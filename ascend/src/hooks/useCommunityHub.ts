@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
-import { useAuth } from "../context/AuthContext";
 
 export interface StudyGroup {
   id: string;
@@ -24,12 +23,23 @@ export interface CommunityEvent {
 }
 
 export function useCommunityHub() {
-  const { profile } = useAuth();
+  const [userId, setUserId] = useState<string | null>(null);
   const [groups, setGroups] = useState<StudyGroup[]>([]);
   const [events, setEvents] = useState<CommunityEvent[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const loadData = async () => {
+  // Get the current user ID directly from Supabase auth — works even if 'profiles' row is missing
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      setUserId(data.user?.id ?? null);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
+      setUserId(session?.user?.id ?? null);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const loadData = async (uid: string | null) => {
     setLoading(true);
     try {
       const [groupsRes, membersRes, eventsRes, rsvpsRes] = await Promise.all([
@@ -42,16 +52,34 @@ export function useCommunityHub() {
       const members = membersRes.data || [];
       const rsvps = rsvpsRes.data || [];
 
-      const enrichedGroups: StudyGroup[] = (groupsRes.data || []).map((g) => ({
+      // De-duplicate groups by id (guard against duplicate seed inserts)
+      const rawGroups = groupsRes.data || [];
+      const seen = new Set<string>();
+      const uniqueGroups = rawGroups.filter((g) => {
+        if (seen.has(g.id)) return false;
+        seen.add(g.id);
+        return true;
+      });
+
+      // De-duplicate events by id
+      const rawEvents = eventsRes.data || [];
+      const seenE = new Set<string>();
+      const uniqueEvents = rawEvents.filter((e) => {
+        if (seenE.has(e.id)) return false;
+        seenE.add(e.id);
+        return true;
+      });
+
+      const enrichedGroups: StudyGroup[] = uniqueGroups.map((g) => ({
         ...g,
         member_count: members.filter((m) => m.group_id === g.id).length,
-        is_member: !!profile && members.some((m) => m.group_id === g.id && m.user_id === profile.id),
+        is_member: !!uid && members.some((m) => m.group_id === g.id && m.user_id === uid),
       }));
 
-      const enrichedEvents: CommunityEvent[] = (eventsRes.data || []).map((e) => ({
+      const enrichedEvents: CommunityEvent[] = uniqueEvents.map((e) => ({
         ...e,
         attendee_count: rsvps.filter((r) => r.event_id === e.id).length,
-        is_rsvpd: !!profile && rsvps.some((r) => r.event_id === e.id && r.user_id === profile.id),
+        is_rsvpd: !!uid && rsvps.some((r) => r.event_id === e.id && r.user_id === uid),
       }));
 
       setGroups(enrichedGroups);
@@ -64,25 +92,28 @@ export function useCommunityHub() {
   };
 
   useEffect(() => {
-    loadData();
+    loadData(userId);
 
-    // Subscribe to real-time changes on members and rsvps tables
-    const memberChannel = supabase
-      .channel("community-members")
-      .on("postgres_changes", { event: "*", schema: "public", table: "study_group_members" }, () => loadData())
-      .on("postgres_changes", { event: "*", schema: "public", table: "event_rsvps" }, () => loadData())
+    // Subscribe to real-time changes so counts update live across all users
+    const channel = supabase
+      .channel("community-hub-changes")
+      .on("postgres_changes", { event: "*", schema: "public", table: "study_group_members" }, () => loadData(userId))
+      .on("postgres_changes", { event: "*", schema: "public", table: "event_rsvps" }, () => loadData(userId))
       .subscribe();
 
     return () => {
-      supabase.removeChannel(memberChannel);
+      supabase.removeChannel(channel);
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profile?.id]);
+  }, [userId]);
 
   const toggleGroupMembership = async (groupId: string, isMember: boolean) => {
-    if (!profile) return;
+    if (!userId) {
+      alert("Please sign in to join a study group!");
+      return;
+    }
 
-    // Optimistic update
+    // Optimistic UI update — instant feel
     setGroups((prev) =>
       prev.map((g) =>
         g.id === groupId
@@ -93,20 +124,25 @@ export function useCommunityHub() {
 
     try {
       if (isMember) {
-        await supabase.from("study_group_members").delete().eq("group_id", groupId).eq("user_id", profile.id);
+        const { error } = await supabase.from("study_group_members").delete().eq("group_id", groupId).eq("user_id", userId);
+        if (error) throw error;
       } else {
-        await supabase.from("study_group_members").insert({ group_id: groupId, user_id: profile.id });
+        const { error } = await supabase.from("study_group_members").insert({ group_id: groupId, user_id: userId });
+        if (error) throw error;
       }
     } catch (err) {
       console.error("Failed to toggle group membership:", err);
-      loadData(); // Revert by reloading
+      loadData(userId); // Revert optimistic update
     }
   };
 
   const toggleEventRsvp = async (eventId: string, isRsvpd: boolean) => {
-    if (!profile) return;
+    if (!userId) {
+      alert("Please sign in to RSVP to an event!");
+      return;
+    }
 
-    // Optimistic update
+    // Optimistic UI update — instant feel
     setEvents((prev) =>
       prev.map((e) =>
         e.id === eventId
@@ -117,15 +153,17 @@ export function useCommunityHub() {
 
     try {
       if (isRsvpd) {
-        await supabase.from("event_rsvps").delete().eq("event_id", eventId).eq("user_id", profile.id);
+        const { error } = await supabase.from("event_rsvps").delete().eq("event_id", eventId).eq("user_id", userId);
+        if (error) throw error;
       } else {
-        await supabase.from("event_rsvps").insert({ event_id: eventId, user_id: profile.id });
+        const { error } = await supabase.from("event_rsvps").insert({ event_id: eventId, user_id: userId });
+        if (error) throw error;
       }
     } catch (err) {
       console.error("Failed to toggle event RSVP:", err);
-      loadData(); // Revert by reloading
+      loadData(userId); // Revert optimistic update
     }
   };
 
-  return { groups, events, loading, toggleGroupMembership, toggleEventRsvp };
+  return { groups, events, loading, userId, toggleGroupMembership, toggleEventRsvp };
 }
