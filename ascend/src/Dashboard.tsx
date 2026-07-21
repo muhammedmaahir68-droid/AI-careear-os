@@ -778,7 +778,7 @@ export default function Dashboard() {
                           setSelectedCompany(c);
                           setSelectedCompanyAptAnswer(null);
                           setCompanyAptChecked(false);
-                          setCompanyCodingUserSolution(c.codingRound.starter || "def solve():\n    pass");
+                          setCompanyCodingUserSolution("def solve():\n    pass");
                           setCompanyCodingOutput("");
                         }}
                         className={`p-6 rounded-3xl border bg-gradient-to-br ${c.color} ${c.border} cursor-pointer`}

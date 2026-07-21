@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { CheckCircle2, Circle, Lock, ChevronDown, ChevronUp, BookOpen, HelpCircle } from "lucide-react";
+import { CheckCircle2, Circle, Lock, ChevronDown, ChevronUp, BookOpen, HelpCircle, Zap, Loader2 } from "lucide-react";
+import { usePlacementReadiness } from "../hooks/usePlacementReadiness";
 
 interface SyllabusModuleProps {
   completedModules: number;
+  onSelectConcept?: (conceptName: string, levelName: string) => void;
 }
 
 // ─── TYPES ───────────────────────────────────────────────────────────────────
@@ -908,6 +910,8 @@ export default function SyllabusModule({ completedModules, onSelectConcept }: Sy
   const [expandedPhase, setExpandedPhase] = useState<number | null>(0);
   const [expandedConcept, setExpandedConcept] = useState<string | null>(null);
 
+  const { checkedItems, history, loading, calculating, toggleItem, calculateScore } = usePlacementReadiness();
+
   return (
     <div className="p-6 rounded-3xl border border-border bg-white/5 backdrop-blur-sm max-h-[85vh] overflow-y-auto custom-scrollbar">
       <div className="sticky top-0 bg-background/95 backdrop-blur-md pt-2 pb-6 z-20 border-b border-white/5 mb-6">
@@ -968,6 +972,49 @@ export default function SyllabusModule({ completedModules, onSelectConcept }: Sy
                   </p>
                 </div>
 
+                {/* Placement Readiness Panel (Level 15 only) */}
+                {i === 15 && isExpanded && (
+                  <div className="mt-4 p-5 rounded-2xl border border-blue-500/30 bg-blue-500/5 mb-4">
+                    <div className="flex justify-between items-center mb-4">
+                      <div>
+                        <h4 className="text-lg font-bold text-blue-400">Placement Readiness</h4>
+                        <p className="text-xs text-muted-foreground mt-1">Check off the items below, then get your AI score.</p>
+                      </div>
+                      <button
+                        onClick={() => calculateScore(phase.concepts.reduce((acc, c) => acc + c.questions.length, 0))}
+                        disabled={calculating || loading}
+                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-sm font-semibold rounded-lg flex items-center gap-2 transition-colors"
+                      >
+                        {calculating ? <Loader2 size={16} className="animate-spin" /> : <Zap size={16} />}
+                        Get My Readiness Score
+                      </button>
+                    </div>
+
+                    {history.length > 0 && (
+                      <div className="space-y-4">
+                        <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+                          <div className="flex items-end gap-3 mb-2">
+                            <span className="text-3xl font-bold text-green-400">{history[0].score}%</span>
+                            <span className="text-sm text-muted-foreground pb-1">Current Readiness Score</span>
+                          </div>
+                          <p className="text-sm text-gray-200 leading-relaxed">{history[0].recommendation}</p>
+                        </div>
+                        
+                        {history.length > 1 && (
+                          <div className="flex flex-wrap gap-2">
+                            <span className="text-xs text-muted-foreground py-1 mr-2">History:</span>
+                            {history.slice(1, 4).map((h) => (
+                              <div key={h.id} className="text-xs px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-gray-400">
+                                {h.score}% <span className="opacity-50">({new Date(h.calculated_at).toLocaleDateString()})</span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 {/* Expanded Concepts */}
                 <AnimatePresence>
                   {isExpanded && (
@@ -1021,13 +1068,26 @@ export default function SyllabusModule({ completedModules, onSelectConcept }: Sy
                                         </button>
                                       </div>
                                       <ol className="space-y-2">
-                                        {concept.questions.map((q, qi) => (
-                                          <li key={qi} className="flex gap-3 text-xs text-gray-300 leading-relaxed">
-                                            <span className="text-blue-400 font-mono shrink-0 w-5">{qi + 1}.</span>
-                                            <span>{q}</span>
-                                            <HelpCircle size={12} className="text-muted-foreground shrink-0 mt-0.5 ml-auto" />
-                                          </li>
-                                        ))}
+                                        {concept.questions.map((q, qi) => {
+                                          const itemId = `${phase.title}-${concept.name}-${qi}`;
+                                          const isChecked = checkedItems[itemId] || false;
+                                          return (
+                                            <li key={qi} className="flex gap-3 text-xs text-gray-300 leading-relaxed items-start">
+                                              {i === 15 ? (
+                                                <button
+                                                  onClick={() => toggleItem(itemId, isChecked)}
+                                                  className={`mt-0.5 w-4 h-4 rounded-sm border shrink-0 flex items-center justify-center transition-colors ${isChecked ? "bg-blue-500 border-blue-500" : "border-gray-500 hover:border-gray-400"}`}
+                                                >
+                                                  {isChecked && <CheckCircle2 size={12} className="text-white" />}
+                                                </button>
+                                              ) : (
+                                                <span className="text-blue-400 font-mono shrink-0 w-5">{qi + 1}.</span>
+                                              )}
+                                              <span className={i === 15 && isChecked ? "line-through opacity-50 transition-opacity" : ""}>{q}</span>
+                                              {i !== 15 && <HelpCircle size={12} className="text-muted-foreground shrink-0 mt-0.5 ml-auto" />}
+                                            </li>
+                                          );
+                                        })}
                                       </ol>
                                     </div>
                                   </motion.div>

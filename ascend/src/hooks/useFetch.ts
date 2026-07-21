@@ -1,7 +1,7 @@
 // src/hooks/useFetch.ts
 
 import { useEffect, useState } from "react";
-import { supabase } from "../lib/api";
+import { supabase } from "../lib/supabase";
 
 /**
  * Generic data‑fetch hook for a Supabase table.
@@ -26,7 +26,7 @@ export function useFetch<T>(
     setLoading(true);
     setError(null);
     try {
-      let query = supabase.from<T>(table).select("*");
+      let query = supabase.from(table).select("*");
       if (filter) {
         query = query.eq(filter[0], filter[1]);
       }

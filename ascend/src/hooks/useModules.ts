@@ -1,7 +1,7 @@
 // src/hooks/useModules.ts
 
 import { useEffect, useState } from "react";
-import { supabase } from "../lib/api";
+import { supabase } from "../lib/supabase";
 import type { Module } from "../types";
 
 /** Hook to fetch all modules (public) */
@@ -14,7 +14,7 @@ export function useModules() {
     const fetchModules = async () => {
       setLoading(true);
       try {
-        const { data, error } = await supabase.from<Module>("modules").select("*");
+        const { data, error } = await supabase.from("modules").select("*");
         if (error) throw error;
         setModules(data as Module[]);
       } catch (e: any) {

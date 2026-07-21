@@ -283,3 +283,30 @@ CREATE POLICY "User owns own daily_tasks" ON daily_tasks USING (auth.uid() = use
 CREATE POLICY "User owns own resumes" ON resumes USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
 
 -- End of core tables
+
+-- ============================================================
+-- Placement Readiness Tables
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS placement_checklist (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  item_id TEXT NOT NULL,
+  completed BOOLEAN DEFAULT false,
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(user_id, item_id)
+);
+
+CREATE TABLE IF NOT EXISTS placement_readiness_history (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  score INTEGER NOT NULL,
+  recommendation TEXT NOT NULL,
+  calculated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE placement_checklist ENABLE ROW LEVEL SECURITY;
+ALTER TABLE placement_readiness_history ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "User owns own placement_checklist" ON placement_checklist USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "User owns own placement_readiness_history" ON placement_readiness_history USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);

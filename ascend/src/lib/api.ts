@@ -1,25 +1,14 @@
 // src/lib/api.ts
 
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import { supabase } from "./supabase";
 
-// ------------------------------------------------------------
-// Supabase client – reads env vars set in Vercel or .env files
-// ------------------------------------------------------------
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
-const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
-
-if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-  console.error("❌ Supabase URL or ANON KEY missing – check your .env files");
-  // In a real app we would throw, but this file is just for compilation.
-}
-
-export const supabase: SupabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+export { supabase };
 
 /**
  * Generic fetch – returns the rows or throws an error.
  */
 export async function fetchTable<T>(table: string, opts?: { select?: string; eq?: [string, any]; order?: string }): Promise<T[]> {
-  let query: any = supabase.from<T>(table).select(opts?.select || "*");
+  let query: any = supabase.from(table).select(opts?.select || "*");
   if (opts?.eq) {
     query = query.eq(opts.eq[0], opts.eq[1]);
   }
@@ -37,7 +26,7 @@ export async function fetchTable<T>(table: string, opts?: { select?: string; eq?
  * Generic insert – upserts rows (on conflict of primary key).
  */
 export async function upsertRows<T>(table: string, rows: T[]): Promise<T[]> {
-  const { data, error } = await supabase.from<T>(table).upsert(rows, { onConflict: "id" });
+  const { data, error } = await supabase.from(table).upsert(rows as any, { onConflict: "id" }).select();
   if (error) {
     throw new Error(`Failed to upsert ${table}: ${error.message}`);
   }
@@ -49,9 +38,10 @@ export async function upsertRows<T>(table: string, rows: T[]): Promise<T[]> {
  */
 export async function updateRows<T>(table: string, filter: { column: string; value: any }, changes: Partial<T>): Promise<T[]> {
   const { data, error } = await supabase
-    .from<T>(table)
-    .update(changes)
-    .eq(filter.column, filter.value);
+    .from(table)
+    .update(changes as any)
+    .eq(filter.column, filter.value)
+    .select();
   if (error) {
     throw new Error(`Failed to update ${table}: ${error.message}`);
   }
@@ -62,7 +52,7 @@ export async function updateRows<T>(table: string, filter: { column: string; val
  * Generic delete – removes rows matching a filter.
  */
 export async function deleteRows<T>(table: string, filter: { column: string; value: any }): Promise<void> {
-  const { error } = await supabase.from<T>(table).delete().eq(filter.column, filter.value);
+  const { error } = await supabase.from(table).delete().eq(filter.column, filter.value);
   if (error) {
     throw new Error(`Failed to delete from ${table}: ${error.message}`);
   }
@@ -74,16 +64,18 @@ export function subscribe<T>(
   onChange: (payload: { new: T | null; old: T | null }) => void,
   filter?: { column: string; value: any }
 ) {
-  let query = supabase.from<T>(table);
+  let filterStr = undefined;
   if (filter) {
-    query = query.eq(filter.column, filter.value);
+    filterStr = `${filter.column}=eq.${filter.value}`;
   }
-  const subscription = query
-    .on("INSERT", (payload) => onChange(payload))
-    .on("UPDATE", (payload) => onChange(payload))
-    .on("DELETE", (payload) => onChange(payload))
+  
+  const channel = supabase.channel(`public:${table}`)
+    .on('postgres_changes', { event: '*', schema: 'public', table, filter: filterStr }, (payload: any) => {
+      onChange({ new: payload.new as T, old: payload.old as T });
+    })
     .subscribe();
-  return subscription;
+    
+  return channel;
 }
 
 /**
@@ -95,7 +87,7 @@ export async function getAIExplanation(prompt: string): Promise<string> {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
     },
     body: JSON.stringify({
       model: "gpt-4o-mini",

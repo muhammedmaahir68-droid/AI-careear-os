@@ -1,6 +1,6 @@
 // src/components/LottiePlayer.tsx
 import React, { useEffect, useRef } from "react";
-import lottie, { AnimationItem } from "lottie-web";
+import lottie, { type AnimationItem } from "lottie-web";
 
 interface LottiePlayerProps {
   /** Path to the JSON animation file (relative to the src folder) */
