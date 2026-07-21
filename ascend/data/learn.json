@@ -1,0 +1,9 @@
+// data/learn.json
+[
+  {
+    "id": "l1",
+    "module_id": "m1",
+    "title": "Introduction to Career Planning",
+    "content": "Placeholder content for learning module."
+  }
+]

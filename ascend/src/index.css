@@ -13,6 +13,12 @@
     --border: 0 0% 18%;
     --input: 0 0% 18%;
 
+  /* Brand colors */
+  --brand-primary: 340 78% 65%;   /* #FF6F91 */
+  --brand-secondary: 210 30% 20%; /* Deep navy */
+  --gradient-start: hsl(var(--brand-primary));
+  --gradient-end: hsl(var(--brand-secondary));
+
     --font-display: 'Instrument Serif', serif;
     --font-body: 'Inter', sans-serif;
   }

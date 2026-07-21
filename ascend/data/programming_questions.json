@@ -1,0 +1,23 @@
+// data/programming_questions.json
+[
+  {
+    "id": "00000000-0000-0000-0000-000000001001",
+    "module_id": null,
+    "topic_id": null,
+    "difficulty": "easy",
+    "type": "multiple_choice",
+    "content": "What is the output of \"print(2 ** 3)\" in Python?",
+    "answer": "8",
+    "explanation": "The ** operator is exponentiation; 2 raised to the power of 3 equals 8."
+  },
+  {
+    "id": "00000000-0000-0000-0000-000000001002",
+    "module_id": null,
+    "topic_id": null,
+    "difficulty": "medium",
+    "type": "coding",
+    "content": "Write a function in JavaScript that returns the sum of an array of numbers.",
+    "answer": "function sum(arr) { return arr.reduce((a,b)=>a+b,0); }",
+    "explanation": "Use Array.reduce to accumulate the sum starting from 0."
+  }
+]

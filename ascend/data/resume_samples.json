@@ -1,0 +1,13 @@
+// data/resume_samples.json
+[
+  {
+    "id": "r1",
+    "title": "Software Engineer Resume",
+    "content": "Placeholder resume content for a software engineer."
+  },
+  {
+    "id": "r2",
+    "title": "Data Analyst Resume",
+    "content": "Placeholder resume content for a data analyst."
+  }
+]

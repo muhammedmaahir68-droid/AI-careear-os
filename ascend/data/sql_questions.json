@@ -1,0 +1,13 @@
+// data/sql_questions.json
+[
+  {
+    "id": "sql001",
+    "module_id": null,
+    "topic_id": null,
+    "difficulty": "easy",
+    "type": "multiple_choice",
+    "content": "Which keyword is used to retrieve data from a database?",
+    "answer": "SELECT",
+    "explanation": "SELECT is used to query rows from a table."
+  }
+]

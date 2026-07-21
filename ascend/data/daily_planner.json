@@ -1,0 +1,11 @@
+// data/daily_planner.json
+[
+  {
+    "id": "dp1",
+    "date": "2026-07-01",
+    "tasks": [
+      {"title": "Morning meditation", "completed": false},
+      {"title": "Review assessment results", "completed": false}
+    ]
+  }
+]

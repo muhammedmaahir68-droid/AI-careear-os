@@ -1,0 +1,10 @@
+// data/assessments.json
+[
+  {
+    "id": "a1",
+    "title": "Career Aptitude Assessment",
+    "description": "A short questionnaire to evaluate career interests.",
+    "questions": ["q1", "q2", "q3"],
+    "result": "placeholder"
+  }
+]

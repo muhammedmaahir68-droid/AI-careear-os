@@ -1,0 +1,15 @@
+// data/community_posts.json
+[
+  {
+    "id": "c1",
+    "author": "User123",
+    "content": "Excited to start my journey with the AI Career OS!",
+    "timestamp": "2026-07-01T12:00:00Z"
+  },
+  {
+    "id": "c2",
+    "author": "MentorMike",
+    "content": "Remember to focus on transferable skills when exploring new roles.",
+    "timestamp": "2026-07-02T09:30:00Z"
+  }
+]

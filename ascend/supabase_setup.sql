@@ -114,3 +114,172 @@ DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+-- ============================================================
+-- Core Learning Tables (Modules, Topics, Lessons, Content)
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS modules (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title TEXT NOT NULL,
+  description TEXT,
+  order_index INTEGER NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS topics (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  module_id UUID REFERENCES modules(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  description TEXT,
+  order_index INTEGER NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS lessons (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  topic_id UUID REFERENCES topics(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  content TEXT NOT NULL, -- markdown or HTML
+  order_index INTEGER NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS content_blocks (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  lesson_id UUID REFERENCES lessons(id) ON DELETE CASCADE,
+  type TEXT NOT NULL CHECK (type IN ('note','example','formula','animation','video')),
+  payload JSONB NOT NULL,
+  order_index INTEGER NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- ============================================================
+-- Question & Quiz Tables
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS questions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  module_id UUID REFERENCES modules(id) ON DELETE SET NULL,
+  topic_id UUID REFERENCES topics(id) ON DELETE SET NULL,
+  difficulty TEXT CHECK (difficulty IN ('easy','medium','hard')),
+  type TEXT CHECK (type IN ('multiple_choice','short_answer','coding')),
+  content TEXT NOT NULL,
+  answer TEXT NOT NULL,
+  explanation TEXT,
+  ai_explanation TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS quizzes (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title TEXT NOT NULL,
+  module_id UUID REFERENCES modules(id) ON DELETE SET NULL,
+  description TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS quiz_questions (
+  quiz_id UUID REFERENCES quizzes(id) ON DELETE CASCADE,
+  question_id UUID REFERENCES questions(id) ON DELETE CASCADE,
+  "order" INTEGER NOT NULL,
+  PRIMARY KEY (quiz_id, question_id)
+);
+
+CREATE TABLE IF NOT EXISTS quiz_attempts (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  quiz_id UUID REFERENCES quizzes(id) ON DELETE CASCADE,
+  score INTEGER NOT NULL,
+  attempt_date TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- ============================================================
+-- Progress & Daily Planner Tables
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS user_progress (
+  user_id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  xp INTEGER DEFAULT 0,
+  streak INTEGER DEFAULT 0,
+  last_active DATE,
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS xp_log (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  amount INTEGER NOT NULL,
+  reason TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS badges (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  description TEXT,
+  icon_url TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS user_badges (
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  badge_id UUID REFERENCES badges(id) ON DELETE CASCADE,
+  earned_at TIMESTAMPTZ DEFAULT NOW(),
+  PRIMARY KEY (user_id, badge_id)
+);
+
+CREATE TABLE IF NOT EXISTS daily_tasks (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  date DATE NOT NULL,
+  task_type TEXT CHECK (task_type IN ('learn','practice','quiz','coding','revision','interview')),
+  title TEXT NOT NULL,
+  completed BOOLEAN DEFAULT false,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- ============================================================
+-- Resume Builder Table
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS resumes (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  data JSONB NOT NULL, -- stores all sections as JSON
+  ats_score INTEGER,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Enable RLS for the new tables (users can only access their own data)
+
+ALTER TABLE modules ENABLE ROW LEVEL SECURITY;
+ALTER TABLE topics ENABLE ROW LEVEL SECURITY;
+ALTER TABLE lessons ENABLE ROW LEVEL SECURITY;
+ALTER TABLE content_blocks ENABLE ROW LEVEL SECURITY;
+ALTER TABLE questions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE quizzes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE quiz_questions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE quiz_attempts ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_progress ENABLE ROW LEVEL SECURITY;
+ALTER TABLE xp_log ENABLE ROW LEVEL SECURITY;
+ALTER TABLE badges ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_badges ENABLE ROW LEVEL SECURITY;
+ALTER TABLE daily_tasks ENABLE ROW LEVEL SECURITY;
+ALTER TABLE resumes ENABLE ROW LEVEL SECURITY;
+
+-- Policies – users can read/write their own records; public read for modules/topics/lessons
+
+CREATE POLICY "Public read modules" ON modules FOR SELECT USING (true);
+CREATE POLICY "Public read topics" ON topics FOR SELECT USING (true);
+CREATE POLICY "Public read lessons" ON lessons FOR SELECT USING (true);
+CREATE POLICY "Public read questions" ON questions FOR SELECT USING (true);
+CREATE POLICY "Public read quizzes" ON quizzes FOR SELECT USING (true);
+
+CREATE POLICY "User owns own progress" ON user_progress USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "User owns own xp_log" ON xp_log USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "User owns own badges" ON user_badges USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "User owns own daily_tasks" ON daily_tasks USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "User owns own resumes" ON resumes USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+
+-- End of core tables

@@ -1,0 +1,23 @@
+// data/aptitude_questions.json
+[
+  {
+    "id": "00000000-0000-0000-0000-000000000001",
+    "module_id": null,
+    "topic_id": null,
+    "difficulty": "easy",
+    "type": "multiple_choice",
+    "content": "What is 7 + 5?",
+    "answer": "12",
+    "explanation": "Adding two numbers: 7 + 5 = 12."
+  },
+  {
+    "id": "00000000-0000-0000-0000-000000000002",
+    "module_id": null,
+    "topic_id": null,
+    "difficulty": "medium",
+    "type": "multiple_choice",
+    "content": "A train travels 60 km/h for 2 hours and then 80 km/h for 1.5 hours. What is the total distance?",
+    "answer": "180",
+    "explanation": "First leg: 60 * 2 = 120 km. Second leg: 80 * 1.5 = 120 km. Total = 240 km."
+  }
+]
