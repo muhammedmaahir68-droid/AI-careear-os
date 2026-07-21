@@ -1,0 +1,55 @@
+// MECH branch — company-oriented question bank.
+export type HRQuestion = { question: string; category: "technical" | "hr_behavioral" | "case_study" | "coding"; company_type: "product_based" | "service_based" | "startup" | "core_company"; guidance: string };
+
+export const MECH_HR_QUESTIONS: Record<string, HRQuestion[]> = {
+  "mech-robotics": [
+    { question: "Explain the difference between forward and inverse kinematics.", category: "technical", company_type: "core_company",
+      guidance: "Forward: joint angles to end position; inverse: desired position to required joint angles." },
+    { question: "How would you design a robotic arm to pick and place objects of varying sizes?", category: "case_study", company_type: "core_company",
+      guidance: "Gripper design, sensor feedback, path planning." },
+    { question: "What's the difference between open-loop and closed-loop robotic control?", category: "technical", company_type: "core_company",
+      guidance: "Feedback usage for correcting position/force errors." },
+    { question: "Tell me about a robotics project you've built.", category: "hr_behavioral", company_type: "core_company",
+      guidance: "Design process, challenges, and results." },
+  ],
+  "mech-automation": [
+    { question: "How would you design an automated packaging line for varying product sizes?", category: "case_study", company_type: "core_company",
+      guidance: "Adjustable fixtures, sensor detection, PLC sequencing." },
+    { question: "Explain the difference between pneumatic and hydraulic actuation.", category: "technical", company_type: "core_company",
+      guidance: "Compressed air vs fluid pressure; force, speed, and precision tradeoffs." },
+    { question: "What safety systems would you include in an automated production line?", category: "technical", company_type: "core_company",
+      guidance: "E-stops, light curtains, interlocked guards." },
+    { question: "Tell me about an automation project you've worked on.", category: "hr_behavioral", company_type: "core_company",
+      guidance: "Design decisions and measurable results." },
+  ],
+  "mech-control": [
+    { question: "Explain how a feedback control loop works for controlling motor speed.", category: "technical", company_type: "core_company",
+      guidance: "Encoder feedback, error calculation, PID correction to actuator." },
+    { question: "How would you diagnose oscillation in a mechatronic control system?", category: "case_study", company_type: "core_company",
+      guidance: "Check gain tuning, sensor noise, mechanical backlash." },
+    { question: "What's the difference between a stepper motor and a servo motor?", category: "technical", company_type: "core_company",
+      guidance: "Open-loop discrete steps vs closed-loop continuous feedback control." },
+    { question: "Tell me about a control systems project you've built.", category: "hr_behavioral", company_type: "core_company",
+      guidance: "Design and testing narrative." },
+  ],
+  "mech-cad": [
+    { question: "Walk me through your design process for a mechanical component.", category: "case_study", company_type: "core_company",
+      guidance: "Requirements, material selection, tolerancing, simulation validation." },
+    { question: "What is GD&T and why is it important in manufacturing?", category: "technical", company_type: "core_company",
+      guidance: "Geometric Dimensioning & Tolerancing communicates allowable variation precisely." },
+    { question: "How would you use FEA to validate a part design?", category: "technical", company_type: "core_company",
+      guidance: "Load application, mesh quality, stress/deflection interpretation." },
+    { question: "Tell me about a design that failed testing and how you fixed it.", category: "hr_behavioral", company_type: "core_company",
+      guidance: "Root cause and redesign process." },
+  ],
+  "mech-iiot": [
+    { question: "How would you design a predictive maintenance system for factory equipment?", category: "case_study", company_type: "core_company",
+      guidance: "Vibration/temperature sensors, threshold/ML-based anomaly detection, alerting." },
+    { question: "Explain the difference between Modbus and OPC-UA.", category: "technical", company_type: "core_company",
+      guidance: "Simple legacy protocol vs modern, secure, semantic industrial protocol." },
+    { question: "What's the benefit of edge computing in an industrial IoT setup?", category: "technical", company_type: "core_company",
+      guidance: "Reduces latency and bandwidth by processing data near the sensor." },
+    { question: "Tell me about an IIoT or smart-factory project you've worked on.", category: "hr_behavioral", company_type: "core_company",
+      guidance: "Design process and measurable impact." },
+  ],
+};

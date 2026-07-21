@@ -1,0 +1,55 @@
+// IT branch — company-oriented question bank.
+export type HRQuestion = { question: string; category: "technical" | "hr_behavioral" | "case_study" | "coding"; company_type: "product_based" | "service_based" | "startup" | "core_company"; guidance: string };
+
+export const IT_HR_QUESTIONS: Record<string, HRQuestion[]> = {
+  "it-qa": [
+    { question: "Explain the difference between smoke testing and regression testing.", category: "technical", company_type: "service_based",
+      guidance: "Smoke = quick sanity check; regression = ensure existing features still work after changes." },
+    { question: "How would you design test cases for a login page?", category: "case_study", company_type: "service_based",
+      guidance: "Valid/invalid credentials, boundary values, security (SQLi/XSS), UI states." },
+    { question: "What's the difference between severity and priority of a bug?", category: "technical", company_type: "service_based",
+      guidance: "Severity = impact on system; priority = urgency to fix." },
+    { question: "Tell me about a critical bug you found before release.", category: "hr_behavioral", company_type: "service_based",
+      guidance: "STAR format; emphasize impact and how you communicated it." },
+  ],
+  "it-sysadmin": [
+    { question: "Explain the difference between TCP and UDP.", category: "technical", company_type: "core_company",
+      guidance: "Connection-oriented reliable vs connectionless fast; use cases." },
+    { question: "How would you troubleshoot a server that suddenly became unreachable?", category: "case_study", company_type: "core_company",
+      guidance: "Check network, ping/traceroute, service status, logs, escalation." },
+    { question: "What is DNS and how does resolution work?", category: "technical", company_type: "service_based",
+      guidance: "Recursive resolver, root/TLD/authoritative servers." },
+    { question: "Describe a time you had to work under pressure to fix a system outage.", category: "hr_behavioral", company_type: "service_based",
+      guidance: "Focus on calm, structured troubleshooting." },
+  ],
+  "it-cloud": [
+    { question: "Explain the difference between IaaS, PaaS, and SaaS.", category: "technical", company_type: "product_based",
+      guidance: "Level of managed abstraction, examples of each." },
+    { question: "How would you reduce cloud costs for an over-provisioned environment?", category: "case_study", company_type: "product_based",
+      guidance: "Right-sizing, reserved instances, auto-scaling, unused resource cleanup." },
+    { question: "What is a VPC and why is it important?", category: "technical", company_type: "product_based",
+      guidance: "Isolated network environment, subnetting, security groups." },
+    { question: "Tell me about a time you resolved a cloud infrastructure issue.", category: "hr_behavioral", company_type: "startup",
+      guidance: "Structured troubleshooting narrative." },
+  ],
+  "it-fullstack": [
+    { question: "Walk me through a project you built end to end.", category: "case_study", company_type: "service_based",
+      guidance: "Architecture, tech choices, challenges faced." },
+    { question: "What's the difference between GET and POST requests?", category: "technical", company_type: "service_based",
+      guidance: "Idempotency, data in URL vs body, caching behavior." },
+    { question: "How do you ensure your application is secure against common vulnerabilities?", category: "technical", company_type: "service_based",
+      guidance: "Input validation, parameterized queries, HTTPS, auth best practices." },
+    { question: "Tell me about a time you worked in a team on a coding project.", category: "hr_behavioral", company_type: "service_based",
+      guidance: "Collaboration, version control workflow, conflict resolution." },
+  ],
+  "it-dba": [
+    { question: "What is database normalization and why is it important?", category: "technical", company_type: "core_company",
+      guidance: "Reduces redundancy, defines normal forms (1NF-3NF) with tradeoffs vs denormalization." },
+    { question: "How would you diagnose and fix a slow-running query?", category: "case_study", company_type: "core_company",
+      guidance: "EXPLAIN plan, missing indexes, query rewrite." },
+    { question: "Explain the difference between a clustered and non-clustered index.", category: "technical", company_type: "service_based",
+      guidance: "Clustered defines physical row order; non-clustered is a separate lookup structure." },
+    { question: "Tell me about a time you had to restore a database from backup under pressure.", category: "hr_behavioral", company_type: "core_company",
+      guidance: "Emphasize calm process and validation after restore." },
+  ],
+};

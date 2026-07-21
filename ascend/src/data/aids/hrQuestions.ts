@@ -1,0 +1,55 @@
+// AIDS branch — company-oriented question bank.
+export type HRQuestion = { question: string; category: "technical" | "hr_behavioral" | "case_study" | "coding"; company_type: "product_based" | "service_based" | "startup" | "core_company"; guidance: string };
+
+export const AIDS_HR_QUESTIONS: Record<string, HRQuestion[]> = {
+  "aids-data-analyst": [
+    { question: "Write a SQL query to find customers who made purchases in every month of the last year.", category: "coding", company_type: "product_based",
+      guidance: "Use GROUP BY with HAVING COUNT(DISTINCT month) = 12, or self-joins." },
+    { question: "How would you investigate a sudden drop in weekly active users?", category: "case_study", company_type: "product_based",
+      guidance: "Segment by platform/geography, check for bugs/releases, funnel analysis." },
+    { question: "What's the difference between a bar chart and a histogram?", category: "technical", company_type: "service_based",
+      guidance: "Bar chart compares categories; histogram shows distribution of continuous data." },
+    { question: "Tell me about an analysis that led to a concrete business change.", category: "hr_behavioral", company_type: "startup",
+      guidance: "Quantify impact and describe the decision chain." },
+  ],
+  "aids-data-scientist": [
+    { question: "How would you build a churn prediction model for a subscription business?", category: "case_study", company_type: "product_based",
+      guidance: "Feature engineering from usage data, model choice, business-relevant metrics." },
+    { question: "Explain the difference between Type I and Type II errors.", category: "technical", company_type: "product_based",
+      guidance: "False positive vs false negative; tradeoffs via threshold selection." },
+    { question: "What's the difference between supervised and unsupervised learning?", category: "technical", company_type: "service_based",
+      guidance: "Labeled vs unlabeled data, example algorithms for each." },
+    { question: "Tell me about a time your model's prediction was wrong — what did you learn?", category: "hr_behavioral", company_type: "startup",
+      guidance: "Focus on diagnosis and iteration, not just being right." },
+  ],
+  "aids-data-engineer": [
+    { question: "How would you design a pipeline to load daily sales data into a warehouse?", category: "case_study", company_type: "product_based",
+      guidance: "Extraction schedule, transformation logic, incremental loads, failure handling." },
+    { question: "What's the difference between a data warehouse and a data lake?", category: "technical", company_type: "product_based",
+      guidance: "Structured/schema-on-write vs raw/schema-on-read storage." },
+    { question: "Explain idempotency in the context of data pipelines.", category: "technical", company_type: "service_based",
+      guidance: "Re-running a pipeline shouldn't duplicate or corrupt data." },
+    { question: "Tell me about a pipeline failure you diagnosed and fixed.", category: "hr_behavioral", company_type: "startup",
+      guidance: "Root cause analysis and monitoring improvement afterward." },
+  ],
+  "aids-bi-analyst": [
+    { question: "How do you decide which KPIs matter for a given business function?", category: "case_study", company_type: "service_based",
+      guidance: "Align metrics to business goals, avoid vanity metrics." },
+    { question: "What's the difference between a fact table and a dimension table?", category: "technical", company_type: "service_based",
+      guidance: "Fact = measurable events; dimension = descriptive context." },
+    { question: "How would you design a dashboard for a sales team vs an executive team?", category: "case_study", company_type: "product_based",
+      guidance: "Sales wants granular/actionable; execs want high-level trends." },
+    { question: "Tell me about a time a dashboard you built changed how a team worked.", category: "hr_behavioral", company_type: "startup",
+      guidance: "Concrete before/after behavior change." },
+  ],
+  "aids-ai-product": [
+    { question: "How would you evaluate whether an AI feature is ready to ship?", category: "case_study", company_type: "product_based",
+      guidance: "Accuracy thresholds, failure mode review, user testing, guardrails." },
+    { question: "What tradeoffs would you consider between a rule-based system and an ML model for a new feature?", category: "technical", company_type: "product_based",
+      guidance: "Explainability, maintenance cost, data availability, accuracy needs." },
+    { question: "How do you communicate AI model limitations to non-technical stakeholders?", category: "hr_behavioral", company_type: "startup",
+      guidance: "Simplify without overpromising; use concrete failure examples." },
+    { question: "Tell me about a time you had to say no to a feature request due to technical constraints.", category: "hr_behavioral", company_type: "startup",
+      guidance: "Show reasoning and stakeholder management." },
+  ],
+};

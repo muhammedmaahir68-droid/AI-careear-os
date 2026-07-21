@@ -1,0 +1,55 @@
+// EEE branch — company-oriented question bank.
+export type HRQuestion = { question: string; category: "technical" | "hr_behavioral" | "case_study" | "coding"; company_type: "product_based" | "service_based" | "startup" | "core_company"; guidance: string };
+
+export const EEE_HR_QUESTIONS: Record<string, HRQuestion[]> = {
+  "eee-power": [
+    { question: "Explain the difference between star and delta connections.", category: "technical", company_type: "core_company",
+      guidance: "Line vs phase voltage/current relationships, use cases." },
+    { question: "How does a circuit breaker differ from a fuse?", category: "technical", company_type: "core_company",
+      guidance: "Breaker is resettable and can be remotely operated; fuse is one-time sacrificial." },
+    { question: "How would you diagnose a transformer overheating issue?", category: "case_study", company_type: "core_company",
+      guidance: "Load analysis, cooling system check, insulation testing." },
+    { question: "Tell me about a time you worked on a power systems project or internship.", category: "hr_behavioral", company_type: "core_company",
+      guidance: "Concrete technical contribution and outcome." },
+  ],
+  "eee-control": [
+    { question: "Explain how a PID controller works.", category: "technical", company_type: "core_company",
+      guidance: "Proportional, Integral, Derivative terms and what each corrects for." },
+    { question: "How would you tune a PID controller that's oscillating?", category: "case_study", company_type: "core_company",
+      guidance: "Reduce proportional/derivative gain, use Ziegler-Nichols method." },
+    { question: "What's the difference between open-loop and closed-loop control?", category: "technical", company_type: "core_company",
+      guidance: "Feedback presence; closed-loop corrects for disturbances." },
+    { question: "Tell me about a PLC or control systems project you've built.", category: "hr_behavioral", company_type: "core_company",
+      guidance: "Design decisions and testing process." },
+  ],
+  "eee-design": [
+    { question: "How do you select the right wire gauge for a given load current?", category: "technical", company_type: "core_company",
+      guidance: "Ampacity tables, derating factors, voltage drop considerations." },
+    { question: "Explain the purpose of a single-line diagram in electrical design.", category: "technical", company_type: "core_company",
+      guidance: "Simplified representation of the electrical system for planning/protection design." },
+    { question: "How would you approach designing a control panel for an industrial machine?", category: "case_study", company_type: "core_company",
+      guidance: "Load calculation, component sizing, safety standards compliance." },
+    { question: "Tell me about a design project where you had to balance cost and safety.", category: "hr_behavioral", company_type: "core_company",
+      guidance: "Tradeoff reasoning and final decision." },
+  ],
+  "eee-renewable": [
+    { question: "How would you size a solar PV system for a given household load?", category: "case_study", company_type: "core_company",
+      guidance: "Load calculation, panel wattage, battery backup sizing, inverter rating." },
+    { question: "Explain the difference between on-grid and off-grid solar systems.", category: "technical", company_type: "core_company",
+      guidance: "Grid-tied with net metering vs standalone with battery storage." },
+    { question: "What factors affect solar panel efficiency?", category: "technical", company_type: "core_company",
+      guidance: "Temperature, shading, tilt angle, dust/soiling." },
+    { question: "Tell me about a renewable energy project you've worked on.", category: "hr_behavioral", company_type: "core_company",
+      guidance: "Design process and measured outcomes." },
+  ],
+  "eee-automation": [
+    { question: "Explain ladder logic and how a PLC scans it.", category: "technical", company_type: "core_company",
+      guidance: "Rungs represent logic; PLC scans input-logic-output cyclically." },
+    { question: "How would you design an automated system for a conveyor belt with safety interlocks?", category: "case_study", company_type: "core_company",
+      guidance: "Sensors for jam detection, emergency stop, interlocked start conditions." },
+    { question: "What's the difference between SCADA and a PLC?", category: "technical", company_type: "core_company",
+      guidance: "SCADA is supervisory/monitoring across systems; PLC executes local control logic." },
+    { question: "Tell me about an automation project you've built or worked on.", category: "hr_behavioral", company_type: "core_company",
+      guidance: "Design decisions and results." },
+  ],
+};

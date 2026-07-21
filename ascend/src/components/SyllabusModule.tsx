@@ -904,9 +904,11 @@ const syllabus: Phase[] = [
 interface SyllabusModuleProps {
   completedModules: number;
   onSelectConcept?: (conceptName: string, levelName: string) => void;
+  syllabusData?: any[] | null;
 }
 
-export default function SyllabusModule({ completedModules, onSelectConcept }: SyllabusModuleProps) {
+export default function SyllabusModule({ completedModules, onSelectConcept, syllabusData }: SyllabusModuleProps) {
+  const activeSyllabus = syllabusData && syllabusData.length > 0 ? syllabusData : syllabus;
   const [expandedPhase, setExpandedPhase] = useState<number | null>(0);
   const [expandedConcept, setExpandedConcept] = useState<string | null>(null);
 
@@ -924,7 +926,7 @@ export default function SyllabusModule({ completedModules, onSelectConcept }: Sy
       <div className="space-y-2 relative">
         <div className="absolute left-[23px] top-4 bottom-4 w-0.5 bg-white/10" />
 
-        {syllabus.map((phase, i) => {
+        {activeSyllabus.map((phase, i) => {
           const isCompleted = i < completedModules;
           const isActive = i === completedModules;
           const isLocked = i > completedModules;
@@ -981,7 +983,7 @@ export default function SyllabusModule({ completedModules, onSelectConcept }: Sy
                         <p className="text-xs text-muted-foreground mt-1">Check off the items below, then get your AI score.</p>
                       </div>
                       <button
-                        onClick={() => calculateScore(phase.concepts.reduce((acc, c) => acc + c.questions.length, 0))}
+                        onClick={() => calculateScore(phase.concepts.reduce((acc: number, c: any) => acc + c.questions.length, 0))}
                         disabled={calculating || loading}
                         className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-sm font-semibold rounded-lg flex items-center gap-2 transition-colors"
                       >
@@ -1025,7 +1027,7 @@ export default function SyllabusModule({ completedModules, onSelectConcept }: Sy
                       className="overflow-hidden mt-4"
                     >
                       <div className="space-y-3">
-                        {phase.concepts.map((concept, ci) => {
+                        {phase.concepts.map((concept: any, ci: number) => {
                           const key = `${i}-${ci}`;
                           const conceptOpen = expandedConcept === key;
                           return (
@@ -1068,7 +1070,7 @@ export default function SyllabusModule({ completedModules, onSelectConcept }: Sy
                                         </button>
                                       </div>
                                       <ol className="space-y-2">
-                                        {concept.questions.map((q, qi) => {
+                                        {concept.questions.map((q: any, qi: number) => {
                                           const itemId = `${phase.title}-${concept.name}-${qi}`;
                                           const isChecked = checkedItems[itemId] || false;
                                           return (

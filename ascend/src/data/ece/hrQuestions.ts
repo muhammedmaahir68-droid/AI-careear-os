@@ -1,0 +1,55 @@
+// ECE branch — company-oriented question bank.
+export type HRQuestion = { question: string; category: "technical" | "hr_behavioral" | "case_study" | "coding"; company_type: "product_based" | "service_based" | "startup" | "core_company"; guidance: string };
+
+export const ECE_HR_QUESTIONS: Record<string, HRQuestion[]> = {
+  "ece-vlsi": [
+    { question: "Explain the difference between combinational and sequential circuits.", category: "technical", company_type: "core_company",
+      guidance: "No memory/state vs clocked memory elements; examples of each." },
+    { question: "Design a Mealy vs Moore state machine for a simple sequence detector.", category: "case_study", company_type: "core_company",
+      guidance: "Output depends on state+input (Mealy) vs state only (Moore)." },
+    { question: "What is setup and hold time in digital circuits?", category: "technical", company_type: "core_company",
+      guidance: "Timing constraints around the clock edge for reliable data capture." },
+    { question: "Tell me about a project where you debugged a timing violation.", category: "hr_behavioral", company_type: "core_company",
+      guidance: "Root cause and how you resolved it via design changes." },
+  ],
+  "ece-embedded": [
+    { question: "Explain the difference between polling and interrupt-driven I/O.", category: "technical", company_type: "core_company",
+      guidance: "CPU cycles wasted vs event-driven efficiency; use case tradeoffs." },
+    { question: "How would you debug a system that randomly resets in the field?", category: "case_study", company_type: "core_company",
+      guidance: "Watchdog timers, brown-out detection, stack overflow, ESD issues." },
+    { question: "What is the difference between RAM and flash memory usage in embedded systems?", category: "technical", company_type: "core_company",
+      guidance: "Volatile working memory vs non-volatile program/data storage." },
+    { question: "Tell me about a hardware-software integration issue you solved.", category: "hr_behavioral", company_type: "core_company",
+      guidance: "Cross-layer debugging narrative." },
+  ],
+  "ece-signal": [
+    { question: "Explain the Nyquist-Shannon sampling theorem.", category: "technical", company_type: "core_company",
+      guidance: "Sample at least 2x the highest frequency to avoid aliasing." },
+    { question: "What's the difference between FIR and IIR filters?", category: "technical", company_type: "core_company",
+      guidance: "Finite vs infinite impulse response; stability and phase tradeoffs." },
+    { question: "How would you remove noise from a sensor signal in real time?", category: "case_study", company_type: "core_company",
+      guidance: "Filter choice based on noise characteristics, latency constraints." },
+    { question: "Tell me about a signal processing project you worked on.", category: "hr_behavioral", company_type: "core_company",
+      guidance: "Problem, approach, and results." },
+  ],
+  "ece-iot": [
+    { question: "Explain the difference between MQTT and HTTP for IoT communication.", category: "technical", company_type: "core_company",
+      guidance: "Lightweight pub/sub vs request/response; power and bandwidth tradeoffs." },
+    { question: "How would you design a low-power IoT sensor network for agriculture?", category: "case_study", company_type: "core_company",
+      guidance: "Sleep cycles, LoRa/Zigbee choice, battery life, data aggregation." },
+    { question: "What security considerations matter most for IoT devices?", category: "technical", company_type: "core_company",
+      guidance: "Firmware updates, encrypted comms, device authentication." },
+    { question: "Tell me about an IoT project where connectivity was unreliable — how did you handle it?", category: "hr_behavioral", company_type: "startup",
+      guidance: "Buffering, retry logic, offline-first design." },
+  ],
+  "ece-rf": [
+    { question: "Why is impedance matching important in RF circuits?", category: "technical", company_type: "core_company",
+      guidance: "Maximizes power transfer, minimizes reflections (VSWR)." },
+    { question: "Explain the difference between near-field and far-field antenna regions.", category: "technical", company_type: "core_company",
+      guidance: "Reactive vs radiating field behavior, distance boundaries." },
+    { question: "How would you troubleshoot a poor VSWR reading in an RF system?", category: "case_study", company_type: "core_company",
+      guidance: "Check connectors, cable damage, antenna tuning, matching network." },
+    { question: "Tell me about an RF project you've worked on.", category: "hr_behavioral", company_type: "core_company",
+      guidance: "Problem, design choices, testing/validation." },
+  ],
+};

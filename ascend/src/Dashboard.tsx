@@ -12,6 +12,8 @@ import DailyChallenge from "./components/DailyChallenge";
 import { useAuth } from "./context/AuthContext";
 import { supabase } from "./lib/supabase";
 import { useCommunityHub } from "./hooks/useCommunityHub";
+import { useBranchRole, useRoleContent } from "./hooks/useBranchRole";
+import BranchRolePicker from "./components/BranchRolePicker";
 
 function formatEventTime(isoString: string): string {
   const date = new Date(isoString);
@@ -174,6 +176,10 @@ export default function Dashboard() {
   const [activeTab, setActiveTab] = useState<Tab>("dashboard");
   const [challengeCompleted, setChallengeCompleted] = useState(false);
   const [leaderboard, setLeaderboard] = useState<{ display_name: string; total_xp: number; user_id: string }[]>([]);
+
+  // Branch and Role selection
+  const { branchId, roleId, loading: branchLoading, selectRole } = useBranchRole(profile?.id ?? null);
+  const { syllabus: branchSyllabus, hrQuestions: branchHrQuestions, mockQuestions: branchMockQuestions, loading: contentLoading } = useRoleContent(branchId, roleId);
 
   // Community Hub – real Supabase data
   const { groups: studyGroups, events: communityEvents, loading: communityLoading, actionLoading: communityActionLoading, userId: communityUserId, toggleGroupMembership, toggleEventRsvp, createGroup, deleteGroup, createEvent, deleteEvent } = useCommunityHub();
@@ -450,6 +456,14 @@ export default function Dashboard() {
     { id: "community", label: "Community", icon: <Users size={18} /> },
   ] as const;
 
+  if (branchLoading) {
+    return <div className="min-h-screen flex items-center justify-center bg-background"><div className="text-muted-foreground">Loading your profile...</div></div>;
+  }
+
+  if (!branchId || !roleId) {
+    return <BranchRolePicker onSelect={selectRole} />;
+  }
+
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       {/* Top Header */}
@@ -605,6 +619,7 @@ export default function Dashboard() {
               <div className="lg:col-span-2">
                 <SyllabusModule
                   completedModules={completedModules}
+                  syllabusData={branchSyllabus}
                   onSelectConcept={(conceptName, levelName) => {
                     setSelectedConcept({ name: conceptName, level: levelName });
                     setActiveTab("daily");
