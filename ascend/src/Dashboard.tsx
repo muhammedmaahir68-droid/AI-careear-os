@@ -176,7 +176,11 @@ export default function Dashboard() {
   const [leaderboard, setLeaderboard] = useState<{ display_name: string; total_xp: number; user_id: string }[]>([]);
 
   // Community Hub – real Supabase data
-  const { groups: studyGroups, events: communityEvents, loading: communityLoading, toggleGroupMembership, toggleEventRsvp } = useCommunityHub();
+  const { groups: studyGroups, events: communityEvents, loading: communityLoading, actionLoading: communityActionLoading, userId: communityUserId, toggleGroupMembership, toggleEventRsvp, createGroup, deleteGroup, createEvent, deleteEvent } = useCommunityHub();
+  const [showCreateGroup, setShowCreateGroup] = useState(false);
+  const [showCreateEvent, setShowCreateEvent] = useState(false);
+  const [newGroupForm, setNewGroupForm] = useState({ name: "", topic: "", description: "" });
+  const [newEventForm, setNewEventForm] = useState({ title: "", speaker: "", type: "Masterclass", event_time: "" });
   const [chatMessages, setChatMessages] = useState<{ from: "ai" | "user"; text: string }[]>([
     { from: "ai", text: `Hey ${profile?.name?.split(" ")[0] || "there"}! 🚀 Ready to tackle Day 1? Today we're focusing on Python Arrays. Try to solve the Two Sum challenge in the Daily tab!` }
   ]);
@@ -1154,14 +1158,54 @@ export default function Dashboard() {
 
                 {/* Study Groups – real Supabase data */}
                 <div className="p-6 rounded-3xl border border-border bg-white/5">
-                  <div className="flex items-center gap-3 mb-6">
-                    <Users className="text-purple-400" size={24} />
-                    <h3 className="text-xl font-display">Active Study Groups</h3>
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-3">
+                      <Users className="text-purple-400" size={24} />
+                      <h3 className="text-xl font-display">Active Study Groups</h3>
+                    </div>
+                    <button
+                      onClick={() => setShowCreateGroup(!showCreateGroup)}
+                      className="text-xs px-3 py-1.5 rounded-full bg-purple-500/20 text-purple-300 hover:bg-purple-500/30 transition-colors flex items-center gap-1"
+                    >
+                      {showCreateGroup ? "✕ Cancel" : "+ Create Group"}
+                    </button>
                   </div>
+
+                  {/* Create Group Form */}
+                  {showCreateGroup && (
+                    <div className="mb-4 p-4 rounded-2xl bg-white/5 border border-purple-500/20 space-y-3">
+                      <input
+                        type="text" placeholder="Group name (e.g. DSA Warriors)" maxLength={50}
+                        value={newGroupForm.name} onChange={(e) => setNewGroupForm(f => ({ ...f, name: e.target.value }))}
+                        className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-400"
+                      />
+                      <input
+                        type="text" placeholder="Topic (e.g. Data Structures & Algorithms)" maxLength={60}
+                        value={newGroupForm.topic} onChange={(e) => setNewGroupForm(f => ({ ...f, topic: e.target.value }))}
+                        className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-400"
+                      />
+                      <textarea
+                        placeholder="Short description (optional)" maxLength={200} rows={2}
+                        value={newGroupForm.description} onChange={(e) => setNewGroupForm(f => ({ ...f, description: e.target.value }))}
+                        className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-400 resize-none"
+                      />
+                      <button
+                        disabled={communityActionLoading || !newGroupForm.name.trim() || !newGroupForm.topic.trim()}
+                        onClick={async () => {
+                          const ok = await createGroup(newGroupForm);
+                          if (ok) { setNewGroupForm({ name: "", topic: "", description: "" }); setShowCreateGroup(false); }
+                        }}
+                        className="w-full py-2 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white text-sm font-semibold rounded-lg transition-colors"
+                      >
+                        {communityActionLoading ? "Creating..." : "Create Group"}
+                      </button>
+                    </div>
+                  )}
+
                   {communityLoading ? (
                     <div className="text-sm text-muted-foreground">Loading groups...</div>
                   ) : studyGroups.length === 0 ? (
-                    <div className="text-sm text-muted-foreground">No groups yet — check back soon!</div>
+                    <div className="text-sm text-muted-foreground">No groups yet — be the first to create one!</div>
                   ) : (
                     studyGroups.map((g) => (
                       <div key={g.id} className="flex items-center justify-between py-3 border-b border-white/5 last:border-0">
@@ -1169,49 +1213,136 @@ export default function Dashboard() {
                           <div className="text-sm font-medium">{g.name}</div>
                           <div className="text-xs text-muted-foreground mt-0.5">{g.member_count} members · {g.topic}</div>
                         </div>
-                        <button
-                          onClick={() => toggleGroupMembership(g.id, g.is_member)}
-                          className={`text-xs px-3 py-1 rounded-full transition-colors ${
-                            g.is_member
-                              ? "bg-blue-500/30 text-blue-300 hover:bg-red-500/30 hover:text-red-300"
-                              : "bg-white/10 hover:bg-white/20"
-                          }`}
-                        >
-                          {g.is_member ? "Joined ✓" : "Join"}
-                        </button>
+                        <div className="flex items-center gap-2">
+                          {g.is_owner && (
+                            <button
+                              onClick={() => { if (confirm(`Delete group "${g.name}"?`)) deleteGroup(g.id); }}
+                              className="text-xs px-2 py-1 rounded-full bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors"
+                              title="Delete your group"
+                            >
+                              🗑️
+                            </button>
+                          )}
+                          {!g.is_owner && (
+                            <button
+                              onClick={() => toggleGroupMembership(g.id, g.is_member)}
+                              className={`text-xs px-3 py-1 rounded-full transition-colors ${
+                                g.is_member
+                                  ? "bg-blue-500/30 text-blue-300 hover:bg-red-500/30 hover:text-red-300"
+                                  : "bg-white/10 hover:bg-white/20"
+                              }`}
+                            >
+                              {g.is_member ? "Joined ✓" : "Join"}
+                            </button>
+                          )}
+                          {g.is_owner && (
+                            <span className="text-xs px-2 py-1 rounded-full bg-purple-500/20 text-purple-300">Owner</span>
+                          )}
+                        </div>
                       </div>
                     ))
                   )}
                 </div>
 
-                {/* Upcoming Events – real Supabase data */}
+                {/* Upcoming Events – real Supabase data with auto-expiry */}
                 <div className="p-6 rounded-3xl border border-border bg-white/5">
-                  <div className="flex items-center gap-3 mb-6">
-                    <BookOpen className="text-green-400" size={24} />
-                    <h3 className="text-xl font-display">Upcoming Events</h3>
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-3">
+                      <BookOpen className="text-green-400" size={24} />
+                      <h3 className="text-xl font-display">Upcoming Events</h3>
+                    </div>
+                    <button
+                      onClick={() => setShowCreateEvent(!showCreateEvent)}
+                      className="text-xs px-3 py-1.5 rounded-full bg-green-500/20 text-green-300 hover:bg-green-500/30 transition-colors flex items-center gap-1"
+                    >
+                      {showCreateEvent ? "✕ Cancel" : "+ Add Event"}
+                    </button>
                   </div>
+
+                  {/* Create Event Form */}
+                  {showCreateEvent && (
+                    <div className="mb-4 p-4 rounded-2xl bg-white/5 border border-green-500/20 space-y-3">
+                      <input
+                        type="text" placeholder="Event title" maxLength={80}
+                        value={newEventForm.title} onChange={(e) => setNewEventForm(f => ({ ...f, title: e.target.value }))}
+                        className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-green-400"
+                      />
+                      <input
+                        type="text" placeholder="Speaker / Host name" maxLength={60}
+                        value={newEventForm.speaker} onChange={(e) => setNewEventForm(f => ({ ...f, speaker: e.target.value }))}
+                        className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-green-400"
+                      />
+                      <select
+                        value={newEventForm.type} onChange={(e) => setNewEventForm(f => ({ ...f, type: e.target.value }))}
+                        className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-green-400"
+                      >
+                        {["Masterclass","Workshop","Practice Session","Hackathon","Contest","Interview Prep"].map(t => (
+                          <option key={t} value={t}>{t}</option>
+                        ))}
+                      </select>
+                      <div>
+                        <label className="text-xs text-muted-foreground mb-1 block">Event Date & Time</label>
+                        <input
+                          type="datetime-local"
+                          value={newEventForm.event_time} onChange={(e) => setNewEventForm(f => ({ ...f, event_time: e.target.value }))}
+                          min={new Date().toISOString().slice(0, 16)}
+                          className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-green-400"
+                        />
+                      </div>
+                      <button
+                        disabled={communityActionLoading || !newEventForm.title.trim() || !newEventForm.event_time}
+                        onClick={async () => {
+                          const ok = await createEvent({ ...newEventForm, event_time: new Date(newEventForm.event_time).toISOString() });
+                          if (ok) { setNewEventForm({ title: "", speaker: "", type: "Masterclass", event_time: "" }); setShowCreateEvent(false); }
+                        }}
+                        className="w-full py-2 bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white text-sm font-semibold rounded-lg transition-colors"
+                      >
+                        {communityActionLoading ? "Saving..." : "Create Event"}
+                      </button>
+                    </div>
+                  )}
+
                   {communityLoading ? (
                     <div className="text-sm text-muted-foreground">Loading events...</div>
                   ) : communityEvents.length === 0 ? (
-                    <div className="text-sm text-muted-foreground">No upcoming events — check back soon!</div>
+                    <div className="text-sm text-muted-foreground">No upcoming events — create one above!</div>
                   ) : (
                     communityEvents.map((e) => (
-                      <div key={e.id} className="py-3 border-b border-white/5 last:border-0">
+                      <div key={e.id} className={`py-3 border-b border-white/5 last:border-0 ${e.is_past ? "opacity-50" : ""}`}>
                         <div className="flex justify-between items-start mb-1">
                           <div className="text-sm font-medium">{e.title}</div>
-                          <span className="text-xs px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 shrink-0 ml-2">{e.type}</span>
+                          <div className="flex items-center gap-1.5 shrink-0 ml-2">
+                            {e.is_past && <span className="text-xs px-2 py-0.5 rounded-full bg-gray-500/20 text-gray-400">Ended</span>}
+                            <span className="text-xs px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300">{e.type}</span>
+                          </div>
                         </div>
-                        <div className="text-xs text-muted-foreground mb-2">{formatEventTime(e.event_time)} · {e.attendee_count} attending</div>
-                        <button
-                          onClick={() => toggleEventRsvp(e.id, e.is_rsvpd)}
-                          className={`text-xs px-3 py-1 rounded-full transition-colors ${
-                            e.is_rsvpd
-                              ? "bg-green-500/30 text-green-300 hover:bg-red-500/30 hover:text-red-300"
-                              : "bg-white/10 hover:bg-white/20"
-                          }`}
-                        >
-                          {e.is_rsvpd ? "RSVP'd ✓" : "RSVP"}
-                        </button>
+                        <div className="text-xs text-muted-foreground mb-2">{formatEventTime(e.event_time)} · {e.attendee_count} attending · {e.speaker}</div>
+                        <div className="flex items-center gap-2">
+                          {!e.is_past && !e.is_owner && (
+                            <button
+                              onClick={() => toggleEventRsvp(e.id, e.is_rsvpd)}
+                              className={`text-xs px-3 py-1 rounded-full transition-colors ${
+                                e.is_rsvpd
+                                  ? "bg-green-500/30 text-green-300 hover:bg-red-500/30 hover:text-red-300"
+                                  : "bg-white/10 hover:bg-white/20"
+                              }`}
+                            >
+                              {e.is_rsvpd ? "RSVP'd ✓" : "RSVP"}
+                            </button>
+                          )}
+                          {e.is_owner && (
+                            <>
+                              <span className="text-xs px-2 py-1 rounded-full bg-green-500/20 text-green-300">Your Event</span>
+                              <button
+                                onClick={() => { if (confirm(`Delete event "${e.title}"?`)) deleteEvent(e.id); }}
+                                className="text-xs px-2 py-1 rounded-full bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors"
+                                title="Delete this event"
+                              >
+                                🗑️
+                              </button>
+                            </>
+                          )}
+                        </div>
                       </div>
                     ))
                   )}
