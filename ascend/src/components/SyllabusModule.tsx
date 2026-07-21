@@ -907,8 +907,43 @@ interface SyllabusModuleProps {
   syllabusData?: any[] | null;
 }
 
+function normalizePhase(phase: any): { title: string; desc: string; concepts: { name: string; questions: string[] }[] } {
+  const rawConcepts = phase.concepts || phase.items || phase.syllabus_items || [];
+  const concepts = rawConcepts.map((c: any) => {
+    const name = c.name || c.title || "Topic";
+    const questions = Array.isArray(c.questions) && c.questions.length > 0
+      ? c.questions
+      : [c.title || c.name || "Master concept & practice questions"];
+    return { name, questions };
+  });
+
+  return {
+    title: phase.title || `Level ${phase.level_number || phase.level || ''}`,
+    desc: phase.desc || phase.description || '',
+    concepts,
+  };
+}
+
 export default function SyllabusModule({ completedModules, onSelectConcept, syllabusData }: SyllabusModuleProps) {
-  const activeSyllabus = syllabusData && syllabusData.length > 0 ? syllabusData : syllabus;
+  // If branch technical syllabus is provided, merge it into Level 8 (Technical Domain) while keeping common Aptitude, DSA, CS, HR levels
+  const activeSyllabus = React.useMemo(() => {
+    const normalizedDefault = syllabus.map(normalizePhase);
+
+    if (!syllabusData || syllabusData.length === 0) {
+      return normalizedDefault;
+    }
+
+    const normalizedBranchData = syllabusData.map(normalizePhase);
+
+    // If branch data has levels, replace Level 8 (AI/Cloud) & Level 9 (Projects) with branch specialized levels
+    const merged = [...normalizedDefault];
+    // Level 8 index is 8
+    if (normalizedBranchData.length > 0) {
+      merged.splice(8, 2, ...normalizedBranchData);
+    }
+    return merged;
+  }, [syllabusData]);
+
   const [expandedPhase, setExpandedPhase] = useState<number | null>(0);
   const [expandedConcept, setExpandedConcept] = useState<string | null>(null);
 
@@ -919,7 +954,7 @@ export default function SyllabusModule({ completedModules, onSelectConcept, syll
       <div className="sticky top-0 bg-background/95 backdrop-blur-md pt-2 pb-6 z-20 border-b border-white/5 mb-6">
         <h2 className="text-2xl font-display mb-1">Career Roadmap</h2>
         <p className="text-sm text-muted-foreground">
-          Phase 0 → Level 15 · Read, Solve & Master before unlocking next level.
+          Phase 0 → Level {activeSyllabus.length - 1} · Read, Solve & Master before unlocking next level.
         </p>
       </div>
 
@@ -931,6 +966,9 @@ export default function SyllabusModule({ completedModules, onSelectConcept, syll
           const isActive = i === completedModules;
           const isLocked = i > completedModules;
           const isExpanded = expandedPhase === i;
+          
+          const concepts = phase.concepts;
+          const desc = phase.desc;
 
           return (
             <motion.div
@@ -970,7 +1008,7 @@ export default function SyllabusModule({ completedModules, onSelectConcept, syll
                     )}
                   </div>
                   <p className="text-sm text-muted-foreground mt-1 leading-relaxed pr-4">
-                    {phase.desc}
+                    {desc}
                   </p>
                 </div>
 
@@ -983,7 +1021,7 @@ export default function SyllabusModule({ completedModules, onSelectConcept, syll
                         <p className="text-xs text-muted-foreground mt-1">Check off the items below, then get your AI score.</p>
                       </div>
                       <button
-                        onClick={() => calculateScore(phase.concepts.reduce((acc: number, c: any) => acc + c.questions.length, 0))}
+                        onClick={() => calculateScore(concepts.reduce((acc: number, c: any) => acc + (c.questions?.length || 0), 0))}
                         disabled={calculating || loading}
                         className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-sm font-semibold rounded-lg flex items-center gap-2 transition-colors"
                       >
@@ -1027,7 +1065,7 @@ export default function SyllabusModule({ completedModules, onSelectConcept, syll
                       className="overflow-hidden mt-4"
                     >
                       <div className="space-y-3">
-                        {phase.concepts.map((concept: any, ci: number) => {
+                        {concepts.map((concept: any, ci: number) => {
                           const key = `${i}-${ci}`;
                           const conceptOpen = expandedConcept === key;
                           return (
@@ -1041,7 +1079,7 @@ export default function SyllabusModule({ completedModules, onSelectConcept, syll
                                   <BookOpen size={14} className="text-blue-400 shrink-0" />
                                   <span className="text-sm font-medium">{concept.name}</span>
                                   <span className="text-xs text-muted-foreground bg-white/10 px-2 py-0.5 rounded-full">
-                                    {concept.questions.length} Q
+                                    {concept.questions?.length || 0} Q
                                   </span>
                                 </div>
                                 {conceptOpen ? (
@@ -1070,7 +1108,7 @@ export default function SyllabusModule({ completedModules, onSelectConcept, syll
                                         </button>
                                       </div>
                                       <ol className="space-y-2">
-                                        {concept.questions.map((q: any, qi: number) => {
+                                        {(concept.questions || []).map((q: any, qi: number) => {
                                           const itemId = `${phase.title}-${concept.name}-${qi}`;
                                           const isChecked = checkedItems[itemId] || false;
                                           return (
