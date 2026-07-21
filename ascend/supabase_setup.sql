@@ -310,3 +310,68 @@ ALTER TABLE placement_readiness_history ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "User owns own placement_checklist" ON placement_checklist USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
 CREATE POLICY "User owns own placement_readiness_history" ON placement_readiness_history USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+
+-- ============================================================
+-- Community Hub Tables
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS study_groups (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  topic TEXT NOT NULL,
+  description TEXT NOT NULL,
+  icon TEXT NOT NULL,
+  color TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS study_group_members (
+  group_id UUID REFERENCES study_groups(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  joined_at TIMESTAMPTZ DEFAULT NOW(),
+  PRIMARY KEY (group_id, user_id)
+);
+
+CREATE TABLE IF NOT EXISTS community_events (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title TEXT NOT NULL,
+  speaker TEXT NOT NULL,
+  type TEXT NOT NULL,
+  event_time TIMESTAMPTZ NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS event_rsvps (
+  event_id UUID REFERENCES community_events(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  rsvp_at TIMESTAMPTZ DEFAULT NOW(),
+  PRIMARY KEY (event_id, user_id)
+);
+
+ALTER TABLE study_groups ENABLE ROW LEVEL SECURITY;
+ALTER TABLE study_group_members ENABLE ROW LEVEL SECURITY;
+ALTER TABLE community_events ENABLE ROW LEVEL SECURITY;
+ALTER TABLE event_rsvps ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Public read study_groups" ON study_groups FOR SELECT USING (true);
+CREATE POLICY "Public read community_events" ON community_events FOR SELECT USING (true);
+CREATE POLICY "Public read study_group_members" ON study_group_members FOR SELECT USING (true);
+CREATE POLICY "Public read event_rsvps" ON event_rsvps FOR SELECT USING (true);
+
+CREATE POLICY "Users can join groups" ON study_group_members FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Users can RSVP to events" ON event_rsvps FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+
+-- Insert starter groups
+INSERT INTO study_groups (name, topic, description, icon, color) VALUES
+('FAANG Prep 2024', 'Data Structures & Algorithms', 'Daily LeetCode discussions and weekend mock interviews.', 'target', 'blue'),
+('SQL Masters', 'Database Design', 'Mastering complex queries and system design concepts.', 'database', 'green'),
+('Frontend Geniuses', 'React & Next.js', 'Building UI clones and discussing the latest React patterns.', 'layout', 'purple'),
+('Aptitude Crackers', 'Quantitative', 'Solving speed math and logical reasoning puzzles.', 'calculator', 'orange')
+ON CONFLICT DO NOTHING;
+
+-- Insert starter events (set for upcoming days)
+INSERT INTO community_events (title, speaker, type, event_time) VALUES
+('Cracking the System Design Round', 'Sarah Jenkins (Ex-Meta)', 'Masterclass', NOW() + INTERVAL '1 day'),
+('Resume Review Workshop', 'David Chen (Recruiter)', 'Workshop', NOW() + INTERVAL '3 days'),
+('Mock Interview: React & JS', 'Peer to Peer', 'Practice Session', NOW() + INTERVAL '5 days')
+ON CONFLICT DO NOTHING;

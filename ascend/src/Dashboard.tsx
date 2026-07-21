@@ -11,6 +11,20 @@ import SyllabusModule from "./components/SyllabusModule";
 import DailyChallenge from "./components/DailyChallenge";
 import { useAuth } from "./context/AuthContext";
 import { supabase } from "./lib/supabase";
+import { useCommunityHub } from "./hooks/useCommunityHub";
+
+function formatEventTime(isoString: string): string {
+  const date = new Date(isoString);
+  const now = new Date();
+  const tomorrow = new Date(now);
+  tomorrow.setDate(now.getDate() + 1);
+  const isToday = date.toDateString() === now.toDateString();
+  const isTomorrow = date.toDateString() === tomorrow.toDateString();
+  const timeStr = date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  if (isToday) return `Today, ${timeStr}`;
+  if (isTomorrow) return `Tomorrow, ${timeStr}`;
+  return date.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" }) + `, ${timeStr}`;
+}
 
 type Tab = "dashboard" | "roadmap" | "daily" | "mock" | "companies" | "community" | "resume";
 
@@ -160,6 +174,9 @@ export default function Dashboard() {
   const [activeTab, setActiveTab] = useState<Tab>("dashboard");
   const [challengeCompleted, setChallengeCompleted] = useState(false);
   const [leaderboard, setLeaderboard] = useState<{ display_name: string; total_xp: number; user_id: string }[]>([]);
+
+  // Community Hub – real Supabase data
+  const { groups: studyGroups, events: communityEvents, loading: communityLoading, toggleGroupMembership, toggleEventRsvp } = useCommunityHub();
   const [chatMessages, setChatMessages] = useState<{ from: "ai" | "user"; text: string }[]>([
     { from: "ai", text: `Hey ${profile?.name?.split(" ")[0] || "there"}! 🚀 Ready to tackle Day 1? Today we're focusing on Python Arrays. Try to solve the Two Sum challenge in the Daily tab!` }
   ]);
@@ -1135,42 +1152,69 @@ export default function Dashboard() {
                   )}
                 </div>
 
-                {/* Study Groups */}
+                {/* Study Groups – real Supabase data */}
                 <div className="p-6 rounded-3xl border border-border bg-white/5">
                   <div className="flex items-center gap-3 mb-6">
                     <Users className="text-purple-400" size={24} />
                     <h3 className="text-xl font-display">Active Study Groups</h3>
                   </div>
-                  {["DSA Grind 30 Days", "System Design Masters", "Python Beginners", "Aptitude Warriors"].map((g, i) => (
-                    <div key={i} className="flex items-center justify-between py-3 border-b border-white/5 last:border-0">
-                      <div>
-                        <div className="text-sm font-medium">{g}</div>
-                        <div className="text-xs text-muted-foreground mt-0.5">{[24, 18, 42, 31][i]} members</div>
+                  {communityLoading ? (
+                    <div className="text-sm text-muted-foreground">Loading groups...</div>
+                  ) : studyGroups.length === 0 ? (
+                    <div className="text-sm text-muted-foreground">No groups yet — check back soon!</div>
+                  ) : (
+                    studyGroups.map((g) => (
+                      <div key={g.id} className="flex items-center justify-between py-3 border-b border-white/5 last:border-0">
+                        <div>
+                          <div className="text-sm font-medium">{g.name}</div>
+                          <div className="text-xs text-muted-foreground mt-0.5">{g.member_count} members · {g.topic}</div>
+                        </div>
+                        <button
+                          onClick={() => toggleGroupMembership(g.id, g.is_member)}
+                          className={`text-xs px-3 py-1 rounded-full transition-colors ${
+                            g.is_member
+                              ? "bg-blue-500/30 text-blue-300 hover:bg-red-500/30 hover:text-red-300"
+                              : "bg-white/10 hover:bg-white/20"
+                          }`}
+                        >
+                          {g.is_member ? "Joined ✓" : "Join"}
+                        </button>
                       </div>
-                      <button className="text-xs px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 transition-colors">Join</button>
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </div>
 
-                {/* Upcoming Events */}
+                {/* Upcoming Events – real Supabase data */}
                 <div className="p-6 rounded-3xl border border-border bg-white/5">
                   <div className="flex items-center gap-3 mb-6">
                     <BookOpen className="text-green-400" size={24} />
                     <h3 className="text-xl font-display">Upcoming Events</h3>
                   </div>
-                  {[
-                    { title: "Weekly Coding Battle", date: "Tomorrow, 8 PM", tag: "Contest" },
-                    { title: "System Design Hackathon", date: "Sat, Jul 26", tag: "Hackathon" },
-                    { title: "Mock Interview Marathon", date: "Sun, Jul 27", tag: "Interview" },
-                  ].map((e, i) => (
-                    <div key={i} className="py-3 border-b border-white/5 last:border-0">
-                      <div className="flex justify-between items-start">
-                        <div className="text-sm font-medium">{e.title}</div>
-                        <span className="text-xs px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300">{e.tag}</span>
+                  {communityLoading ? (
+                    <div className="text-sm text-muted-foreground">Loading events...</div>
+                  ) : communityEvents.length === 0 ? (
+                    <div className="text-sm text-muted-foreground">No upcoming events — check back soon!</div>
+                  ) : (
+                    communityEvents.map((e) => (
+                      <div key={e.id} className="py-3 border-b border-white/5 last:border-0">
+                        <div className="flex justify-between items-start mb-1">
+                          <div className="text-sm font-medium">{e.title}</div>
+                          <span className="text-xs px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 shrink-0 ml-2">{e.type}</span>
+                        </div>
+                        <div className="text-xs text-muted-foreground mb-2">{formatEventTime(e.event_time)} · {e.attendee_count} attending</div>
+                        <button
+                          onClick={() => toggleEventRsvp(e.id, e.is_rsvpd)}
+                          className={`text-xs px-3 py-1 rounded-full transition-colors ${
+                            e.is_rsvpd
+                              ? "bg-green-500/30 text-green-300 hover:bg-red-500/30 hover:text-red-300"
+                              : "bg-white/10 hover:bg-white/20"
+                          }`}
+                        >
+                          {e.is_rsvpd ? "RSVP'd ✓" : "RSVP"}
+                        </button>
                       </div>
-                      <div className="text-xs text-muted-foreground mt-1">{e.date}</div>
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </div>
               </div>
             </motion.div>
