@@ -1,0 +1,10 @@
+{
+  "name": "ai-career-os",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "build": "cd ascend && npm install && npm run build",
+    "dev": "cd ascend && npm run dev",
+    "preview": "cd ascend && npm run preview"
+  }
+}
