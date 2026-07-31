@@ -9,6 +9,17 @@ export interface VideoLink {
   url: string;
 }
 
+export interface ComparisonTable {
+  headers: string[];
+  rows: string[][];
+}
+
+export interface AuthorReference {
+  author: string;
+  bookTitle: string;
+  coreInsight: string;
+}
+
 export interface BranchModuleData {
   moduleTitle: string;
   level: string;
@@ -16,6 +27,15 @@ export interface BranchModuleData {
   videos: VideoLink[];
   studyMaterial: {
     summary: string;
+    deepDiveTextbook?: string; // Comprehensive textbook chapter content
+    authorReferences?: AuthorReference[];
+    comparisonTable?: ComparisonTable;
+    flowchartSteps?: string[];
+    concept3DSimulation?: {
+      title: string;
+      description: string;
+      interactiveNodes: { name: string; type: string; details: string }[];
+    };
     keyPoints: string[];
     example: string;
     complexity?: string;

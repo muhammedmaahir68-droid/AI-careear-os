@@ -1013,18 +1013,122 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
                 </div>
               )}
 
-              {/* ── STUDY MATERIAL ── */}
+              {/* ── STUDY MATERIAL (ZERO-TO-HERO ADVANCED EDITION) ── */}
               {currentType === "study" && (
-                <div className="space-y-4">
+                <div className="space-y-5">
+                  {/* Comprehensive Overview */}
                   <div className="p-5 rounded-2xl border border-purple-500/30 bg-purple-500/5">
-                    <div className="flex items-center gap-2 mb-3">
-                      <BookOpen size={18} className="text-purple-400" />
-                      <h3 className="text-lg font-bold">Study Material</h3>
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <BookOpen size={18} className="text-purple-400" />
+                        <h3 className="text-lg font-bold">Executive Masterclass & Core Fundamentals</h3>
+                      </div>
+                      <span className="text-xs px-2.5 py-1 rounded-full bg-purple-500/20 text-purple-300 font-mono">Zero-to-Hero Placement Spec</span>
                     </div>
-                    <pre className="text-sm text-gray-200 whitespace-pre-wrap leading-relaxed font-sans">{mod.studyMaterial.summary}</pre>
+                    <p className="text-sm text-gray-200 leading-relaxed whitespace-pre-wrap">{mod.studyMaterial.summary}</p>
                   </div>
+
+                  {/* World Top Author Book References */}
+                  {(mod.studyMaterial as any).authorReferences && (mod.studyMaterial as any).authorReferences.length > 0 && (
+                    <div className="p-5 rounded-2xl border border-amber-500/30 bg-amber-500/5">
+                      <h4 className="text-sm font-bold text-amber-400 mb-3 flex items-center gap-2">
+                        <span>📚</span> World Top Author Insights & Reference Library
+                      </h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {((mod.studyMaterial as any).authorReferences as any[]).map((auth: any, ai: number) => (
+                          <div key={ai} className="p-3.5 rounded-xl border border-amber-500/20 bg-black/40 space-y-1">
+                            <p className="text-xs font-bold text-amber-300">{auth.author}</p>
+                            <p className="text-xs text-gray-400 italic">"{auth.bookTitle}"</p>
+                            <p className="text-xs text-gray-200 mt-2">{auth.coreInsight}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Dynamic Visual Flowchart */}
+                  {(mod.studyMaterial as any).flowchartSteps && (mod.studyMaterial as any).flowchartSteps.length > 0 && (
+                    <div className="p-5 rounded-2xl border border-cyan-500/30 bg-cyan-500/5 space-y-3">
+                      <h4 className="text-sm font-bold text-cyan-400 flex items-center gap-2">
+                        <span>🔄</span> Execution Logic & Dynamic Flowchart
+                      </h4>
+                      <div className="flex flex-wrap items-center gap-2 pt-1">
+                        {((mod.studyMaterial as any).flowchartSteps as string[]).map((step: string, si: number) => (
+                          <React.Fragment key={si}>
+                            <div className="px-3.5 py-2 rounded-xl bg-cyan-950 border border-cyan-500/40 text-xs font-mono text-cyan-200 shadow-lg">
+                              {step}
+                            </div>
+                            {si < ((mod.studyMaterial as any).flowchartSteps as string[]).length - 1 && (
+                              <ChevronRight size={16} className="text-cyan-400 shrink-0" />
+                            )}
+                          </React.Fragment>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Interactive Comparison Matrix */}
+                  {(mod.studyMaterial as any).comparisonTable && (
+                    <div className="p-5 rounded-2xl border border-blue-500/30 bg-blue-500/5 space-y-3 overflow-x-auto">
+                      <h4 className="text-sm font-bold text-blue-400 flex items-center gap-2">
+                        <span>📊</span> Trade-off Matrix & Benchmark Comparison
+                      </h4>
+                      <table className="w-full text-left text-xs border-collapse">
+                        <thead>
+                          <tr className="border-b border-blue-500/30 text-blue-300">
+                            {((mod.studyMaterial as any).comparisonTable.headers as string[]).map((h: string, hi: number) => (
+                              <th key={hi} className="p-2 font-bold">{h}</th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-white/10 text-gray-300 font-mono">
+                          {((mod.studyMaterial as any).comparisonTable.rows as string[][]).map((row: string[], ri: number) => (
+                            <tr key={ri} className="hover:bg-white/5 transition-colors">
+                              {row.map((cell: string, ci: number) => (
+                                <td key={ci} className="p-2">{cell}</td>
+                              ))}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+
+                  {/* 3D Concept Visualization Simulation */}
+                  {(mod.studyMaterial as any).concept3DSimulation && (
+                    <div className="p-5 rounded-2xl border border-emerald-500/30 bg-emerald-500/5 space-y-4">
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-sm font-bold text-emerald-400 flex items-center gap-2">
+                          <span>🧊</span> 3D Concept Simulation & Architecture View
+                        </h4>
+                        <span className="text-xs px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono">Interactive Model</span>
+                      </div>
+                      <p className="text-xs text-gray-300">{(mod.studyMaterial as any).concept3DSimulation.description}</p>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+                        {((mod.studyMaterial as any).concept3DSimulation.interactiveNodes as any[]).map((node: any, ni: number) => (
+                          <div key={ni} className="p-3 rounded-xl border border-emerald-500/20 bg-black/50 hover:border-emerald-400/50 transition-all cursor-pointer group">
+                            <span className="text-xs font-mono font-bold text-emerald-400 group-hover:text-emerald-300">{node.name}</span>
+                            <span className="text-[10px] block text-emerald-600 font-semibold uppercase">{node.type}</span>
+                            <p className="text-[11px] text-gray-400 mt-1">{node.details}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Deep Textbook Chapter Content */}
+                  {(mod.studyMaterial as any).deepDiveTextbook && (
+                    <div className="p-5 rounded-2xl border border-white/10 bg-black/40 space-y-3">
+                      <h4 className="text-sm font-bold text-indigo-400 flex items-center gap-2">
+                        <span>📖</span> Comprehensive Placement Textbook Chapter
+                      </h4>
+                      <p className="text-xs text-gray-300 whitespace-pre-wrap leading-relaxed font-sans">{ (mod.studyMaterial as any).deepDiveTextbook }</p>
+                    </div>
+                  )}
+
+                  {/* Key Points */}
                   <div className="p-5 rounded-2xl border border-white/10 bg-white/5">
-                    <h4 className="text-sm font-bold text-yellow-400 mb-3">⚡ Key Points to Remember</h4>
+                    <h4 className="text-sm font-bold text-yellow-400 mb-3">⚡ Key Placement Principles</h4>
                     <ul className="space-y-2">
                       {mod.studyMaterial.keyPoints.map((p, i) => (
                         <li key={i} className="flex gap-2 text-sm text-gray-300">
@@ -1033,15 +1137,19 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
                       ))}
                     </ul>
                   </div>
+
+                  {/* Worked Code Example */}
                   <div className="p-5 rounded-2xl border border-white/10 bg-black/30">
-                    <h4 className="text-sm font-bold text-blue-400 mb-3">📖 Worked Example</h4>
+                    <h4 className="text-sm font-bold text-blue-400 mb-3">💻 Code / Industry Implementation Example</h4>
                     <pre className="text-xs text-green-300 font-mono whitespace-pre-wrap leading-relaxed">{mod.studyMaterial.example}</pre>
                   </div>
+
                   {mod.studyMaterial.complexity && (
                     <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-500/10 border border-orange-500/20 text-xs text-orange-300">
-                      ⏱️ {mod.studyMaterial.complexity}
+                      ⏱️ Complexity Rating: {mod.studyMaterial.complexity}
                     </div>
                   )}
+
                   <button
                     onClick={() => setActiveStep(2)}
                     className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 text-sm font-medium transition-colors"
