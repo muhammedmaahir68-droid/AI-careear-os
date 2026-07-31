@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import SyllabusModule from "./components/SyllabusModule";
 import DailyChallenge from "./components/DailyChallenge";
 import PlacementCertification from "./components/PlacementCertification";
+import { LessonWalkthrough } from "./components/LessonWalkthrough";
 import { useAuth } from "./context/AuthContext";
 import { supabase } from "./lib/supabase";
 import { useCommunityHub } from "./hooks/useCommunityHub";
@@ -29,7 +30,7 @@ function formatEventTime(isoString: string): string {
   return date.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" }) + `, ${timeStr}`;
 }
 
-type Tab = "dashboard" | "roadmap" | "daily" | "mock" | "companies" | "community" | "resume";
+type Tab = "dashboard" | "roadmap" | "walkthrough" | "daily" | "mock" | "companies" | "community" | "resume";
 
 interface CompanyDetails {
   name: string;
@@ -451,6 +452,7 @@ export default function Dashboard() {
   const tabs = [
     { id: "dashboard", label: "Overview", icon: <LayoutDashboard size={18} /> },
     { id: "roadmap", label: "Roadmap", icon: <Map size={18} /> },
+    { id: "walkthrough", label: "Syllabus Walkthrough", icon: <BookOpen size={18} /> },
     { id: "daily", label: "Daily Flow", icon: <Zap size={18} /> },
     { id: "mock", label: "Mock Interview", icon: <Mic size={18} /> },
     { id: "companies", label: "Companies", icon: <Building2 size={18} /> },
@@ -634,12 +636,46 @@ export default function Dashboard() {
           {/* ── ROADMAP ── */}
           {activeTab === "roadmap" && (
             <motion.div key="roadmap" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-2">
+              <div className="lg:col-span-2 space-y-4">
+                <div className="p-5 rounded-2xl border border-blue-500/30 bg-gradient-to-r from-blue-600/10 to-indigo-600/10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                  <div>
+                    <h3 className="text-base font-bold text-white">Prefer Guided Step-by-Step Study?</h3>
+                    <p className="text-xs text-muted-foreground mt-1">Walk through theory, code/formulas, worked examples & MNC tips before testing yourself.</p>
+                  </div>
+                  <button
+                    onClick={() => setActiveTab("walkthrough")}
+                    className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold whitespace-nowrap transition-colors flex items-center gap-1.5 shrink-0"
+                  >
+                    <BookOpen size={14} /> Launch Syllabus Walkthrough
+                  </button>
+                </div>
                 <SyllabusModule
                   completedModules={completedModules}
                   syllabusData={branchSyllabus}
                   onSelectConcept={(conceptName, levelName) => {
                     setSelectedConcept({ name: conceptName, level: levelName });
+                    setActiveTab("daily");
+                  }}
+                />
+              </div>
+              <div className="lg:col-span-1">
+                <AIMentorChat
+                  messages={chatMessages}
+                  chatInput={chatInput}
+                  setChatInput={setChatInput}
+                  onSend={handleSendMessage}
+                />
+              </div>
+            </motion.div>
+          )}
+
+          {/* ── WALKTHROUGH ── */}
+          {activeTab === "walkthrough" && (
+            <motion.div key="walkthrough" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-2">
+                <LessonWalkthrough
+                  branchId={branchId}
+                  onStartQuiz={(level) => {
                     setActiveTab("daily");
                   }}
                 />
