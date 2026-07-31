@@ -4,11 +4,12 @@ import {
   ArrowLeft, Trophy, Flame, Star, MessageSquare,
   ChevronRight, Target, BookOpen, Code2, BarChart3,
   Zap, Users, Medal, CheckCircle2, Send, LayoutDashboard,
-  Map, Mic, FileText, Building2, LogOut, Download, AlertCircle, Play, RefreshCw
+  Map, Mic, FileText, Building2, LogOut, Download, AlertCircle, Play, RefreshCw, Award
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import SyllabusModule from "./components/SyllabusModule";
 import DailyChallenge from "./components/DailyChallenge";
+import PlacementCertification from "./components/PlacementCertification";
 import { useAuth } from "./context/AuthContext";
 import { supabase } from "./lib/supabase";
 import { useCommunityHub } from "./hooks/useCommunityHub";
@@ -175,6 +176,7 @@ export default function Dashboard() {
 
   const [activeTab, setActiveTab] = useState<Tab>("dashboard");
   const [challengeCompleted, setChallengeCompleted] = useState(false);
+  const [showCertification, setShowCertification] = useState(false);
   const [leaderboard, setLeaderboard] = useState<{ display_name: string; total_xp: number; user_id: string }[]>([]);
 
   // Branch and Role selection
@@ -490,6 +492,13 @@ export default function Dashboard() {
               <Trophy className="text-purple-400" size={16} />
               <span className="text-sm font-bold text-purple-300">Level {level}</span>
             </div>
+            <button
+              onClick={() => setShowCertification(true)}
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 font-bold text-xs text-slate-950 shadow-md transition cursor-pointer"
+            >
+              <Award size={15} />
+              <span>Get Certified</span>
+            </button>
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 border-2 border-white/20 flex items-center justify-center text-sm font-bold shrink-0">
                 {avatarInitial}
@@ -559,6 +568,15 @@ export default function Dashboard() {
                   </div>
                   <div className="mt-6 p-4 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-sm text-blue-200">
                     🤖 <strong>AI Recommendation:</strong> Your aptitude is your strongest area! Focus on Coding and DSA next to boost your placement score above 50%.
+                  </div>
+                  <div className="mt-4">
+                    <button
+                      onClick={() => setShowCertification(true)}
+                      className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-600 hover:to-yellow-600 font-bold text-slate-950 text-sm transition shadow-lg shadow-amber-500/20 cursor-pointer"
+                    >
+                      <Award className="w-5 h-5" />
+                      <span>Take Proctored Exit Exam & Claim Placement Certification</span>
+                    </button>
                   </div>
                 </div>
 
@@ -1367,6 +1385,14 @@ export default function Dashboard() {
           )}
         </AnimatePresence>
       </main>
+
+      {showCertification && (
+        <PlacementCertification
+          onClose={() => setShowCertification(false)}
+          userBranch={branchId || "Computer Science Engineering"}
+          userName={profile?.name || "Student Candidate"}
+        />
+      )}
     </div>
   );
 }

@@ -6,6 +6,7 @@ import {
   Building2, Mic, FlaskConical, ChevronDown, ChevronUp, XCircle
 } from "lucide-react";
 import { supabase } from "../lib/supabase";
+import { getDaily40Questions, type QuestionItem } from "../data/questionBank";
 
 interface DailyChallengeProps {
   onComplete: () => void;
@@ -739,6 +740,24 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
   const [showAnswer, setShowAnswer] = useState<number | null>(null);
   const [expandedMock, setExpandedMock] = useState<number | null>(null);
 
+  // 40-Question Daily Challenge State
+  const [viewMode, setViewMode] = useState<"flow" | "quiz40">("flow");
+  const [daily40Questions, setDaily40Questions] = useState<QuestionItem[]>([]);
+  const [daily40Answers, setDaily40Answers] = useState<Record<number, number>>({});
+  const [daily40CurrentIndex, setDaily40CurrentIndex] = useState(0);
+  const [daily40Submitted, setDaily40Submitted] = useState(false);
+  const [daily40Timer, setDaily40Timer] = useState(2400);
+
+  useEffect(() => {
+    setDaily40Questions(getDaily40Questions(1));
+  }, []);
+
+  useEffect(() => {
+    if (viewMode !== "quiz40" || daily40Submitted || daily40Timer <= 0) return;
+    const t = setInterval(() => setDaily40Timer((s) => s - 1), 1000);
+    return () => clearInterval(t);
+  }, [viewMode, daily40Submitted, daily40Timer]);
+
   // Dynamic modules memory cache
   const [dynamicModules, setDynamicModules] = useState<ModuleData[]>([]);
 
@@ -883,21 +902,43 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
           <p className="text-xs text-muted-foreground">Follow all steps to earn XP and unlock next module.</p>
         </div>
         <div className="flex items-center gap-2">
-          <select
-            value={moduleIdx}
-            onChange={e => setModuleIdx(Number(e.target.value))}
-            className="text-xs bg-white/10 border border-white/20 rounded-full px-3 py-1.5 text-white"
-          >
-            {modules.map((m, i) => (
-              <option key={i} value={i} className="bg-[#0d1117]">{m.moduleTitle}</option>
-            ))}
-          </select>
-          <div className="px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 text-xs font-medium border border-blue-500/30">
-            {mod.level}
+          <div className="flex bg-black/40 p-1 rounded-full border border-white/10">
+            <button
+              onClick={() => setViewMode("flow")}
+              className={`px-3 py-1 rounded-full text-xs font-semibold transition cursor-pointer ${
+                viewMode === "flow" ? "bg-white text-black" : "text-slate-400 hover:text-white"
+              }`}
+            >
+              Step-by-Step Flow
+            </button>
+            <button
+              onClick={() => setViewMode("quiz40")}
+              className={`px-3 py-1 rounded-full text-xs font-semibold transition cursor-pointer flex items-center gap-1.5 ${
+                viewMode === "quiz40"
+                  ? "bg-gradient-to-r from-amber-500 to-yellow-600 text-slate-950 font-bold"
+                  : "text-amber-400 hover:text-amber-300"
+              }`}
+            >
+              <span>🔥 Daily 40Q Placement Test</span>
+            </button>
           </div>
+          {viewMode === "flow" && (
+            <select
+              value={moduleIdx}
+              onChange={(e) => setModuleIdx(Number(e.target.value))}
+              className="text-xs bg-white/10 border border-white/20 rounded-full px-3 py-1.5 text-white"
+            >
+              {modules.map((m, i) => (
+                <option key={i} value={i} className="bg-[#0d1117]">
+                  {m.moduleTitle}
+                </option>
+              ))}
+            </select>
+          )}
         </div>
       </div>
 
+      {viewMode === "flow" ? (
       <div className="flex-1 flex gap-4 overflow-hidden">
         {/* Step Sidebar */}
         <div className="w-[200px] shrink-0 border-r border-white/10 pr-3 overflow-y-auto custom-scrollbar space-y-1">
@@ -1325,6 +1366,150 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
           </AnimatePresence>
         </div>
       </div>
+      ) : (
+        <div className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-6 bg-slate-950/40 rounded-2xl border border-white/10">
+          <div className="flex items-center justify-between p-4 rounded-xl bg-gradient-to-r from-amber-500/10 to-yellow-500/10 border border-amber-500/20">
+            <div>
+              <h3 className="text-lg font-bold text-amber-300">Daily 40-Question Adaptive Placement Challenge</h3>
+              <p className="text-xs text-slate-400">Tailored to your current level • 40 Questions</p>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="text-right">
+                <div className="text-xs text-slate-400">Time Remaining</div>
+                <div className="font-mono text-sm font-bold text-amber-400">
+                  {Math.floor(daily40Timer / 60)}:{(daily40Timer % 60).toString().padStart(2, "0")}
+                </div>
+              </div>
+              {!daily40Submitted ? (
+                <button
+                  onClick={() => {
+                    setDaily40Submitted(true);
+                    onComplete();
+                  }}
+                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-600 font-bold text-xs text-slate-950 hover:from-amber-600 hover:to-yellow-700 transition cursor-pointer"
+                >
+                  Submit 40Q Challenge
+                </button>
+              ) : (
+                <div className="px-3 py-1 rounded-lg bg-emerald-500/20 text-emerald-400 text-xs font-bold border border-emerald-500/30">
+                  Completed 🎉
+                </div>
+              )}
+            </div>
+          </div>
+
+          {!daily40Submitted ? (
+            <div className="space-y-6">
+              <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+                <div className="text-xs text-slate-400 mb-2 flex justify-between">
+                  <span>Question Palette (Answered: {Object.keys(daily40Answers).length}/40)</span>
+                  <span>Click any number to jump</span>
+                </div>
+                <div className="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto p-1 custom-scrollbar">
+                  {daily40Questions.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setDaily40CurrentIndex(i)}
+                      className={`w-7 h-7 rounded-lg text-xs font-mono font-bold transition flex items-center justify-center cursor-pointer ${
+                        i === daily40CurrentIndex
+                          ? "bg-amber-500 text-slate-950 ring-2 ring-amber-400"
+                          : daily40Answers[i] !== undefined
+                          ? "bg-emerald-600/30 text-emerald-300 border border-emerald-500/40"
+                          : "bg-slate-800 text-slate-400 hover:bg-slate-700"
+                      }`}
+                    >
+                      {i + 1}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {daily40Questions[daily40CurrentIndex] && (
+                <div className="p-6 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="px-2.5 py-1 rounded-md bg-amber-500/10 text-amber-400 border border-amber-500/20 font-semibold uppercase">
+                      Q{daily40CurrentIndex + 1} • {daily40Questions[daily40CurrentIndex].module} ({daily40Questions[daily40CurrentIndex].topic})
+                    </span>
+                    <span className="text-slate-400 uppercase font-mono">
+                      Level: {daily40Questions[daily40CurrentIndex].difficulty}
+                    </span>
+                  </div>
+
+                  <h4 className="text-base font-semibold text-slate-100 leading-snug">
+                    {daily40Questions[daily40CurrentIndex].prompt}
+                  </h4>
+
+                  {daily40Questions[daily40CurrentIndex].codeSnippet && (
+                    <pre className="p-4 rounded-xl bg-slate-950 font-mono text-xs text-amber-300 overflow-x-auto border border-slate-800">
+                      {daily40Questions[daily40CurrentIndex].codeSnippet}
+                    </pre>
+                  )}
+
+                  <div className="grid grid-cols-1 gap-2.5 pt-2">
+                    {daily40Questions[daily40CurrentIndex].options.map((opt, oIdx) => {
+                      const isSelected = daily40Answers[daily40CurrentIndex] === oIdx;
+                      return (
+                        <button
+                          key={oIdx}
+                          onClick={() => setDaily40Answers((prev) => ({ ...prev, [daily40CurrentIndex]: oIdx }))}
+                          className={`w-full p-3.5 rounded-xl text-left border text-xs transition cursor-pointer flex items-center justify-between ${
+                            isSelected
+                              ? "bg-amber-500/20 border-amber-500 text-amber-200 font-medium"
+                              : "bg-slate-800/60 border-slate-700/50 hover:bg-slate-800 text-slate-300"
+                          }`}
+                        >
+                          <span className="flex items-center gap-3">
+                            <span className={`w-5 h-5 rounded-full border flex items-center justify-center text-[10px] font-bold ${
+                              isSelected ? "border-amber-400 bg-amber-400 text-slate-950" : "border-slate-600 text-slate-400"
+                            }`}>
+                              {String.fromCharCode(65 + oIdx)}
+                            </span>
+                            <span>{opt}</span>
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              <div className="flex justify-between">
+                <button
+                  disabled={daily40CurrentIndex === 0}
+                  onClick={() => setDaily40CurrentIndex((c) => Math.max(0, c - 1))}
+                  className="px-4 py-2 rounded-xl bg-slate-800 text-xs font-semibold text-slate-300 cursor-pointer disabled:opacity-40"
+                >
+                  Previous
+                </button>
+                <button
+                  disabled={daily40CurrentIndex === daily40Questions.length - 1}
+                  onClick={() => setDaily40CurrentIndex((c) => Math.min(daily40Questions.length - 1, c + 1))}
+                  className="px-4 py-2 rounded-xl bg-amber-500 text-xs font-bold text-slate-950 cursor-pointer disabled:opacity-40"
+                >
+                  Next Question
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-6 text-center py-6">
+              <div className="inline-flex p-4 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+                <Trophy className="w-12 h-12" />
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold text-emerald-400">Daily 40-Question Challenge Complete!</h3>
+                <p className="text-slate-300 text-sm mt-1">
+                  You scored <span className="text-amber-400 font-bold">
+                    {daily40Questions.filter((q, i) => daily40Answers[i] === q.correctAnswer).length} / 40
+                  </span> ({Math.round((daily40Questions.filter((q, i) => daily40Answers[i] === q.correctAnswer).length / 40) * 100)}% Accuracy)
+                </p>
+              </div>
+              <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-300 max-w-md mx-auto">
+                🎉 +400 XP awarded! Your daily streak has been updated. Come back tomorrow for your next adaptive 40-question placement session.
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
