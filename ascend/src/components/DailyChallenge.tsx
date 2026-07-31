@@ -3,16 +3,19 @@ import { motion, AnimatePresence } from "motion/react";
 import {
   Play, CheckCircle2, Code2, BookOpen, BrainCircuit, PenTool,
   Bug, HelpCircle, Trophy, BarChart3, ChevronRight, Target,
-  Building2, Mic, FlaskConical, ChevronDown, ChevronUp, XCircle
+  Building2, Mic, FlaskConical, ChevronDown, ChevronUp, XCircle,
+  ExternalLink, Video
 } from "lucide-react";
 import { supabase } from "../lib/supabase";
 import { getDaily40Questions, type QuestionItem } from "../data/questionBank";
+import { getBranchModules, type BranchModuleData, type VideoLink } from "../data/branchModules";
 
 interface DailyChallengeProps {
   onComplete: () => void;
   isCompleted: boolean;
   selectedConcept?: { name: string; level: string } | null;
   onClearSelectedConcept?: () => void;
+  branchId?: string | null;
 }
 
 // ─── TYPES ────────────────────────────────────────────────────────────────────
@@ -729,7 +732,7 @@ print(solve_${conceptName.toLowerCase().replace(/[^a-z0-9]/g, "_")}([3, 1, 4, 1,
 }
 
 // ─── COMPONENT ────────────────────────────────────────────────────────────────
-export default function DailyChallenge({ onComplete, isCompleted, selectedConcept, onClearSelectedConcept }: DailyChallengeProps) {
+export default function DailyChallenge({ onComplete, isCompleted, selectedConcept, onClearSelectedConcept, branchId }: DailyChallengeProps) {
   const [moduleIdx, setModuleIdx] = useState(0);
   const [activeStep, setActiveStep] = useState(0);
   const [code, setCode] = useState("");
@@ -748,9 +751,12 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
   const [daily40Submitted, setDaily40Submitted] = useState(false);
   const [daily40Timer, setDaily40Timer] = useState(2400);
 
+  // Load branch-specific modules
+  const branchModules = getBranchModules(branchId ?? null);
+
   useEffect(() => {
-    setDaily40Questions(getDaily40Questions(1));
-  }, []);
+    setDaily40Questions(getDaily40Questions(1, branchId ?? undefined));
+  }, [branchId]);
 
   useEffect(() => {
     if (viewMode !== "quiz40" || daily40Submitted || daily40Timer <= 0) return;
@@ -761,21 +767,33 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
   // Dynamic modules memory cache
   const [dynamicModules, setDynamicModules] = useState<ModuleData[]>([]);
 
-  // Get active module (checks if dynamic concept was selected from roadmap)
+  // Get active module (checks branch modules first, then legacy, then dynamic)
   const getActiveModule = (): ModuleData => {
     if (selectedConcept) {
-      // Check if it matches a pre-populated module
+      // Check branch-specific modules first
+      const branchMatch = branchModules.find(m => m.moduleTitle.toLowerCase() === selectedConcept.name.toLowerCase());
+      if (branchMatch) return branchMatch as unknown as ModuleData;
+
+      // Check legacy pre-populated modules
       const matched = modules.find(m => m.moduleTitle.toLowerCase() === selectedConcept.name.toLowerCase());
       if (matched) return matched;
 
-      // Check if it already exists in our dynamic cache
+      // Check dynamic cache
       const cached = dynamicModules.find(m => m.moduleTitle.toLowerCase() === selectedConcept.name.toLowerCase());
       if (cached) return cached;
 
       // Generate a new dynamic module
       return generateDynamicModule(selectedConcept.name, selectedConcept.level);
     }
-    return modules[moduleIdx];
+    // Branch modules come first in dropdown, legacy modules after
+    if (moduleIdx < branchModules.length) {
+      return branchModules[moduleIdx] as unknown as ModuleData;
+    }
+    const legacyIdx = moduleIdx - branchModules.length;
+    if (legacyIdx >= 0 && legacyIdx < modules.length) {
+      return modules[legacyIdx];
+    }
+    return branchModules[0] as unknown as ModuleData;
   };
 
   const mod = getActiveModule();
@@ -868,6 +886,7 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
   const steps: { icon: React.ReactNode; title: string; type: StepType }[] = [
     { icon: <Target className="text-blue-400" size={18} />, title: "Daily Goal", type: "goal" },
     { icon: <BookOpen className="text-purple-400" size={18} />, title: "Study Material", type: "study" },
+    { icon: <Video className="text-rose-400" size={18} />, title: "Watch Videos", type: "videos" as StepType },
     { icon: <BrainCircuit className="text-green-400" size={18} />, title: "AI Explain", type: "ai_explain" },
     { icon: <Bug className="text-red-400" size={18} />, title: "Debug Challenge", type: "debug" },
     { icon: <HelpCircle className="text-orange-400" size={18} />, title: "Quiz", type: "quiz" },
@@ -928,8 +947,13 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
               onChange={(e) => setModuleIdx(Number(e.target.value))}
               className="text-xs bg-white/10 border border-white/20 rounded-full px-3 py-1.5 text-white"
             >
-              {modules.map((m, i) => (
+              {branchModules.map((m, i) => (
                 <option key={i} value={i} className="bg-[#0d1117]">
+                  {m.moduleTitle}
+                </option>
+              ))}
+              {modules.map((m, i) => (
+                <option key={`legacy-${i}`} value={branchModules.length + i} className="bg-[#0d1117]">
                   {m.moduleTitle}
                 </option>
               ))}
@@ -1021,6 +1045,56 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
                   <button
                     onClick={() => setActiveStep(2)}
                     className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 text-sm font-medium transition-colors"
+                  >
+                    Next: Watch Videos <ChevronRight size={16} />
+                  </button>
+                </div>
+              )}
+
+              {/* ── WATCH VIDEOS (ALL INDIAN LANGUAGES) ── */}
+              {currentType === ("videos" as StepType) && (
+                <div className="space-y-4">
+                  <div className="p-5 rounded-2xl border border-rose-500/30 bg-rose-500/5">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Video size={18} className="text-rose-400" />
+                      <h3 className="text-lg font-bold">🎬 Watch Video Tutorials</h3>
+                    </div>
+                    <p className="text-xs text-muted-foreground mb-4">Learn {mod.moduleTitle} in your preferred language — click any link to watch on YouTube.</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {((mod as any).videos ?? []).length > 0 ? (
+                        ((mod as any).videos as VideoLink[]).map((v: VideoLink, vi: number) => (
+                          <a
+                            key={vi}
+                            href={v.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-3 p-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-rose-400/40 transition-all group"
+                          >
+                            <span className="text-lg">{v.flag}</span>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium text-white group-hover:text-rose-300 transition-colors truncate">{v.language}</p>
+                              <p className="text-xs text-gray-400 truncate">{v.title}</p>
+                            </div>
+                            <ExternalLink size={14} className="text-gray-500 group-hover:text-rose-400 shrink-0" />
+                          </a>
+                        ))
+                      ) : (
+                        <div className="col-span-2 text-center py-6 text-gray-400 text-sm">
+                          <p>🔍 Video links are being prepared for this module.</p>
+                          <a
+                            href={`https://www.youtube.com/results?search_query=${encodeURIComponent(mod.moduleTitle + " tutorial")}`}
+                            target="_blank" rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 mt-2 text-rose-400 hover:text-rose-300 underline"
+                          >
+                            Search on YouTube <ExternalLink size={12} />
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setActiveStep(3)}
+                    className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 text-sm font-medium transition-colors"
                   >
                     Next: AI Explanation <ChevronRight size={16} />
                   </button>

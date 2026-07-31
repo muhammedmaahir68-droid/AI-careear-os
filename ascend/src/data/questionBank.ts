@@ -557,7 +557,28 @@ for (let i = 11; i <= 210; i++) {
   });
 }
 
+// ─── DATE-SEEDED PSEUDO-RANDOM ───────────────────────────────────────────────
+// Deterministic shuffle: same date = same question set all day; new date = new questions.
+function seededRandom(seed: number): () => number {
+  let state = seed;
+  return () => {
+    state = (state * 1664525 + 1013904223) & 0x7fffffff;
+    return state / 0x7fffffff;
+  };
+}
+
+function dateSeed(): number {
+  const today = new Date();
+  const dateStr = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+  let hash = 0;
+  for (let i = 0; i < dateStr.length; i++) {
+    hash = ((hash << 5) - hash + dateStr.charCodeAt(i)) | 0;
+  }
+  return Math.abs(hash);
+}
+
 // Helper to filter questions by level, branch, topic, or count (Adaptive 40 Questions)
+// NOW DATE-SEEDED: questions rotate every calendar day automatically.
 export function getDaily40Questions(userLevel: number, userBranch?: string): QuestionItem[] {
   let available = QUESTION_BANK;
   if (userBranch) {
@@ -565,16 +586,23 @@ export function getDaily40Questions(userLevel: number, userBranch?: string): Que
     if (branchSpecific.length >= 10) available = branchSpecific;
   }
 
-  const selected: QuestionItem[] = [];
-  let pool = [...available];
+  // Deterministic shuffle based on today's date
+  const rand = seededRandom(dateSeed() + userLevel);
+  const pool = [...available];
 
-  while (selected.length < 40) {
-    if (pool.length === 0) pool = [...available];
-    const randomIndex = Math.floor(Math.random() * pool.length);
-    const item = pool.splice(randomIndex, 1)[0];
+  // Fisher-Yates shuffle with seeded random
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+
+  // Pick first 40 (or wrap if pool < 40)
+  const selected: QuestionItem[] = [];
+  for (let k = 0; k < 40; k++) {
+    const item = pool[k % pool.length];
     selected.push({
       ...item,
-      id: `${item.id}-${selected.length + 1}`
+      id: `daily-${item.id}-${k + 1}`
     });
   }
 

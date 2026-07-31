@@ -16,6 +16,7 @@ import { supabase } from "./lib/supabase";
 import { useCommunityHub } from "./hooks/useCommunityHub";
 import { useBranchRole, useRoleContent } from "./hooks/useBranchRole";
 import BranchRolePicker from "./components/BranchRolePicker";
+import { getBranchCompanies, type CompanyTrack } from "./data/companyData";
 
 function formatEventTime(isoString: string): string {
   const date = new Date(isoString);
@@ -677,6 +678,7 @@ export default function Dashboard() {
                   isCompleted={challengeCompleted}
                   selectedConcept={selectedConcept}
                   onClearSelectedConcept={() => setSelectedConcept(null)}
+                  branchId={branchId}
                 />
               </div>
               <div className="lg:col-span-1">
@@ -834,28 +836,29 @@ export default function Dashboard() {
             <motion.div key="companies" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
               {!selectedCompany ? (
                 <>
-                  <h2 className="text-3xl font-display mb-2">Company Preparation Tracks</h2>
-                  <p className="text-muted-foreground mb-8">Dedicated roadmaps with previous interview questions, coding rounds, aptitude, and HR questions.</p>
+                  <h2 className="text-3xl font-display mb-2">Target Companies for {branchId ? branchId.toUpperCase() : "All Engineering"}</h2>
+                  <p className="text-muted-foreground mb-8">Curated company preparation tracks tailored for your department with actual interview questions, coding tests, and HR rounds.</p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                    {COMPANY_TRACKS.map((c, i) => (
+                    {getBranchCompanies(branchId).map((c, i) => (
                       <motion.div
                         key={i}
                         whileHover={{ scale: 1.03 }}
                         onClick={() => {
-                          setSelectedCompany(c);
+                          setSelectedCompany(c as any);
                           setSelectedCompanyAptAnswer(null);
                           setCompanyAptChecked(false);
-                          setCompanyCodingUserSolution("def solve():\n    pass");
+                          setCompanyCodingUserSolution(c.codingQuestion?.starter || "def solve():\n    pass");
                           setCompanyCodingOutput("");
                         }}
-                        className={`p-6 rounded-3xl border bg-gradient-to-br ${c.color} ${c.border} cursor-pointer`}
+                        className={`p-6 rounded-3xl border bg-gradient-to-br ${c.color.includes('from-') ? c.color : 'from-blue-600/20 to-indigo-600/20'} border-white/10 cursor-pointer`}
                       >
                         <div className="text-4xl mb-4">{c.logo}</div>
-                        <h3 className="text-xl font-display mb-2">{c.name}</h3>
+                        <h3 className="text-xl font-display mb-1">{c.name}</h3>
+                        <p className="text-xs text-yellow-400 font-semibold mb-3">{c.avgPackage}</p>
                         <ul className="text-xs text-muted-foreground space-y-1 mb-5">
-                          <li>• Previous questions</li>
-                          <li>• Coding rounds</li>
-                          <li>• Mock test</li>
+                          {c.roles.slice(0, 3).map((r, ri) => (
+                            <li key={ri}>• {r}</li>
+                          ))}
                         </ul>
                         <div className="inline-flex items-center gap-2 text-sm font-semibold text-white/80 hover:text-white">
                           View Track <ChevronRight size={14} />
