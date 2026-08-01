@@ -1,6 +1,7 @@
 import React, { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 // Keep each route independent so visitors download only the screen they open.
 const VelorahHero = lazy(() => import("./VelorahHero.tsx"));
 const LoginPage = lazy(() => import("./pages/LoginPage.tsx"));
@@ -27,20 +28,24 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Suspense fallback={<PageLoader />}>
-          <Routes>
-            <Route path="/" element={<VelorahHero />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/dashboard" element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            } />
-          </Routes>
-        </Suspense>
-      </BrowserRouter>
-    </AuthProvider>
+    <ErrorBoundary>
+      <AuthProvider>
+        <BrowserRouter>
+          <Suspense fallback={<PageLoader />}>
+            <Routes>
+              <Route path="/" element={<VelorahHero />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/dashboard" element={
+                <ProtectedRoute>
+                  <ErrorBoundary>
+                    <Dashboard />
+                  </ErrorBoundary>
+                </ProtectedRoute>
+              } />
+            </Routes>
+          </Suspense>
+        </BrowserRouter>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }
