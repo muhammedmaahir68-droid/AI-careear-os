@@ -105,6 +105,43 @@ const CSE_COMPANIES: CompanyTrack[] = [
   }
 ];
 
+// ─── IT ──────────────────────────────────────────────────────────────────────
+const IT_COMPANIES: CompanyTrack[] = [
+  {
+    name: "TCS", logo: "🔷", color: "from-blue-500 to-indigo-600", difficulty: "Medium",
+    roles: ["System Engineer", "QA Engineer", "IT Analyst"],
+    avgPackage: "₹3.5-7 LPA", rounds: ["NQT (Aptitude + Coding)", "Technical Interview", "HR Interview"],
+    codingQuestion: { title: "Reverse a Linked List", desc: "Reverse a singly linked list iteratively.", difficulty: "Easy", starter: `def reverse_list(head):\n    prev = None\n    # iterate and relink\n    return prev` },
+    interviewQuestions: [
+      { round: "Technical", question: "Explain the difference between SDLC models: Waterfall vs Agile", tip: "Waterfall is sequential and rigid; Agile is iterative with sprints and continuous feedback." },
+      { round: "Technical", question: "What is normalization in databases? Explain up to 3NF", tip: "1NF: atomic values. 2NF: no partial dependency. 3NF: no transitive dependency." },
+      { round: "HR", question: "Why do you want to join TCS as a System Engineer?", tip: "Focus on learning opportunities, project diversity, and long-term growth." }
+    ]
+  },
+  {
+    name: "Infosys", logo: "🔵", color: "from-blue-600 to-cyan-500", difficulty: "Medium",
+    roles: ["System Engineer", "Power Programmer", "Test Engineer"],
+    avgPackage: "₹4-9.5 LPA", rounds: ["Online Test (Aptitude + Coding)", "Technical", "HR"],
+    codingQuestion: { title: "Check for Palindrome", desc: "Write a function to check if a string is a palindrome, ignoring case and non-alphanumeric characters.", difficulty: "Easy", starter: `def is_palindrome(s: str) -> bool:\n    # clean, compare with reverse\n    pass` },
+    interviewQuestions: [
+      { round: "Technical", question: "What is REST API? Explain its key principles", tip: "Stateless, resource-based URLs, standard HTTP verbs, representations (usually JSON)." },
+      { round: "Technical", question: "Explain the OSI model layers", tip: "7 layers: Physical, Data Link, Network, Transport, Session, Presentation, Application." },
+      { round: "HR", question: "Are you comfortable relocating for this role?", tip: "Answer honestly, tie it to career growth reasoning." }
+    ]
+  },
+  {
+    name: "Zoho", logo: "🟠", color: "from-red-500 to-orange-500", difficulty: "Hard",
+    roles: ["Member of Technical Staff", "QA Engineer", "Support Engineer"],
+    avgPackage: "₹6-12 LPA", rounds: ["Written Test (Aptitude + Coding + Puzzles)", "2-3 Technical Rounds", "HR"],
+    codingQuestion: { title: "Find Duplicate in Array", desc: "Given an array of n+1 integers where each integer is between 1 and n, find the duplicate.", difficulty: "Medium", starter: `def find_duplicate(nums):\n    # Floyd's cycle detection or hashing\n    pass` },
+    interviewQuestions: [
+      { round: "Technical", question: "Explain how a hash table handles collisions", tip: "Chaining (linked list per bucket) or open addressing (linear/quadratic probing, double hashing)." },
+      { round: "Puzzle", question: "You have 8 identical-looking balls, one heavier. Find it in 2 weighings", tip: "Split into groups of 3-3-2, weigh 3 vs 3 first to narrow down." },
+      { round: "Technical", question: "What happens when you type a URL into a browser and hit Enter?", tip: "DNS resolution, TCP handshake, TLS, HTTP request, server processing, response render." }
+    ]
+  }
+];
+
 // ─── ECE ─────────────────────────────────────────────────────────────────────
 const ECE_COMPANIES: CompanyTrack[] = [
   {
@@ -308,12 +345,51 @@ const AIML_COMPANIES: CompanyTrack[] = [
   }
 ];
 
+// ─── AIDS ────────────────────────────────────────────────────────────────────
+const AIDS_COMPANIES: CompanyTrack[] = [
+  {
+    name: "Mu Sigma", logo: "📈", color: "from-teal-600 to-cyan-600", difficulty: "Medium",
+    roles: ["Decision Scientist", "Data Analyst", "Business Analyst"],
+    avgPackage: "₹8-14 LPA", rounds: ["Aptitude + Puzzles", "Case Study + SQL", "Technical + HR"],
+    codingQuestion: { title: "SQL: Second Highest Salary", desc: "Write a query to find the second highest salary from an Employee table.", difficulty: "Easy", starter: `SELECT MAX(salary) AS second_highest\nFROM employee\nWHERE salary < (SELECT MAX(salary) FROM employee);` },
+    interviewQuestions: [
+      { round: "Case Study", question: "How would you measure the success of a new feature launch?", tip: "Define north-star metric, guardrail metrics, A/B test design, statistical significance." },
+      { round: "Technical", question: "Explain the difference between supervised and unsupervised learning with examples", tip: "Supervised: labeled data, classification/regression. Unsupervised: clustering, dimensionality reduction." },
+      { round: "Technical", question: "What is A/B testing and how do you determine sample size?", tip: "Power analysis based on effect size, significance level, and desired statistical power." }
+    ]
+  },
+  {
+    name: "LatentView Analytics", logo: "🔍", color: "from-indigo-600 to-purple-600", difficulty: "Medium",
+    roles: ["Data Analyst", "ML Engineer", "Business Intelligence Analyst"],
+    avgPackage: "₹7-13 LPA", rounds: ["Aptitude + SQL Test", "Case Study", "Technical + HR"],
+    codingQuestion: { title: "Pandas: Group and Aggregate", desc: "Given sales data, compute total revenue per region using pandas groupby.", difficulty: "Easy", starter: `import pandas as pd\ndef revenue_by_region(df):\n    # df.groupby(...).sum()\n    pass` },
+    interviewQuestions: [
+      { round: "Technical", question: "Explain precision, recall, and F1-score with a real example", tip: "Precision: of predicted positives, how many correct. Recall: of actual positives, how many caught. F1 balances both." },
+      { round: "Case Study", question: "A dashboard shows declining daily active users. How do you investigate?", tip: "Segment by cohort, platform, geography; check for tracking bugs before assuming real decline." },
+      { round: "Technical", question: "What is data leakage in machine learning and how do you prevent it?", tip: "Leakage happens when training data includes information unavailable at prediction time; prevent with proper train/test splits and time-aware validation." }
+    ]
+  },
+  {
+    name: "Karza Technologies", logo: "🛡️", color: "from-slate-600 to-blue-700", difficulty: "Medium",
+    roles: ["Data Scientist", "NLP Engineer", "Computer Vision Engineer"],
+    avgPackage: "₹9-16 LPA", rounds: ["Technical Test (ML + Python)", "Case Study", "Technical + HR"],
+    codingQuestion: { title: "Text Preprocessing Pipeline", desc: "Write a function to lowercase, remove punctuation, and tokenize a sentence.", difficulty: "Easy", starter: `import re\ndef preprocess(text):\n    # lowercase, strip punctuation, split into tokens\n    pass` },
+    interviewQuestions: [
+      { round: "Technical", question: "Explain how a convolutional neural network processes an image", tip: "Filters slide over the image detecting local patterns (edges, textures), pooling reduces dimensionality, deeper layers capture higher-level features." },
+      { round: "Technical", question: "What is named entity recognition and where is it used?", tip: "Identifying entities like names, dates, organizations in text; used in document parsing, KYC automation, search." },
+      { round: "Case Study", question: "Design a system to verify identity documents automatically", tip: "OCR extraction, field validation, fraud pattern detection, human-in-the-loop for edge cases." }
+    ]
+  }
+];
+
 // ─── LOOKUP ──────────────────────────────────────────────────────────────────
 export function getBranchCompanies(branchId: string | null): CompanyTrack[] {
   if (!branchId) return CSE_COMPANIES;
   const b = branchId.toLowerCase();
-  if (b === "cse" || b === "it") return CSE_COMPANIES;
-  if (b === "aiml" || b === "aids") return AIML_COMPANIES;
+  if (b === "cse") return CSE_COMPANIES;
+  if (b === "it") return IT_COMPANIES;
+  if (b === "aiml") return AIML_COMPANIES;
+  if (b === "aids") return AIDS_COMPANIES;
   if (b === "ece") return ECE_COMPANIES;
   if (b === "eee") return EEE_COMPANIES;
   if (b === "mech") return MECH_COMPANIES;
