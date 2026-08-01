@@ -61,6 +61,41 @@ interface CompanyDetails {
   };
 }
 
+/** Normalizes branch-specific company tracks for the full interview workspace. */
+function createCompanyDetails(track: CompanyTrack): CompanyDetails {
+  const behavioral = track.interviewQuestions.find((question) =>
+    /hr|behavioral|leadership|managerial/i.test(question.round)
+  ) ?? track.interviewQuestions[0];
+
+  return {
+    name: track.name,
+    logo: track.logo,
+    color: track.color,
+    border: "border-white/10",
+    description: `${track.name} preparation track for ${track.roles.join(", ")}. Interview flow: ${track.rounds.join(" • ")}.`,
+    codingRound: {
+      question: track.codingQuestion.title,
+      description: track.codingQuestion.desc,
+      sampleInput: "Use the function signature in the editor.",
+      sampleOutput: "Validate against edge cases and explain the complexity.",
+      approach: "Start with a correct baseline, state time and space complexity, then improve it if constraints require.",
+      bookReference: "Use the role-specific roadmap and official documentation for the technologies named in this track.",
+    },
+    aptitudeRound: {
+      question: "A project has 5 tasks estimated at 4 hours each. If two tasks are completed in parallel, what is the minimum elapsed time?",
+      options: ["4 hours", "8 hours", "12 hours", "20 hours"],
+      answer: 2,
+      explanation: "Two tasks can run in parallel, so the five tasks require three time slots: 3 × 4 = 12 hours.",
+      bookReference: "Practice quantitative reasoning and role-specific assessments from the learning roadmap.",
+    },
+    hrRound: {
+      question: behavioral?.question ?? "Tell us about a project you are proud of.",
+      bestApproach: behavioral?.tip ?? "Use the STAR format and quantify the outcome.",
+      starExample: "Situation: Explain the context.\nTask: State your responsibility.\nAction: Describe the specific decisions you made.\nResult: Share a measurable outcome and what you learned.",
+    },
+  };
+}
+
 const COMPANY_TRACKS: CompanyDetails[] = [
   {
     name: "Google",
@@ -364,7 +399,7 @@ export default function Dashboard() {
   };
 
   // Resume Download Helpers
-  const downloadResume = (format: "pdf" | "docx" | "json") => {
+  const downloadResume = (format: "pdf" | "doc" | "json") => {
     const resumeData = {
       name: resumeName || "User Name",
       email: resumeEmail || "user@email.com",
@@ -375,66 +410,57 @@ export default function Dashboard() {
       skills: resumeSkills || "React, Javascript, Python, SQL"
     };
 
-    let filename = `${resumeData.name.replace(/\s+/g, "_")}_Resume`;
-    let content = "";
-    let mimeType = "text/plain";
+    const filename = `${resumeData.name.replace(/\s+/g, "_")}_Resume`;
+    const escapeHtml = (value: string) => value
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/\n/g, "<br />");
+    const resumeHtml = `<!doctype html>
+      <html><head><meta charset="utf-8" /><title>${escapeHtml(resumeData.name)} Resume</title>
+      <style>
+        @page { margin: 18mm; }
+        body { font-family: Arial, sans-serif; color: #172033; line-height: 1.5; max-width: 800px; margin: 0 auto; }
+        h1 { margin: 0; font-size: 30px; } h2 { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; border-bottom: 1px solid #cbd5e1; padding-bottom: 5px; margin: 24px 0 8px; }
+        .contact { color: #475569; margin-top: 4px; } p { white-space: normal; margin: 0; }
+      </style></head><body>
+        <h1>${escapeHtml(resumeData.name)}</h1>
+        <p class="contact">${escapeHtml(resumeData.email)} &middot; ${escapeHtml(resumeData.phone)}</p>
+        <h2>Professional Summary</h2><p>${escapeHtml(resumeData.summary)}</p>
+        <h2>Experience</h2><p>${escapeHtml(resumeData.experience)}</p>
+        <h2>Education</h2><p>${escapeHtml(resumeData.education)}</p>
+        <h2>Skills</h2><p>${escapeHtml(resumeData.skills)}</p>
+      </body></html>`;
 
     if (format === "json") {
-      content = JSON.stringify(resumeData, null, 2);
-      mimeType = "application/json";
-      filename += ".json";
-    } else if (format === "docx") {
-      content = `
-        Ascend Resume Export
-        --------------------
-        NAME: ${resumeData.name}
-        EMAIL: ${resumeData.email}
-        PHONE: ${resumeData.phone}
-        
-        SUMMARY:
-        ${resumeData.summary}
-        
-        EXPERIENCE:
-        ${resumeData.experience}
-        
-        EDUCATION:
-        ${resumeData.education}
-        
-        SKILLS:
-        ${resumeData.skills}
-      `;
-      mimeType = "application/msword";
-      filename += ".doc";
-    } else {
-      content = `
-        === RESUME ===
-        ${resumeData.name}
-        ${resumeData.email} | ${resumeData.phone}
-        
-        SUMMARY
-        ${resumeData.summary}
-        
-        WORK EXPERIENCE
-        ${resumeData.experience}
-        
-        EDUCATION
-        ${resumeData.education}
-        
-        SKILLS
-        ${resumeData.skills}
-      `;
-      mimeType = "application/pdf";
-      filename += ".pdf";
+      const blob = new Blob([JSON.stringify(resumeData, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${filename}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+      return;
     }
 
-    const blob = new Blob([content], { type: mimeType });
+    if (format === "pdf") {
+      const printWindow = window.open("", "_blank", "noopener,noreferrer");
+      if (!printWindow) return;
+      printWindow.document.write(resumeHtml);
+      printWindow.document.close();
+      printWindow.focus();
+      printWindow.onafterprint = () => printWindow.close();
+      window.setTimeout(() => printWindow.print(), 250);
+      return;
+    }
+
+    const blob = new Blob([resumeHtml], { type: "application/msword" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = filename;
-    document.body.appendChild(link);
+    link.download = `${filename}.doc`;
     link.click();
-    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   const SCORES = [
@@ -844,7 +870,7 @@ export default function Dashboard() {
                         key={i}
                         whileHover={{ scale: 1.03 }}
                         onClick={() => {
-                          setSelectedCompany(c as any);
+                          setSelectedCompany(createCompanyDetails(c));
                           setSelectedCompanyAptAnswer(null);
                           setCompanyAptChecked(false);
                           setCompanyCodingUserSolution(c.codingQuestion?.starter || "def solve():\n    pass");
@@ -910,7 +936,10 @@ export default function Dashboard() {
 
                       {selectedCompanyAptAnswer !== null && !companyAptChecked && (
                         <button
-                          onClick={() => setCompanyAptChecked(true)}
+                          onClick={() => {
+                            setCompanyAptChecked(true);
+                            if (selectedCompanyAptAnswer === selectedCompany.aptitudeRound.answer) updateXP(25);
+                          }}
                           className="w-full py-2 rounded-full bg-white text-black text-xs font-semibold"
                         >
                           Check Answer
@@ -1147,11 +1176,11 @@ export default function Dashboard() {
                       PDF
                     </button>
                     <button
-                      onClick={() => downloadResume("docx")}
+                      onClick={() => downloadResume("doc")}
                       className="py-2.5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-xs font-semibold flex flex-col items-center justify-center gap-1 transition-colors"
                     >
                       <Download size={14} />
-                      DOCX
+                      Word
                     </button>
                     <button
                       onClick={() => downloadResume("json")}

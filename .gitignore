@@ -1,0 +1,13 @@
+# Dependencies and generated output
+node_modules/
+ascend/node_modules/
+ascend/dist/
+
+# Local configuration — never commit deployment credentials/configuration
+.env
+.env.*
+!*.env.example
+
+# Local tooling
+.vercel/
+*.log

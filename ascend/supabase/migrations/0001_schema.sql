@@ -1,0 +1,9 @@
+-- Compatibility entrypoint included for the source archive.
+--
+-- This project already has supabase_setup.sql and combined_setup.sql, whose
+-- tables use public.profiles and the existing questions shape. Do not import
+-- the archive's original replacement schema: it creates a parallel
+-- user_profiles model and conflicts with the running application.
+--
+-- Use 20260801000000_adaptive_learning.sql after the existing setup scripts.
+-- It contains the compatible adaptive-learning schema, indexes, and RLS rules.
