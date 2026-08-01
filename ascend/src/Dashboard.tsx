@@ -364,7 +364,7 @@ export default function Dashboard() {
   };
 
   // Resume Download Helpers
-  const downloadResume = (format: "pdf" | "docx" | "json") => {
+  const downloadResume = (format: "pdf" | "doc" | "json") => {
     const resumeData = {
       name: resumeName || "User Name",
       email: resumeEmail || "user@email.com",
@@ -375,66 +375,57 @@ export default function Dashboard() {
       skills: resumeSkills || "React, Javascript, Python, SQL"
     };
 
-    let filename = `${resumeData.name.replace(/\s+/g, "_")}_Resume`;
-    let content = "";
-    let mimeType = "text/plain";
+    const filename = `${resumeData.name.replace(/\s+/g, "_")}_Resume`;
+    const escapeHtml = (value: string) => value
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/\n/g, "<br />");
+    const resumeHtml = `<!doctype html>
+      <html><head><meta charset="utf-8" /><title>${escapeHtml(resumeData.name)} Resume</title>
+      <style>
+        @page { margin: 18mm; }
+        body { font-family: Arial, sans-serif; color: #172033; line-height: 1.5; max-width: 800px; margin: 0 auto; }
+        h1 { margin: 0; font-size: 30px; } h2 { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; border-bottom: 1px solid #cbd5e1; padding-bottom: 5px; margin: 24px 0 8px; }
+        .contact { color: #475569; margin-top: 4px; } p { white-space: normal; margin: 0; }
+      </style></head><body>
+        <h1>${escapeHtml(resumeData.name)}</h1>
+        <p class="contact">${escapeHtml(resumeData.email)} &middot; ${escapeHtml(resumeData.phone)}</p>
+        <h2>Professional Summary</h2><p>${escapeHtml(resumeData.summary)}</p>
+        <h2>Experience</h2><p>${escapeHtml(resumeData.experience)}</p>
+        <h2>Education</h2><p>${escapeHtml(resumeData.education)}</p>
+        <h2>Skills</h2><p>${escapeHtml(resumeData.skills)}</p>
+      </body></html>`;
 
     if (format === "json") {
-      content = JSON.stringify(resumeData, null, 2);
-      mimeType = "application/json";
-      filename += ".json";
-    } else if (format === "docx") {
-      content = `
-        Ascend Resume Export
-        --------------------
-        NAME: ${resumeData.name}
-        EMAIL: ${resumeData.email}
-        PHONE: ${resumeData.phone}
-        
-        SUMMARY:
-        ${resumeData.summary}
-        
-        EXPERIENCE:
-        ${resumeData.experience}
-        
-        EDUCATION:
-        ${resumeData.education}
-        
-        SKILLS:
-        ${resumeData.skills}
-      `;
-      mimeType = "application/msword";
-      filename += ".doc";
-    } else {
-      content = `
-        === RESUME ===
-        ${resumeData.name}
-        ${resumeData.email} | ${resumeData.phone}
-        
-        SUMMARY
-        ${resumeData.summary}
-        
-        WORK EXPERIENCE
-        ${resumeData.experience}
-        
-        EDUCATION
-        ${resumeData.education}
-        
-        SKILLS
-        ${resumeData.skills}
-      `;
-      mimeType = "application/pdf";
-      filename += ".pdf";
+      const blob = new Blob([JSON.stringify(resumeData, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${filename}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+      return;
     }
 
-    const blob = new Blob([content], { type: mimeType });
+    if (format === "pdf") {
+      const printWindow = window.open("", "_blank", "noopener,noreferrer");
+      if (!printWindow) return;
+      printWindow.document.write(resumeHtml);
+      printWindow.document.close();
+      printWindow.focus();
+      printWindow.onafterprint = () => printWindow.close();
+      window.setTimeout(() => printWindow.print(), 250);
+      return;
+    }
+
+    const blob = new Blob([resumeHtml], { type: "application/msword" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = filename;
-    document.body.appendChild(link);
+    link.download = `${filename}.doc`;
     link.click();
-    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   const SCORES = [
@@ -1147,11 +1138,11 @@ export default function Dashboard() {
                       PDF
                     </button>
                     <button
-                      onClick={() => downloadResume("docx")}
+                      onClick={() => downloadResume("doc")}
                       className="py-2.5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-xs font-semibold flex flex-col items-center justify-center gap-1 transition-colors"
                     >
                       <Download size={14} />
-                      DOCX
+                      Word
                     </button>
                     <button
                       onClick={() => downloadResume("json")}
