@@ -61,6 +61,41 @@ interface CompanyDetails {
   };
 }
 
+/** Normalizes branch-specific company tracks for the full interview workspace. */
+function createCompanyDetails(track: CompanyTrack): CompanyDetails {
+  const behavioral = track.interviewQuestions.find((question) =>
+    /hr|behavioral|leadership|managerial/i.test(question.round)
+  ) ?? track.interviewQuestions[0];
+
+  return {
+    name: track.name,
+    logo: track.logo,
+    color: track.color,
+    border: "border-white/10",
+    description: `${track.name} preparation track for ${track.roles.join(", ")}. Interview flow: ${track.rounds.join(" • ")}.`,
+    codingRound: {
+      question: track.codingQuestion.title,
+      description: track.codingQuestion.desc,
+      sampleInput: "Use the function signature in the editor.",
+      sampleOutput: "Validate against edge cases and explain the complexity.",
+      approach: "Start with a correct baseline, state time and space complexity, then improve it if constraints require.",
+      bookReference: "Use the role-specific roadmap and official documentation for the technologies named in this track.",
+    },
+    aptitudeRound: {
+      question: "A project has 5 tasks estimated at 4 hours each. If two tasks are completed in parallel, what is the minimum elapsed time?",
+      options: ["4 hours", "8 hours", "12 hours", "20 hours"],
+      answer: 2,
+      explanation: "Two tasks can run in parallel, so the five tasks require three time slots: 3 × 4 = 12 hours.",
+      bookReference: "Practice quantitative reasoning and role-specific assessments from the learning roadmap.",
+    },
+    hrRound: {
+      question: behavioral?.question ?? "Tell us about a project you are proud of.",
+      bestApproach: behavioral?.tip ?? "Use the STAR format and quantify the outcome.",
+      starExample: "Situation: Explain the context.\nTask: State your responsibility.\nAction: Describe the specific decisions you made.\nResult: Share a measurable outcome and what you learned.",
+    },
+  };
+}
+
 const COMPANY_TRACKS: CompanyDetails[] = [
   {
     name: "Google",
@@ -835,7 +870,7 @@ export default function Dashboard() {
                         key={i}
                         whileHover={{ scale: 1.03 }}
                         onClick={() => {
-                          setSelectedCompany(c as any);
+                          setSelectedCompany(createCompanyDetails(c));
                           setSelectedCompanyAptAnswer(null);
                           setCompanyAptChecked(false);
                           setCompanyCodingUserSolution(c.codingQuestion?.starter || "def solve():\n    pass");
@@ -901,7 +936,10 @@ export default function Dashboard() {
 
                       {selectedCompanyAptAnswer !== null && !companyAptChecked && (
                         <button
-                          onClick={() => setCompanyAptChecked(true)}
+                          onClick={() => {
+                            setCompanyAptChecked(true);
+                            if (selectedCompanyAptAnswer === selectedCompany.aptitudeRound.answer) updateXP(25);
+                          }}
                           className="w-full py-2 rounded-full bg-white text-black text-xs font-semibold"
                         >
                           Check Answer
