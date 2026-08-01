@@ -11,6 +11,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const seeds = [
   "seed_cse_sde.js",
   "seed_ece_embedded.js",
+  "seed_it_qa.js",
+  "seed_aiml_mleng.js",
   // add each new branch/role seed file here as it's written
 ];
 
