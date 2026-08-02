@@ -7,8 +7,10 @@ that shouldn't run with a public anon key.
 
 ## Setup
 
-1. Run `ascend/content_library_setup.sql` in Supabase → SQL Editor (after the
-   existing `supabase_setup.sql`).
+1. Run these in Supabase → SQL Editor, in order:
+   - `ascend/content_library_setup.sql`
+   - `ascend/search_setup.sql`
+   - `ascend/assessment_engine_setup.sql`
 2. `cd server && npm install`
 3. Copy `.env.example` to `.env` and fill in your Supabase project URL and
    **service role key** (Project Settings → API → service_role — keep this
@@ -17,15 +19,17 @@ that shouldn't run with a public anon key.
 
 ## Seeding content
 
-`src/seed/seed_cse_sde.js` seeds one full role (CSE / SDE) with real,
-originally-written topic notes and questions, sourced and attributed to
-MIT OpenCourseWare where relevant. This is the pattern to copy for every
-other branch/role — duplicate the file, swap the branch/role codes and
-content, run it.
+Each `seed_*.js` file seeds one branch/role with real, originally-written
+topic notes and questions, sourced and attributed to MIT OpenCourseWare or
+Wikipedia where relevant. Run them all at once:
 
 ```
-node src/seed/seed_cse_sde.js
+node src/seed/run_all.js
 ```
+
+Currently seeded: CSE (SDE, DevOps), ECE (Embedded, VLSI), IT (QA, Cloud
+Support), AIML (ML Engineer, Data Scientist), EEE (Power Systems), MECH
+(Design), AIDS (Data Engineer).
 
 ## API
 
@@ -34,6 +38,11 @@ node src/seed/seed_cse_sde.js
 - `GET /api/syllabus/topic/:topicId/questions` — practice questions for a topic
 - `GET /api/companies/:branchCode` — companies for a branch
 - `GET /api/companies/detail/:companyId` — company detail + its questions
+- `GET /api/search?q=recursion&type=all|topics|materials|questions` — full-text search
+- `POST /api/tests/start` — start a timed test from a role/topic/company scope
+- `POST /api/tests/:attemptId/answer` — record a self-graded answer
+- `POST /api/tests/:attemptId/complete` — finalize and score an attempt
+- `GET /api/tests/history/:userId` — a user's past test attempts
 
 ## Next steps to keep expanding
 
