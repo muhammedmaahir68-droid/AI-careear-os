@@ -5,7 +5,7 @@ import {
   ArrowRight, Gift, X, Zap, Target, ChevronDown, ChevronRight,
   Code2, Brain, Cpu, Bolt, Wrench, Building, Database, Shield,
   Lightbulb, HelpCircle, FileText, Check, Award, Video, Play,
-  Briefcase, UserCheck, Layers, FileCheck, Terminal, Bug
+  Briefcase, UserCheck, Layers, FileCheck, Terminal, Bug, Filter, Layers3
 } from "lucide-react";
 import GamificationModal, { LEAGUES } from "./GamificationModal";
 import { recordUserProgress } from "../services/api";
@@ -59,6 +59,49 @@ interface LearningGamePathProps {
   onNodeComplete?: (xp: number, diamonds: number) => void;
 }
 
+export const PHASE_METADATA: Record<number, { title: string; subtitle: string; icon: any; color: string; bg: string; border: string }> = {
+  1: {
+    title: "Phase 1: Aptitude Foundation",
+    subtitle: "Quantitative Aptitude, Logical Reasoning & Verbal Ability for TCS, Wipro, Infosys screening exams.",
+    icon: BookOpen,
+    color: "text-purple-400",
+    bg: "from-purple-950/60 to-slate-950",
+    border: "border-purple-500/30"
+  },
+  2: {
+    title: "Phase 2: Technical Foundation",
+    subtitle: "Department Core Subjects, Programming Memory Models (C++, Java, Python) & Logic Building.",
+    icon: Code2,
+    color: "text-cyan-400",
+    bg: "from-cyan-950/60 to-slate-950",
+    border: "border-cyan-500/30"
+  },
+  3: {
+    title: "Phase 3: Advanced Preparation",
+    subtitle: "Data Structures & Algorithms, Complex SQL Joins, System Design & Scalability Patterns.",
+    icon: Brain,
+    color: "text-amber-400",
+    bg: "from-amber-950/60 to-slate-950",
+    border: "border-amber-500/30"
+  },
+  4: {
+    title: "Phase 4: Placement Readiness",
+    subtitle: "ATS Resume & Portfolio Optimization, Industry Capstone Projects & Company-wise Test Patterns.",
+    icon: Building,
+    color: "text-emerald-400",
+    bg: "from-emerald-950/60 to-slate-950",
+    border: "border-emerald-500/30"
+  },
+  5: {
+    title: "Phase 5: Placement Rounds",
+    subtitle: "Aptitude Tests, Hands-on Coding Rounds, Technical Panel, HR Behavioral & Full Mock Exams.",
+    icon: Trophy,
+    color: "text-rose-400",
+    bg: "from-rose-950/60 to-slate-950",
+    border: "border-rose-500/30"
+  }
+};
+
 // ─────────────────────────────────────────────────────────────────────────────
 // 5-PHASE DEPARTMENT & ROLE SPECIFIC ROADMAP GENERATOR
 // ─────────────────────────────────────────────────────────────────────────────
@@ -78,7 +121,6 @@ export function getCoursePath(branchId: string, roleId?: string | null): LessonN
   // ───────────────────────────────────────────────────────────────────────────
   // PHASE 1: APTITUDE FOUNDATION
   // ─────────────────────────────────────────────────────────────────────────
-  // Sub-topics: Quantitative Aptitude, Logical Reasoning, Verbal Ability
   nodes.push(
     // Quant 1
     {
@@ -282,14 +324,11 @@ Distance = sqrt((dx)^2 + (dy)^2)
   // ───────────────────────────────────────────────────────────────────────────
   // PHASE 2: TECHNICAL FOUNDATION
   // ─────────────────────────────────────────────────────────────────────────
-  // Mapped per department (CSE/IT, AIML/AIDS, ECE, EEE, MECH)
-  const isCseIt = b === "cse" || b === "it";
   const isAimlAids = b === "aiml" || b === "aids";
   const isEce = b === "ece";
   const isEee = b === "eee";
   const isMech = b === "mech";
 
-  // Node 1: Department Core Subject
   let coreTitle = "Operating Systems & Process Lifecycle";
   let coreSummary = "Process management, CPU scheduling, thread synchronization, and virtual memory paging.";
   if (isAimlAids) {
@@ -407,7 +446,6 @@ public:
   // ───────────────────────────────────────────────────────────────────────────
   // PHASE 3: ADVANCED PREPARATION
   // ─────────────────────────────────────────────────────────────────────────
-  // Mapped using branchModules (DSA, SQL, System Design)
   branchModules.slice(0, 3).forEach((mod, i) => {
     nodes.push({
       id: `${b}-p3-mod-${i}`,
@@ -454,9 +492,7 @@ public:
   // ───────────────────────────────────────────────────────────────────────────
   // PHASE 4: PLACEMENT READINESS
   // ─────────────────────────────────────────────────────────────────────────
-  // Sub-topics: Resume & Portfolio, Projects, Company-wise Preparation
   nodes.push(
-    // Resume & Portfolio
     {
       id: `${b}-p4-resume`,
       step: currentStep++,
@@ -497,8 +533,6 @@ Applicant Tracking Systems parse resumes using OCR and keyword extraction:
         { prompt: "What is Google's recommended formula for writing resume accomplishment bullet points?", options: ["XYZ Formula: Accomplished X, measured by Y, by doing Z", "ABC Formula: Action, Basic, Code", "SMART Goal Formula", "STAR Method only"], correct: 0, explanation: "Google recommends the XYZ formula: Accomplished [X], as measured by [Y], by doing [Z]." }
       ]
     },
-
-    // Company-wise Prep
     {
       id: `${b}-p4-company`,
       step: currentStep++,
@@ -535,7 +569,6 @@ Applicant Tracking Systems parse resumes using OCR and keyword extraction:
   // ───────────────────────────────────────────────────────────────────────────
   // PHASE 5: PLACEMENT ROUNDS
   // ─────────────────────────────────────────────────────────────────────────
-  // Sub-topics: Aptitude Test, Coding Test, Technical Interview, HR Interview, Managerial, Mock Placement Exam
   nodes.push(
     {
       id: `${b}-p5-apt-test`,
@@ -642,6 +675,10 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
     catch { return new Set(); }
   });
 
+  // Active phase view state (Phase 1, 2, 3, 4, 5 or "all")
+  const [activePhaseFilter, setActivePhaseFilter] = useState<number | "all">(targetPhase || "all");
+  const [activeSubTopic, setActiveSubTopic] = useState<string>("all");
+
   const [activeNode, setActiveNode] = useState<LessonNode | null>(null);
   const [modalTab, setModalTab] = useState<"textbook" | "formulas" | "videos" | "placement">("textbook");
   const [step, setStep] = useState<"theory" | "quiz">("theory");
@@ -651,12 +688,18 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
   const [showReward, setShowReward] = useState(false);
   const [lastCompleted, setLastCompleted] = useState<LessonNode | null>(null);
 
-  const phaseRefs = useRef<Record<number, HTMLDivElement | null>>({});
-
   const nodes = useMemo(() => getCoursePath(branchId || "cse", roleId), [branchId, roleId]);
 
-  // Group nodes by Category (Phase 1 to 5)
-  const phases = useMemo(() => {
+  // Sync phase filter when user jumps from Home
+  useEffect(() => {
+    if (targetPhase) {
+      setActivePhaseFilter(targetPhase);
+      setActiveSubTopic("all");
+    }
+  }, [targetPhase]);
+
+  // Group nodes by Category / Phase
+  const allPhases = useMemo(() => {
     const map = new Map<string, LessonNode[]>();
     for (const n of nodes) {
       if (!map.has(n.category)) map.set(n.category, []);
@@ -665,12 +708,26 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
     return Array.from(map.entries());
   }, [nodes]);
 
-  // Auto-scroll when targetPhase is selected
-  useEffect(() => {
-    if (targetPhase && phaseRefs.current[targetPhase]) {
-      phaseRefs.current[targetPhase]?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  }, [targetPhase]);
+  // Filter phases based on active filter
+  const displayedPhases = useMemo(() => {
+    return allPhases.filter(([, phaseNodes]) => {
+      const phaseNum = phaseNodes[0]?.phaseNumber || 1;
+      if (activePhaseFilter !== "all" && phaseNum !== activePhaseFilter) return false;
+      return true;
+    }).map(([cat, phaseNodes]) => {
+      if (activeSubTopic === "all") return [cat, phaseNodes] as [string, LessonNode[]];
+      const filtered = phaseNodes.filter(n => n.subTopic.toLowerCase() === activeSubTopic.toLowerCase());
+      return [cat, filtered] as [string, LessonNode[]];
+    }).filter(([, phaseNodes]) => phaseNodes.length > 0);
+  }, [allPhases, activePhaseFilter, activeSubTopic]);
+
+  // Get available sub-topics for current phase view
+  const availableSubTopics = useMemo(() => {
+    if (activePhaseFilter === "all") return [];
+    const targetNodes = nodes.filter(n => n.phaseNumber === activePhaseFilter);
+    const subTopics = Array.from(new Set(targetNodes.map(n => n.subTopic)));
+    return subTopics;
+  }, [nodes, activePhaseFilter]);
 
   const isUnlocked = (node: LessonNode): boolean => {
     if (completedIds.has(node.id)) return true;
@@ -735,14 +792,14 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
   const nextNode = nodes.find(n => !completedIds.has(n.id));
 
   return (
-    <div className="w-full space-y-8 pb-20 text-slate-100">
+    <div className="w-full space-y-8 pb-20 text-slate-100 max-w-6xl mx-auto">
       {/* ── HEADER STATS ── */}
       <div className="relative overflow-hidden rounded-3xl p-6 bg-gradient-to-br from-slate-900 via-purple-950/60 to-slate-950 border border-purple-500/30 shadow-2xl">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
             <div className="flex flex-wrap gap-2 mb-2">
               <span className="text-[11px] font-extrabold uppercase tracking-widest text-purple-400 bg-purple-500/10 px-3 py-1 rounded-full border border-purple-500/20">
-                {branchId?.toUpperCase() || "CSE"} — 5-Phase Placement Roadmap
+                {branchId?.toUpperCase() || "CSE"} — 5-Phase Master Path
               </span>
               {nextNode && (
                 <span className="text-[11px] font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20 animate-pulse">
@@ -751,9 +808,9 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
               )}
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white flex items-center gap-2">
-              Comprehensive Placement Curriculum <Sparkles size={22} className="text-amber-400" />
+              Integrated Placement Curriculum <Sparkles size={22} className="text-amber-400" />
             </h2>
-            <p className="text-xs sm:text-sm text-slate-400 mt-1">Master Aptitude, Technical Core, DSA, Projects, ATS Resumes, and MNC Placement Interview Rounds.</p>
+            <p className="text-xs sm:text-sm text-slate-400 mt-1">Select a phase below to focus on its separate curriculum chart and dedicated topics.</p>
           </div>
           <div className="flex flex-wrap gap-2">
             <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-300 text-sm font-bold">
@@ -781,29 +838,118 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
         </div>
       </div>
 
-      {/* ── PATH NODES (5 PHASES) ── */}
+      {/* ── SEPARATE PHASE SELECTOR TABS ── */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <span className="text-xs font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+            <Layers3 size={16} className="text-purple-400" /> Select Separate Phase View
+          </span>
+          {activePhaseFilter !== "all" && (
+            <button
+              onClick={() => { setActivePhaseFilter("all"); setActiveSubTopic("all"); }}
+              className="text-xs text-purple-400 hover:text-purple-300 font-bold underline"
+            >
+              View Full 5-Phase Roadmap
+            </button>
+          )}
+        </div>
+
+        {/* Top 5-Phase Tabs */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
+          <button
+            onClick={() => { setActivePhaseFilter("all"); setActiveSubTopic("all"); }}
+            className={`p-3 rounded-2xl border text-xs font-extrabold transition-all flex flex-col items-center justify-center gap-1 cursor-pointer ${
+              activePhaseFilter === "all"
+                ? "bg-purple-600 border-purple-400 text-white shadow-lg shadow-purple-900/50"
+                : "bg-slate-900/80 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700"
+            }`}
+          >
+            <Layers size={18} />
+            <span>All 5 Phases</span>
+          </button>
+
+          {[1, 2, 3, 4, 5].map(pNum => {
+            const meta = PHASE_METADATA[pNum];
+            const Icon = meta.icon;
+            const active = activePhaseFilter === pNum;
+
+            return (
+              <button
+                key={pNum}
+                onClick={() => { setActivePhaseFilter(pNum); setActiveSubTopic("all"); }}
+                className={`p-3 rounded-2xl border text-xs font-extrabold transition-all flex flex-col items-center justify-center gap-1 cursor-pointer ${
+                  active
+                    ? "bg-slate-900 border-purple-400 text-white ring-2 ring-purple-500/50 shadow-lg"
+                    : "bg-slate-900/80 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700"
+                }`}
+              >
+                <Icon size={18} className={meta.color} />
+                <span>Phase {pNum}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Sub-Topic Filtering Pills when a specific phase is selected */}
+        {activePhaseFilter !== "all" && availableSubTopics.length > 0 && (
+          <div className="flex flex-wrap items-center gap-2 pt-2 p-3 rounded-2xl bg-slate-900/60 border border-slate-800">
+            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mr-1 flex items-center gap-1">
+              <Filter size={12} /> Sub-Topics:
+            </span>
+            <button
+              onClick={() => setActiveSubTopic("all")}
+              className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${
+                activeSubTopic === "all"
+                  ? "bg-purple-500/20 text-purple-300 border border-purple-500/40"
+                  : "bg-slate-950 text-slate-400 border border-slate-800 hover:text-slate-200"
+              }`}
+            >
+              All Topics
+            </button>
+            {availableSubTopics.map(st => (
+              <button
+                key={st}
+                onClick={() => setActiveSubTopic(st)}
+                className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${
+                  activeSubTopic.toLowerCase() === st.toLowerCase()
+                    ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/40"
+                    : "bg-slate-950 text-slate-400 border border-slate-800 hover:text-slate-200"
+                }`}
+              >
+                {st}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* ── PATH NODES (FILTERED BY SEPARATE PHASE) ── */}
       <div className="space-y-12">
-        {phases.map(([category, phaseNodes]) => {
+        {displayedPhases.map(([category, phaseNodes]) => {
           const phaseNum = phaseNodes[0]?.phaseNumber || 1;
+          const meta = PHASE_METADATA[phaseNum];
+          const Icon = meta?.icon || BookOpen;
 
           return (
-            <div
-              key={category}
-              ref={el => { phaseRefs.current[phaseNum] = el; }}
-              className="space-y-6 pt-2"
-            >
-              <div className="flex items-center gap-3">
-                <div className="h-px flex-1 bg-slate-800" />
-                <div className="flex items-center gap-2 px-5 py-2 rounded-full border border-purple-500/30 bg-slate-900 shadow-lg">
-                  <span className="w-2.5 h-2.5 rounded-full bg-purple-400 animate-pulse" />
-                  <span className="text-xs font-extrabold uppercase tracking-widest text-purple-300">
-                    {category}
-                  </span>
+            <div key={category} className="space-y-6 pt-2">
+              {/* Separate Dedicated Phase Header Card */}
+              <div className={`p-6 rounded-3xl bg-gradient-to-br ${meta.bg} border ${meta.border} shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4`}>
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <Icon size={20} className={meta.color} />
+                    <span className={`text-xs font-extrabold uppercase tracking-widest ${meta.color}`}>
+                      {category}
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-300 max-w-2xl leading-relaxed">{meta.subtitle}</p>
                 </div>
-                <div className="h-px flex-1 bg-slate-800" />
+                <div className="text-xs font-mono font-bold text-slate-400 bg-slate-950/60 px-3 py-1.5 rounded-full border border-slate-800">
+                  {phaseNodes.length} Learning Steps
+                </div>
               </div>
 
-              <div className="flex flex-col items-center gap-10 relative">
+              {/* S-Curve Path Nodes */}
+              <div className="flex flex-col items-center gap-10 relative py-4">
                 {phaseNodes.map((node, idx) => {
                   const done = completedIds.has(node.id);
                   const unlocked = isUnlocked(node);
