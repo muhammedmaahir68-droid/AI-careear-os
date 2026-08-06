@@ -19,7 +19,7 @@ export interface IQuestion extends Document {
 
 const QuestionSchema: Schema = new Schema(
   {
-    department: { type: String, required: true, enum: ['CSE', 'IT', 'AIML', 'AIDS', 'ECE', 'EEE', 'MECH', 'Civil', 'DataScience', 'Biomedical'] },
+    department: { type: String, required: true, enum: ['cse', 'it', 'aiml', 'aids', 'ece', 'eee', 'mech', 'civil', 'datascience', 'biomedical', 'CSE', 'IT', 'AIML', 'AIDS', 'ECE', 'EEE', 'MECH', 'Civil', 'DataScience', 'Biomedical'] },
     topic: { type: String, required: true },
     module: { type: String, required: true },
     difficulty: { type: String, enum: ['beginner', 'easy', 'medium', 'hard', 'expert'], required: true },

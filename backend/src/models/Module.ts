@@ -15,7 +15,7 @@ export interface IModule extends Document {
 const ModuleSchema: Schema = new Schema(
   {
     title: { type: String, required: true },
-    department: { type: String, required: true, enum: ['CSE', 'IT', 'AIML', 'AIDS', 'ECE', 'EEE', 'MECH', 'Civil', 'DataScience', 'Biomedical'] },
+    department: { type: String, required: true, enum: ['cse', 'it', 'aiml', 'aids', 'ece', 'eee', 'mech', 'civil', 'datascience', 'biomedical', 'CSE', 'IT', 'AIML', 'AIDS', 'ECE', 'EEE', 'MECH', 'Civil', 'DataScience', 'Biomedical'] },
     level: { type: Number, required: true, min: 1, max: 10 },
     description: { type: String, required: true },
     lessonIds: [{ type: Schema.Types.ObjectId, ref: 'Lesson' }],

@@ -22,7 +22,7 @@ export interface ILesson extends Document {
 const LessonSchema: Schema = new Schema(
   {
     title: { type: String, required: true },
-    department: { type: String, required: true, enum: ['CSE', 'IT', 'AIML', 'AIDS', 'ECE', 'EEE', 'MECH', 'Civil', 'DataScience', 'Biomedical'] },
+    department: { type: String, required: true, enum: ['cse', 'it', 'aiml', 'aids', 'ece', 'eee', 'mech', 'civil', 'datascience', 'biomedical', 'CSE', 'IT', 'AIML', 'AIDS', 'ECE', 'EEE', 'MECH', 'Civil', 'DataScience', 'Biomedical'] },
     role: { type: String },
     level: { type: Number, required: true, min: 1, max: 10 },
     content: { type: String, required: true },
