@@ -8,7 +8,7 @@ import {
 import GamificationModal, { LEAGUES } from "./GamificationModal";
 import { recordUserProgress } from "../services/api";
 
-interface PathNode {
+export interface PathNode {
   id: string;
   unitId: number;
   title: string;
@@ -37,111 +37,242 @@ interface LearningGamePathProps {
 }
 
 const GAME_UNITS = [
-  { id: 1, title: "Unit 1: Fundamentals & Aptitude", desc: "Build solid foundations in problem solving, math & core theory", color: "from-cyan-500 to-blue-600" },
-  { id: 2, title: "Unit 2: Core Engineering & Systems", desc: "Master department-specific core modules & architecture", color: "from-purple-500 to-indigo-600" },
-  { id: 3, title: "Unit 3: Advanced Algorithms & System Design", desc: "High-level data structures, system scalability & optimization", color: "from-amber-500 to-orange-600" },
-  { id: 4, title: "Unit 4: MNC Placement & Product Boss Round", desc: "Real interview challenges from Google, Amazon, Microsoft & TCS", color: "from-emerald-500 to-teal-600" },
+  { id: 1, title: "Unit 1: Core Foundations", desc: "Build solid fundamentals, mathematics & core department theory", color: "from-cyan-500 to-blue-600" },
+  { id: 2, title: "Unit 2: Specialized Architecture & Systems", desc: "Master specialized domain modules & system design", color: "from-purple-500 to-indigo-600" },
+  { id: 3, title: "Unit 3: Advanced Optimization & Algorithms", desc: "High-level domain optimization, algorithms & placement prep", color: "from-amber-500 to-orange-600" },
+  { id: 4, title: "Unit 4: MNC Tier-1 Placement Boss Challenge", desc: "Real company interview questions & product engineering test", color: "from-emerald-500 to-teal-600" },
 ];
 
-export const DEFAULT_NODES: PathNode[] = [
-  // Unit 1
-  {
-    id: "node-1", unitId: 1, title: "Number Systems & Math Basics", subtitle: "Unit 1 • Step 1", type: "lesson", xpReward: 50, diamondReward: 15, department: "cse",
-    theoryNotes: {
-      summary: "Understand number representation, divisibility rules, HCF/LCM, and unit digit calculation.",
-      keyPoints: [
-        "HCF × LCM = Product of two numbers",
-        "Unit digit of 7^n follows a 4-step cycle: 7, 9, 3, 1",
-        "Sum of first n natural numbers = n(n+1)/2",
-      ],
-      formula: "HCF(a, b) × LCM(a, b) = a × b",
-      codeSnippet: "def find_lcm(a, b):\n    import math\n    return (a * b) // math.gcd(a, b)",
+// ─── BRANCH-SPECIFIC PATH NODE GENERATOR ───
+export function getBranchNodes(branchId: string = "cse"): PathNode[] {
+  const b = branchId.toLowerCase();
+
+  if (b === "aiml" || b === "aids") {
+    return [
+      {
+        id: "aiml-1", unitId: 1, title: "Linear Regression & Gradient Descent", subtitle: "Unit 1 • Step 1", type: "lesson", xpReward: 60, diamondReward: 20, department: "aiml",
+        theoryNotes: {
+          summary: "Linear regression predicts continuous targets by minimizing Mean Squared Error (MSE) via Gradient Descent.",
+          keyPoints: ["Hypothesis: h(x) = θᵀX", "MSE Cost Function J(θ) = (1/2m)Σ(h-y)²", "Batch vs Stochastic vs Mini-Batch GD"],
+          formula: "J(θ) = (1/2m) Σ (h_θ(x^(i)) - y^(i))^2",
+          codeSnippet: "import numpy as np\ndef gradient_descent(X, y, lr=0.01, epochs=1000):\n    m, n = X.shape\n    w = np.zeros(n)\n    for _ in range(epochs):\n        grad = (1/m) * X.T @ (X @ w - y)\n        w -= lr * grad\n    return w",
+        },
+        questions: [
+          { prompt: "What does the cost function J(θ) measure in Linear Regression?", options: ["Classification Accuracy", "Mean Squared Error between prediction & target", "Number of iterations", "Learning rate"], correctAnswer: 1, explanation: "MSE measures average squared difference between predictions and ground truth." }
+        ]
+      },
+      {
+        id: "aiml-2", unitId: 1, title: "Logistic Regression & Classification", subtitle: "Unit 1 • Step 2", type: "quiz", xpReward: 80, diamondReward: 25, department: "aiml",
+        theoryNotes: {
+          summary: "Binary classification using Sigmoid function σ(z) = 1/(1+e^-z) and Cross-Entropy Loss.",
+          keyPoints: ["Sigmoid outputs probabilities in range (0, 1)", "F1-Score is harmonic mean of Precision & Recall", "Decision boundary: θᵀX = 0"],
+          formula: "σ(z) = 1 / (1 + e^-z)",
+        },
+        questions: [
+          { prompt: "What is the output range of the Sigmoid activation function?", options: ["(-∞, ∞)", "(-1, 1)", "(0, 1)", "[0, 1]"], correctAnswer: 2, explanation: "Sigmoid maps any real number to the open interval (0, 1)." }
+        ]
+      },
+      { id: "aiml-chest-1", unitId: 1, title: "Diamond Chest Milestone 1", subtitle: "Bonus Loot", type: "chest", xpReward: 150, diamondReward: 50, department: "aiml" },
+      {
+        id: "aiml-3", unitId: 1, title: "Neural Networks & Backpropagation", subtitle: "Unit 1 • Step 3", type: "lesson", xpReward: 120, diamondReward: 35, department: "aiml",
+        theoryNotes: {
+          summary: "Feed-forward neural networks compute layer outputs in forward pass and update weights using chain rule in backpropagation.",
+          keyPoints: ["ReLU avoids vanishing gradients: max(0, x)", "Adam optimizer combines momentum and RMSprop", "Dropout randomly zeroes neurons to prevent overfitting"],
+          formula: "Chain Rule: ∂L/∂w = ∂L/∂a · ∂a/∂z · ∂z/∂w",
+          codeSnippet: "import torch.nn as nn\nmodel = nn.Sequential(\n    nn.Linear(784, 128),\n    nn.ReLU(),\n    nn.Dropout(0.2),\n    nn.Linear(128, 10)\n)",
+        },
+        questions: [
+          { prompt: "Which activation function is defined as max(0, x)?", options: ["Sigmoid", "Tanh", "ReLU", "Softmax"], correctAnswer: 2, explanation: "ReLU (Rectified Linear Unit) is max(0, x)." }
+        ]
+      },
+      {
+        id: "aiml-boss-1", unitId: 1, title: "AIML Unit 1 Boss Challenge", subtitle: "ML Placement Test", type: "boss", xpReward: 250, diamondReward: 100, department: "aiml",
+        questions: [
+          { prompt: "In Attention Mechanism (Transformers), why is QKᵀ divided by √dk?", options: ["To reduce memory", "To prevent softmax saturation for large dk", "To double speed", "To normalize vectors"], correctAnswer: 1, explanation: "Scaling by √dk keeps dot products from growing too large and saturating softmax gradients." }
+        ]
+      }
+    ];
+  }
+
+  if (b === "ece") {
+    return [
+      {
+        id: "ece-1", unitId: 1, title: "Digital Logic Design & K-Maps", subtitle: "Unit 1 • Step 1", type: "lesson", xpReward: 60, diamondReward: 20, department: "ece",
+        theoryNotes: {
+          summary: "Logic gates, De Morgan's theorems, and Karnaugh maps for Boolean simplification.",
+          keyPoints: ["NAND and NOR are universal gates", "De Morgan: (A·B)' = A' + B'", "K-map groups 1s in powers of 2 (1, 2, 4, 8)"],
+          formula: "De Morgan: (A · B)' = A' + B'",
+        },
+        questions: [
+          { prompt: "Which gate is known as a universal gate?", options: ["AND", "OR", "NAND", "XOR"], correctAnswer: 2, explanation: "NAND and NOR gates can implement any Boolean function." }
+        ]
+      },
+      {
+        id: "ece-2", unitId: 1, title: "Signals & LTI Systems", subtitle: "Unit 1 • Step 2", type: "quiz", xpReward: 80, diamondReward: 25, department: "ece",
+        theoryNotes: {
+          summary: "Continuous and discrete signals, Fourier Transform, convolution, and Nyquist sampling theorem.",
+          keyPoints: ["Nyquist Rate fs ≥ 2·fmax", "LTI system output y(t) = x(t) * h(t)", "Aliasing occurs if sampling rate < 2·fmax"],
+          formula: "fs ≥ 2 × f_max",
+        },
+        questions: [
+          { prompt: "If max signal frequency is 4 kHz, what is the minimum Nyquist sampling rate?", options: ["4 kHz", "8 kHz", "16 kHz", "2 kHz"], correctAnswer: 1, explanation: "Nyquist rate = 2 × fmax = 2 × 4 kHz = 8 kHz." }
+        ]
+      },
+      { id: "ece-chest-1", unitId: 1, title: "Diamond Chest Milestone 1", subtitle: "Bonus Loot", type: "chest", xpReward: 150, diamondReward: 50, department: "ece" },
+      {
+        id: "ece-3", unitId: 1, title: "8085 / 8086 Microprocessors", subtitle: "Unit 1 • Step 3", type: "lesson", xpReward: 110, diamondReward: 35, department: "ece",
+        theoryNotes: {
+          summary: "8085 (8-bit) and 8086 (16-bit) architecture, segmented memory, flags, and interrupts.",
+          keyPoints: ["8086 has 20-bit address bus (1MB memory)", "Physical Address = Segment × 16 + Offset", "TRAP is highest priority non-maskable interrupt"],
+          formula: "Physical Address = (Segment × 10h) + Offset",
+        },
+        questions: [
+          { prompt: "How wide is the address bus of the 8085 microprocessor?", options: ["8 bits", "16 bits", "20 bits", "32 bits"], correctAnswer: 1, explanation: "8085 has a 16-bit address bus allowing 64KB memory addressing." }
+        ]
+      },
+      {
+        id: "ece-boss-1", unitId: 1, title: "ECE Unit 1 Boss Exam", subtitle: "Core ECE Placement Test", type: "boss", xpReward: 250, diamondReward: 100, department: "ece",
+        questions: [
+          { prompt: "Shannon's channel capacity formula is:", options: ["C = B × SNR", "C = B × log2(1 + SNR)", "C = 2B × log2(M)", "C = B / SNR"], correctAnswer: 1, explanation: "C = B·log2(1+SNR) gives max data rate in bits/sec." }
+        ]
+      }
+    ];
+  }
+
+  if (b === "eee") {
+    return [
+      {
+        id: "eee-1", unitId: 1, title: "Circuit Theory: KVL, KCL & Thevenin", subtitle: "Unit 1 • Step 1", type: "lesson", xpReward: 60, diamondReward: 20, department: "eee",
+        theoryNotes: {
+          summary: "Kirchhoff's laws, Thevenin/Norton equivalent circuits, and maximum power transfer.",
+          keyPoints: ["KCL: Σi = 0 at node", "KVL: Σv = 0 around loop", "Max power when RL = Rth: Pmax = Vth² / 4Rth"],
+          formula: "P_max = V_th^2 / (4 · R_th)",
+        },
+        questions: [
+          { prompt: "Kirchhoff's Current Law (KCL) is based on conservation of:", options: ["Energy", "Charge", "Momentum", "Mass"], correctAnswer: 1, explanation: "KCL states total charge entering a node equals charge leaving it." }
+        ]
+      },
+      {
+        id: "eee-2", unitId: 1, title: "DC Machines & Transformers", subtitle: "Unit 1 • Step 2", type: "quiz", xpReward: 80, diamondReward: 25, department: "eee",
+        theoryNotes: {
+          summary: "EMF equation, speed control of DC motors, and transformer EMF equation E = 4.44fΦN.",
+          keyPoints: ["EMF E = (PΦNZ)/(60A)", "Torque T ∝ Φ·Ia", "Transformer turns ratio V1/V2 = N1/N2"],
+          formula: "E = (P · Φ · N · Z) / (60 · A)",
+        },
+        questions: [
+          { prompt: "In a DC generator, EMF equation is E = ", options: ["PΦNZ/(60A)", "4.44fΦN", "BLv", "-dΦ/dt"], correctAnswer: 0, explanation: "E = PΦNZ/(60A) where P=poles, Φ=flux, N=rpm, Z=conductors, A=paths." }
+        ]
+      },
+      { id: "eee-chest-1", unitId: 1, title: "Diamond Chest Milestone 1", subtitle: "Bonus Loot", type: "chest", xpReward: 150, diamondReward: 50, department: "eee" },
+      {
+        id: "eee-boss-1", unitId: 1, title: "EEE Unit 1 Boss Exam", subtitle: "Core EEE Placement Test", type: "boss", xpReward: 250, diamondReward: 100, department: "eee",
+        questions: [
+          { prompt: "In a 3-phase star (Y) system, Line Voltage VL is:", options: ["VL = VP", "VL = √3 × VP", "VL = VP / √3", "VL = 3 × VP"], correctAnswer: 1, explanation: "In star connection, Line Voltage = √3 × Phase Voltage." }
+        ]
+      }
+    ];
+  }
+
+  if (b === "mech") {
+    return [
+      {
+        id: "mech-1", unitId: 1, title: "Engineering Mechanics & Statics", subtitle: "Unit 1 • Step 1", type: "lesson", xpReward: 60, diamondReward: 20, department: "mech",
+        theoryNotes: {
+          summary: "Free body diagrams, force equilibrium ΣFx=0, ΣFy=0, ΣM=0, and friction laws.",
+          keyPoints: ["Equilibrium requires force & moment balance", "Friction force F = μN", "Parallel axis theorem: I = Icm + Ad²"],
+          formula: "I = I_cm + A · d^2",
+        },
+        questions: [
+          { prompt: "Which condition is required for static equilibrium?", options: ["ΣF = 0 only", "ΣM = 0 only", "ΣF = 0 and ΣM = 0", "ΣF > 0"], correctAnswer: 2, explanation: "Static equilibrium requires both force balance and moment balance." }
+        ]
+      },
+      {
+        id: "mech-2", unitId: 1, title: "Thermodynamics & Engine Cycles", subtitle: "Unit 1 • Step 2", type: "quiz", xpReward: 80, diamondReward: 25, department: "mech",
+        theoryNotes: {
+          summary: "Laws of thermodynamics, Carnot cycle efficiency η = 1 - Tc/Th, and Otto/Diesel cycles.",
+          keyPoints: ["First Law: ΔU = Q - W", "Second Law: Entropy increases (dS ≥ δQ/T)", "Otto efficiency η = 1 - 1/r^(γ-1)"],
+          formula: "η_carnot = 1 - T_cold / T_hot",
+        },
+        questions: [
+          { prompt: "Carnot efficiency between 500K and 300K is:", options: ["20%", "30%", "40%", "60%"], correctAnswer: 2, explanation: "η = 1 - 300/500 = 0.4 = 40%." }
+        ]
+      },
+      { id: "mech-chest-1", unitId: 1, title: "Diamond Chest Milestone 1", subtitle: "Bonus Loot", type: "chest", xpReward: 150, diamondReward: 50, department: "mech" },
+      {
+        id: "mech-boss-1", unitId: 1, title: "MECH Unit 1 Boss Exam", subtitle: "Core Mechanical Placement Test", type: "boss", xpReward: 250, diamondReward: 100, department: "mech",
+        questions: [
+          { prompt: "Reynolds number Re < 2000 indicates which flow regime?", options: ["Turbulent", "Laminar", "Transition", "Supersonic"], correctAnswer: 1, explanation: "Re < 2000 corresponds to laminar flow." }
+        ]
+      }
+    ];
+  }
+
+  // Default to CSE
+  return [
+    {
+      id: "cse-1", unitId: 1, title: "Number Systems & Math Basics", subtitle: "Unit 1 • Step 1", type: "lesson", xpReward: 50, diamondReward: 15, department: "cse",
+      theoryNotes: {
+        summary: "Understand number representation, divisibility rules, HCF/LCM, and unit digit calculation.",
+        keyPoints: [
+          "HCF × LCM = Product of two numbers",
+          "Unit digit of 7^n follows a 4-step cycle: 7, 9, 3, 1",
+          "Sum of first n natural numbers = n(n+1)/2",
+        ],
+        formula: "HCF(a, b) × LCM(a, b) = a × b",
+        codeSnippet: "def find_lcm(a, b):\n    import math\n    return (a * b) // math.gcd(a, b)",
+      },
+      questions: [
+        { prompt: "What is the HCF of 36 and 48?", options: ["6", "12", "18", "24"], correctAnswer: 1, explanation: "36 = 2² × 3², 48 = 2⁴ × 3. HCF = 2² × 3 = 12." },
+        { prompt: "What is the unit digit of 7^105?", options: ["1", "3", "7", "9"], correctAnswer: 2, explanation: "7^n cycle is 7, 9, 3, 1 (period 4). 105 mod 4 = 1. So 7^1 = 7." },
+      ]
     },
-    questions: [
-      { prompt: "What is the HCF of 36 and 48?", options: ["6", "12", "18", "24"], correctAnswer: 1, explanation: "36 = 2² × 3², 48 = 2⁴ × 3. HCF = 2² × 3 = 12." },
-      { prompt: "What is the unit digit of 7^105?", options: ["1", "3", "7", "9"], correctAnswer: 2, explanation: "7^n cycle is 7, 9, 3, 1 (period 4). 105 mod 4 = 1. So 7^1 = 7." },
-    ]
-  },
-  {
-    id: "node-2", unitId: 1, title: "Arrays & Memory Allocation", subtitle: "Unit 1 • Step 2", type: "quiz", xpReward: 75, diamondReward: 20, department: "cse",
-    theoryNotes: {
-      summary: "Arrays provide contiguous memory storage with O(1) random access by index.",
-      keyPoints: ["Address = Base + Index × Size", "Kadane's algorithm finds max subarray sum in O(n)", "Row-major vs Column-major memory layout"],
-      formula: "Address(A[i]) = BaseAddress + i × sizeof(element)",
-      codeSnippet: "function maxSubArray(nums) {\n  let max = nums[0], curr = nums[0];\n  for (let i = 1; i < nums.length; i++) {\n    curr = Math.max(nums[i], curr + nums[i]);\n    max = Math.max(max, curr);\n  }\n  return max;\n}",
+    {
+      id: "cse-2", unitId: 1, title: "Arrays & Memory Allocation", subtitle: "Unit 1 • Step 2", type: "quiz", xpReward: 75, diamondReward: 20, department: "cse",
+      theoryNotes: {
+        summary: "Arrays provide contiguous memory storage with O(1) random access by index.",
+        keyPoints: ["Address = Base + Index × Size", "Kadane's algorithm finds max subarray sum in O(n)", "Row-major vs Column-major memory layout"],
+        formula: "Address(A[i]) = BaseAddress + i × sizeof(element)",
+        codeSnippet: "function maxSubArray(nums) {\n  let max = nums[0], curr = nums[0];\n  for (let i = 1; i < nums.length; i++) {\n    curr = Math.max(nums[i], curr + nums[i]);\n    max = Math.max(max, curr);\n  }\n  return max;\n}",
+      },
+      questions: [
+        { prompt: "What is the time complexity to access an element by index in an array?", options: ["O(1)", "O(n)", "O(log n)", "O(n²)"], correctAnswer: 0, explanation: "Array memory is contiguous, enabling direct pointer calculation in O(1) time." },
+        { prompt: "What is the max subarray sum for [-2, 1, -3, 4, -1, 2, 1, -5, 4]?", options: ["4", "5", "6", "7"], correctAnswer: 2, explanation: "Using Kadane's algorithm, [4, -1, 2, 1] yields maximum sum = 6." }
+      ]
     },
-    questions: [
-      { prompt: "What is the time complexity to access an element by index in an array?", options: ["O(1)", "O(n)", "O(log n)", "O(n²)"], correctAnswer: 0, explanation: "Array memory is contiguous, enabling direct pointer calculation in O(1) time." },
-      { prompt: "What is the max subarray sum for [-2, 1, -3, 4, -1, 2, 1, -5, 4]?", options: ["4", "5", "6", "7"], correctAnswer: 2, explanation: "Using Kadane's algorithm, [4, -1, 2, 1] yields maximum sum = 6." }
-    ]
-  },
-  {
-    id: "node-3", unitId: 1, title: "Diamond Chest Milestone 1", subtitle: "Bonus Loot", type: "chest", xpReward: 150, diamondReward: 50, department: "cse"
-  },
-  {
-    id: "node-4", unitId: 1, title: "Linked Lists & Cycle Detection", subtitle: "Unit 1 • Step 3", type: "lesson", xpReward: 100, diamondReward: 25, department: "cse",
-    theoryNotes: {
-      summary: "Dynamic node allocations connected via pointers. Floyd's tortoise and hare detects cycles.",
-      keyPoints: ["O(1) insertion/deletion at head", "Floyd's algorithm uses 2 pointers: slow (1x) and fast (2x)", "Doubly linked list allows bidirectional traversal"],
-      codeSnippet: "function hasCycle(head) {\n  let slow = head, fast = head;\n  while (fast && fast.next) {\n    slow = slow.next;\n    fast = fast.next.next;\n    if (slow === fast) return true;\n  }\n  return false;\n}",
+    { id: "cse-chest-1", unitId: 1, title: "Diamond Chest Milestone 1", subtitle: "Bonus Loot", type: "chest", xpReward: 150, diamondReward: 50, department: "cse" },
+    {
+      id: "cse-3", unitId: 1, title: "Linked Lists & Cycle Detection", subtitle: "Unit 1 • Step 3", type: "lesson", xpReward: 100, diamondReward: 25, department: "cse",
+      theoryNotes: {
+        summary: "Dynamic node allocations connected via pointers. Floyd's tortoise and hare detects cycles.",
+        keyPoints: ["O(1) insertion/deletion at head", "Floyd's algorithm uses 2 pointers: slow (1x) and fast (2x)", "Doubly linked list allows bidirectional traversal"],
+        codeSnippet: "function hasCycle(head) {\n  let slow = head, fast = head;\n  while (fast && fast.next) {\n    slow = slow.next;\n    fast = fast.next.next;\n    if (slow === fast) return true;\n  }\n  return false;\n}",
+      },
+      questions: [
+        { prompt: "Floyd's cycle detection algorithm uses how many pointers?", options: ["One", "Two (Slow & Fast)", "Three", "Stack memory"], correctAnswer: 1, explanation: "Floyd's algorithm uses a slow pointer (1 step) and fast pointer (2 steps)." }
+      ]
     },
-    questions: [
-      { prompt: "Floyd's cycle detection algorithm uses how many pointers?", options: ["One", "Two (Slow & Fast)", "Three", "Stack memory"], correctAnswer: 1, explanation: "Floyd's algorithm uses a slow pointer (1 step) and fast pointer (2 steps)." }
-    ]
-  },
-  {
-    id: "node-5", unitId: 1, title: "Unit 1 Boss Exam", subtitle: "Placement Foundation Test", type: "boss", xpReward: 250, diamondReward: 100, department: "cse",
-    questions: [
-      { prompt: "Which data structure operates on Last-In-First-Out (LIFO)?", options: ["Queue", "Stack", "Heap", "Tree"], correctAnswer: 1, explanation: "Stacks strictly follow LIFO principles." },
-      { prompt: "What is the average search time complexity in a Hash Table?", options: ["O(1)", "O(n)", "O(log n)", "O(n²)"], correctAnswer: 0, explanation: "Hash tables offer average O(1) time complexity with a good hash function." }
-    ]
-  },
-  // Unit 2
-  {
-    id: "node-6", unitId: 2, title: "Operating Systems & Process Control", subtitle: "Unit 2 • Step 1", type: "lesson", xpReward: 100, diamondReward: 30, department: "cse",
-    theoryNotes: {
-      summary: "Process scheduling, context switching, deadlock conditions, and synchronization primitives.",
-      keyPoints: ["4 Deadlock Conditions: Mutual exclusion, Hold & Wait, No Preemption, Circular Wait", "Round Robin uses fixed time quantum", "Semaphores prevent race conditions"],
-      formula: "Turnaround Time = Completion Time - Arrival Time",
-    },
-    questions: [
-      { prompt: "Which condition is NOT required for a deadlock to occur?", options: ["Mutual Exclusion", "Preemption", "Hold and Wait", "Circular Wait"], correctAnswer: 1, explanation: "Deadlock requires NO preemption. Preemption breaks deadlock." }
-    ]
-  },
-  {
-    id: "node-7", unitId: 2, title: "Database Systems & SQL Normalization", subtitle: "Unit 2 • Step 2", type: "quiz", xpReward: 120, diamondReward: 35, department: "cse",
-    theoryNotes: {
-      summary: "Relational database design, 1NF to BCNF normalization, and ACID properties.",
-      keyPoints: ["3NF removes transitive dependencies", "ACID: Atomicity, Consistency, Isolation, Durability", "B+ Tree index speeds up range queries"],
-    },
-    questions: [
-      { prompt: "Which normal form removes transitive dependencies?", options: ["1NF", "2NF", "3NF", "BCNF"], correctAnswer: 2, explanation: "3NF eliminates dependencies where non-key attributes depend on other non-key attributes." }
-    ]
-  },
-  {
-    id: "node-8", unitId: 2, title: "Diamond Chest Milestone 2", subtitle: "Bonus Loot", type: "chest", xpReward: 200, diamondReward: 75, department: "cse"
-  },
-  {
-    id: "node-9", unitId: 2, title: "Computer Networks & TCP/IP Handshake", subtitle: "Unit 2 • Step 3", type: "lesson", xpReward: 130, diamondReward: 40, department: "cse",
-    theoryNotes: {
-      summary: "Network protocol stack, 3-way TCP handshake, and CIDR subnetting.",
-      keyPoints: ["TCP 3-way handshake: SYN → SYN-ACK → ACK", "Subnetting /24 provides 254 usable host addresses", "HTTP (80), HTTPS (443), DNS (53)"],
-    },
-    questions: [
-      { prompt: "What is the second step of the TCP 3-way handshake?", options: ["SYN", "SYN-ACK", "ACK", "FIN"], correctAnswer: 1, explanation: "The server responds to SYN with SYN-ACK." }
-    ]
-  },
-];
+    {
+      id: "cse-boss-1", unitId: 1, title: "CSE Unit 1 Boss Exam", subtitle: "Placement Foundation Test", type: "boss", xpReward: 250, diamondReward: 100, department: "cse",
+      questions: [
+        { prompt: "Which data structure operates on Last-In-First-Out (LIFO)?", options: ["Queue", "Stack", "Heap", "Tree"], correctAnswer: 1, explanation: "Stacks strictly follow LIFO principles." },
+        { prompt: "What is the average search time complexity in a Hash Table?", options: ["O(1)", "O(n)", "O(log n)", "O(n²)"], correctAnswer: 0, explanation: "Hash tables offer average O(1) time complexity with a good hash function." }
+      ]
+    }
+  ];
+}
 
 export default function LearningGamePath({ branchId = "cse", onNodeComplete }: LearningGamePathProps) {
   const [userXp, setUserXp] = useState<number>(() => parseInt(localStorage.getItem("user_xp") || "350", 10));
   const [userDiamonds, setUserDiamonds] = useState<number>(() => parseInt(localStorage.getItem("user_diamonds") || "120", 10));
   const [completedNodeIds, setCompletedNodeIds] = useState<string[]>(() => {
     const saved = localStorage.getItem("completed_nodes");
-    return saved ? JSON.parse(saved) : ["node-1"];
+    return saved ? JSON.parse(saved) : ["cse-1", "aiml-1", "ece-1", "eee-1", "mech-1"];
   });
   const [activeUnitId, setActiveUnitId] = useState<number>(1);
   const [selectedNode, setSelectedNode] = useState<PathNode | null>(null);
+
+  // Dynamic Nodes based on active Branch ID
+  const currentBranchNodes = getBranchNodes(branchId || "cse");
 
   // Modal State
   const [currentStep, setCurrentStep] = useState<"theory" | "quiz" | "complete">("theory");
@@ -164,7 +295,6 @@ export default function LearningGamePath({ branchId = "cse", onNodeComplete }: L
     setScore(0);
 
     if (node.type === "chest") {
-      // Direct reward claim for chest node
       completeNode(node);
     } else if (node.theoryNotes) {
       setCurrentStep("theory");
@@ -216,7 +346,7 @@ export default function LearningGamePath({ branchId = "cse", onNodeComplete }: L
     }
   };
 
-  const unitNodes = DEFAULT_NODES.filter(n => n.unitId === activeUnitId);
+  const unitNodes = currentBranchNodes.filter(n => n.unitId === activeUnitId);
 
   return (
     <div className="w-full max-w-5xl mx-auto space-y-8 pb-16 text-slate-100">
@@ -295,11 +425,9 @@ export default function LearningGamePath({ branchId = "cse", onNodeComplete }: L
         <div className="w-full max-w-lg space-y-12 relative z-10">
           {unitNodes.map((node, index) => {
             const isCompleted = completedNodeIds.includes(node.id);
-            // First node or node after completed node is unlocked
             const prevCompleted = index === 0 || completedNodeIds.includes(unitNodes[index - 1].id);
             const isUnlocked = isCompleted || prevCompleted;
 
-            // Horizontal Zig-Zag offset: left (-70px), center (0), right (70px)
             const offsets = [0, -75, 75, -50, 50, 0];
             const xOffset = offsets[index % offsets.length];
 
@@ -309,12 +437,12 @@ export default function LearningGamePath({ branchId = "cse", onNodeComplete }: L
                 className="flex flex-col items-center relative"
                 style={{ transform: `translateX(${xOffset}px)` }}
               >
-                {/* Connecting Line to next node */}
+                {/* Connecting Line */}
                 {index < unitNodes.length - 1 && (
                   <div className="absolute top-16 left-1/2 -translate-x-1/2 w-1 h-16 bg-gradient-to-b from-purple-500/40 to-slate-700/40 border-dashed border-l-2 border-purple-500/40 z-0" />
                 )}
 
-                {/* NODE ICON BUTTON */}
+                {/* NODE BUTTON */}
                 <motion.button
                   whileHover={{ scale: isUnlocked ? 1.1 : 1 }}
                   whileTap={{ scale: isUnlocked ? 0.95 : 1 }}
@@ -340,7 +468,6 @@ export default function LearningGamePath({ branchId = "cse", onNodeComplete }: L
                     <BookOpen size={30} className="text-white" />
                   )}
 
-                  {/* Active Ring FX */}
                   {isUnlocked && !isCompleted && (
                     <div className="absolute -inset-2 rounded-full border-2 border-cyan-400/50 animate-ping pointer-events-none" />
                   )}
@@ -363,7 +490,7 @@ export default function LearningGamePath({ branchId = "cse", onNodeComplete }: L
         </div>
       </div>
 
-      {/* ─── INTERACTIVE STEP-BY-STEP NODE MODAL ─── */}
+      {/* ─── INTERACTIVE NODE MODAL ─── */}
       <AnimatePresence>
         {selectedNode && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
@@ -373,7 +500,6 @@ export default function LearningGamePath({ branchId = "cse", onNodeComplete }: L
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
               className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 md:p-8 rounded-3xl bg-slate-900 border border-purple-500/30 shadow-2xl shadow-purple-950/80 text-left space-y-6"
             >
-              {/* Close Button */}
               <button
                 onClick={() => setSelectedNode(null)}
                 className="absolute top-6 right-6 p-2 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors"
@@ -381,7 +507,6 @@ export default function LearningGamePath({ branchId = "cse", onNodeComplete }: L
                 <X size={20} />
               </button>
 
-              {/* Modal Header */}
               <div className="space-y-1 pr-10">
                 <span className="text-xs font-bold tracking-wider text-purple-400 uppercase bg-purple-500/10 px-3 py-1 rounded-full border border-purple-500/20">
                   {selectedNode.subtitle}
@@ -389,7 +514,6 @@ export default function LearningGamePath({ branchId = "cse", onNodeComplete }: L
                 <h3 className="text-2xl font-bold text-white">{selectedNode.title}</h3>
               </div>
 
-              {/* STEP 1: THEORY & NOTES */}
               {currentStep === "theory" && selectedNode.theoryNotes && (
                 <div className="space-y-6">
                   <div className="p-4 rounded-2xl bg-purple-950/40 border border-purple-500/20 text-slate-200 text-sm leading-relaxed">
@@ -427,7 +551,7 @@ export default function LearningGamePath({ branchId = "cse", onNodeComplete }: L
 
                   <button
                     onClick={() => setCurrentStep("quiz")}
-                    className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-white font-bold text-sm shadow-lg shadow-purple-500/25 flex items-center justify-center gap-2 transition-all"
+                    className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-white font-bold text-sm shadow-lg flex items-center justify-center gap-2 transition-all"
                   >
                     <span>Start Practice Challenge</span>
                     <ArrowRight size={18} />
@@ -435,7 +559,6 @@ export default function LearningGamePath({ branchId = "cse", onNodeComplete }: L
                 </div>
               )}
 
-              {/* STEP 2: INTERACTIVE PRACTICE QUIZ */}
               {currentStep === "quiz" && selectedNode.questions && selectedNode.questions[quizIndex] && (
                 <div className="space-y-6">
                   <div className="flex justify-between items-center text-xs font-mono text-slate-400">
@@ -472,7 +595,6 @@ export default function LearningGamePath({ branchId = "cse", onNodeComplete }: L
                     })}
                   </div>
 
-                  {/* Feedback Banner */}
                   {isSubmitted && (
                     <div className={`p-4 rounded-2xl border text-xs leading-relaxed ${
                       selectedOption === selectedNode.questions[quizIndex].correctAnswer
@@ -510,7 +632,6 @@ export default function LearningGamePath({ branchId = "cse", onNodeComplete }: L
         )}
       </AnimatePresence>
 
-      {/* Gamification Loot Chest Reward Modal */}
       <GamificationModal
         isOpen={showGamificationModal}
         onClose={() => {
