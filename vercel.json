@@ -1,8 +1,13 @@
 {
+  "version": 2,
   "buildCommand": "cd ascend && npm install && npm run build",
   "outputDirectory": "ascend/dist",
   "framework": "vite",
   "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api"
+    },
     {
       "source": "/(.*)",
       "destination": "/index.html"
