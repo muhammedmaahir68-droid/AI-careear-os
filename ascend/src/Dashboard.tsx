@@ -17,6 +17,7 @@ import { useCommunityHub } from "./hooks/useCommunityHub";
 import { useBranchRole, useRoleContent } from "./hooks/useBranchRole";
 import BranchRolePicker from "./components/BranchRolePicker";
 import { getBranchCompanies, type CompanyTrack } from "./data/companyData";
+import LearningGamePath from "./components/LearningGamePath";
 
 function formatEventTime(isoString: string): string {
   const date = new Date(isoString);
@@ -31,7 +32,7 @@ function formatEventTime(isoString: string): string {
   return date.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" }) + `, ${timeStr}`;
 }
 
-type Tab = "dashboard" | "daily" | "roadmap" | "mock" | "companies" | "community" | "resume";
+type Tab = "dashboard" | "daily" | "path" | "roadmap" | "mock" | "companies" | "community" | "resume";
 
 interface CompanyDetails {
   name: string;
@@ -478,6 +479,7 @@ export default function Dashboard() {
 
   const tabs = [
     { id: "dashboard", label: "Overview", icon: <LayoutDashboard size={18} /> },
+    { id: "path", label: "Duolingo Game Path 🎮", icon: <Trophy size={18} /> },
     { id: "daily", label: "Placement Journey (Daily Flow)", icon: <Zap size={18} /> },
     { id: "roadmap", label: "Roadmap & Curriculum", icon: <Map size={18} /> },
     { id: "mock", label: "Mock Interview", icon: <Mic size={18} /> },
@@ -719,6 +721,19 @@ export default function Dashboard() {
                   onSend={handleSendMessage}
                 />
               </div>
+            </motion.div>
+          )}
+
+          {/* ── DUOLINGO GAME PATH ── */}
+          {activeTab === "path" && (
+            <motion.div key="path" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+              <LearningGamePath
+                branchId={branchId}
+                onNodeComplete={(xpEarned) => {
+                  updateXP(xpEarned);
+                  updateStreak();
+                }}
+              />
             </motion.div>
           )}
 
