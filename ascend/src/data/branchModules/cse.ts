@@ -636,5 +636,479 @@ class ConsistentHashRing:
       output: "Assigned node name",
       starter: `def lookup_node(nodes, key):\n    # Return server name assigned to key\n    pass`
     }
+  },
+
+  // ═══════════════════════════════════════════════════════════════
+  // MODULE 7: DBMS & SQL – Joins, Normalization, ACID
+  // ═══════════════════════════════════════════════════════════════
+  {
+    moduleTitle: "DBMS & SQL – Joins, Normalization, ACID",
+    level: "Level 4 – Database Systems",
+    branch: ["cse", "it"],
+    videos: makeVideoLinks("DBMS SQL Joins Normalization ACID Transactions"),
+    studyMaterial: {
+      summary: `A Database Management System (DBMS) is software that manages the storage, retrieval, and manipulation of structured data. Relational DBMS (RDBMS) organizes data into tables (relations) with rows (tuples) and columns (attributes).
+
+SQL (Structured Query Language) is the standard language for interacting with RDBMS. It includes DDL (CREATE, ALTER, DROP), DML (SELECT, INSERT, UPDATE, DELETE), DCL (GRANT, REVOKE), and TCL (COMMIT, ROLLBACK, SAVEPOINT).
+
+Normalization is the process of organizing data to reduce redundancy and improve data integrity. The normal forms progress from 1NF (atomic values, no repeating groups) through 2NF (no partial dependencies on composite keys), 3NF (no transitive dependencies), to BCNF (every determinant is a candidate key).
+
+JOINs combine rows from two or more tables based on related columns. INNER JOIN returns matching rows from both tables. LEFT JOIN returns all rows from the left table plus matching rows from the right. RIGHT JOIN is the reverse. FULL OUTER JOIN returns all rows when there is a match in either table. CROSS JOIN produces the Cartesian product.
+
+ACID properties guarantee reliable database transactions: Atomicity (all-or-nothing), Consistency (valid state transitions), Isolation (concurrent transactions don't interfere), Durability (committed data survives crashes). Isolation levels include Read Uncommitted, Read Committed, Repeatable Read, and Serializable.`,
+      deepDiveTextbook: `CHAPTER: INDEXING & QUERY OPTIMIZATION
+
+B-Tree indexes store sorted data in a balanced tree structure allowing O(log N) search, insert, and delete operations. They are the default index type in most RDBMS (MySQL InnoDB, PostgreSQL).
+
+Hash indexes use a hash function for O(1) exact-match lookups but cannot support range queries. Composite indexes cover multiple columns and follow the leftmost prefix rule.
+
+The Query Optimizer analyzes SQL queries and generates an execution plan. It uses statistics about table sizes, index selectivity, and join cardinality to choose between Nested Loop Join (small tables), Hash Join (equi-joins on large tables), and Merge Join (pre-sorted data).
+
+EXPLAIN ANALYZE reveals the actual execution plan including sequential scans, index scans, bitmap scans, and their estimated vs actual costs.`,
+      authorReferences: [
+        {
+          author: "Abraham Silberschatz, Henry F. Korth, S. Sudarshan",
+          bookTitle: "Database System Concepts (7th Edition)",
+          coreInsight: "Transaction isolation levels trade off between concurrency performance and data consistency guarantees."
+        },
+        {
+          author: "Ramez Elmasri, Shamkant B. Navathe",
+          bookTitle: "Fundamentals of Database Systems (7th Edition)",
+          coreInsight: "Normalization to BCNF eliminates all redundancy from functional dependencies but may sacrifice some query performance requiring strategic denormalization."
+        }
+      ],
+      comparisonTable: {
+        headers: ["Normal Form", "Requirement", "Eliminates"],
+        rows: [
+          ["1NF", "Atomic values, no repeating groups", "Multi-valued attributes"],
+          ["2NF", "1NF + No partial dependencies", "Partial key dependencies"],
+          ["3NF", "2NF + No transitive dependencies", "Transitive dependencies"],
+          ["BCNF", "Every determinant is a candidate key", "All FD anomalies"]
+        ]
+      },
+      flowchartSteps: [
+        "Identify all Functional Dependencies (FDs)",
+        "Check 1NF: Are all attributes atomic?",
+        "Check 2NF: Any partial dependencies on composite key?",
+        "Check 3NF: Any transitive dependencies (A→B→C)?",
+        "Check BCNF: Is every determinant a candidate key?",
+        "Decompose violating relations losslessly"
+      ],
+      keyPoints: [
+        "INNER JOIN returns only rows with matching keys in both tables.",
+        "LEFT JOIN preserves all rows from the left table, filling NULLs for non-matching right rows.",
+        "ACID: Atomicity (undo on failure), Consistency (constraints hold), Isolation (concurrent safety), Durability (WAL/redo logs).",
+        "B-Tree index supports range queries O(log N); Hash index supports only equality O(1).",
+        "Normalization reduces redundancy; Denormalization improves read performance for analytics."
+      ],
+      example: `-- INNER JOIN: Get employees with their department names
+SELECT e.name, d.dept_name
+FROM employees e
+INNER JOIN departments d ON e.dept_id = d.id;
+
+-- LEFT JOIN: All employees, even those without a department
+SELECT e.name, COALESCE(d.dept_name, 'Unassigned') AS dept
+FROM employees e
+LEFT JOIN departments d ON e.dept_id = d.id;
+
+-- Subquery: Find employees earning above average
+SELECT name, salary
+FROM employees
+WHERE salary > (SELECT AVG(salary) FROM employees);
+
+-- Window Function: Rank employees by salary within each department
+SELECT name, dept_id, salary,
+       RANK() OVER (PARTITION BY dept_id ORDER BY salary DESC) as rank
+FROM employees;`,
+      complexity: "B-Tree Lookup: O(log N) | Hash Lookup: O(1) avg | Full Scan: O(N)"
+    },
+    aiExplain: {
+      steps: [
+        "1. Define tables with PRIMARY KEY and FOREIGN KEY constraints.",
+        "2. Normalize to 3NF/BCNF to eliminate data anomalies.",
+        "3. Write SELECT queries with appropriate JOINs to combine related data.",
+        "4. Create indexes on frequently queried columns for performance.",
+        "5. Wrap multi-statement operations in TRANSACTIONS for ACID guarantees."
+      ],
+      analogy: "A database is like a well-organized library: tables are bookshelves, rows are books, indexes are the card catalog that helps you find books in O(log N) time instead of scanning every shelf!"
+    },
+    debug: [
+      {
+        title: "Fix SQL JOIN returning duplicate rows",
+        buggy: `SELECT e.name, d.dept_name\nFROM employees e, departments d\nWHERE e.dept_id = d.id; -- Implicit join, easily causes Cartesian product if WHERE is forgotten`,
+        fixed: `SELECT DISTINCT e.name, d.dept_name\nFROM employees e\nINNER JOIN departments d ON e.dept_id = d.id;`,
+        hint: "Always use explicit JOIN syntax with ON clause instead of comma-separated tables in FROM. Use DISTINCT if duplicates persist due to one-to-many relationships."
+      }
+    ],
+    quiz: [
+      { q: "Which normal form eliminates transitive dependencies?", options: ["1NF", "2NF", "3NF", "BCNF"], answer: 2 },
+      { q: "What does the 'I' in ACID stand for?", options: ["Integrity", "Isolation", "Indexing", "Insertion"], answer: 1 },
+      { q: "Which JOIN returns all rows from both tables, matching where possible?", options: ["INNER JOIN", "LEFT JOIN", "CROSS JOIN", "FULL OUTER JOIN"], answer: 3 },
+      { q: "What data structure does a B-Tree index use?", options: ["Hash table", "Balanced search tree", "Linked list", "Stack"], answer: 1 },
+      { q: "Which SQL clause is used to filter groups created by GROUP BY?", options: ["WHERE", "HAVING", "FILTER", "GROUP FILTER"], answer: 1 }
+    ],
+    mnc: [
+      { company: "Oracle", year: "2023", question: "Explain the difference between DELETE, TRUNCATE, and DROP", answer: "DELETE removes specific rows (DML, can rollback, fires triggers). TRUNCATE removes all rows (DDL, faster, resets identity). DROP removes the entire table structure." },
+      { company: "Amazon (RDS)", year: "2023", question: "How would you optimize a slow SQL query?", answer: "1. EXPLAIN ANALYZE the query plan. 2. Add indexes on WHERE/JOIN columns. 3. Avoid SELECT *. 4. Use query caching. 5. Partition large tables. 6. Denormalize for read-heavy workloads." },
+      { company: "Microsoft", year: "2022", question: "What are database isolation levels and their trade-offs?", answer: "Read Uncommitted (fastest, dirty reads), Read Committed (no dirty reads), Repeatable Read (no phantom reads within transaction), Serializable (strictest, full isolation but lowest concurrency)." }
+    ],
+    mock: [
+      { type: "Technical", question: "What is the difference between clustered and non-clustered index?", tip: "Clustered index physically reorders the table data (only one per table, usually on PK). Non-clustered index creates a separate lookup structure pointing to data rows (multiple allowed)." }
+    ],
+    coding: {
+      problem: "SQL: Find Second Highest Salary",
+      desc: "Write a SQL query to find the second highest salary from an employees table.",
+      input: "employees table with columns: id, name, salary",
+      output: "Second highest salary value or NULL if not exists",
+      starter: `-- Write your SQL query here\nSELECT ??? AS second_highest_salary\nFROM employees;`
+    }
+  },
+
+  // ═══════════════════════════════════════════════════════════════
+  // MODULE 8: Operating Systems – Processes, Deadlocks, Scheduling
+  // ═══════════════════════════════════════════════════════════════
+  {
+    moduleTitle: "Operating Systems – Processes, Deadlocks, Scheduling",
+    level: "Level 4 – Systems",
+    branch: ["cse", "it"],
+    videos: makeVideoLinks("Operating Systems Process Scheduling Deadlock Memory Management"),
+    studyMaterial: {
+      summary: `An Operating System (OS) is system software that manages hardware resources and provides services for application software. It handles Process Management, Memory Management, File Systems, I/O Management, and Security.
+
+A Process is a program in execution with its own address space, program counter, registers, and stack. A Thread is a lightweight sub-unit of a process sharing the same address space. Process states: New → Ready → Running → Waiting → Terminated.
+
+CPU Scheduling determines which process runs on the CPU. Algorithms include:
+• FCFS (First Come First Served): Non-preemptive, simple but suffers from convoy effect.
+• SJF (Shortest Job First): Optimal average waiting time but requires knowing burst times.
+• Round Robin: Preemptive with time quantum; good for time-sharing systems.
+• Priority Scheduling: Each process gets a priority; can cause starvation (solved by aging).
+• Multilevel Queue/Feedback Queue: Multiple queues with different scheduling policies.
+
+Deadlock occurs when four conditions hold simultaneously: Mutual Exclusion, Hold and Wait, No Preemption, Circular Wait. Banker's Algorithm prevents deadlock by checking if a safe sequence exists before granting resource requests.
+
+Memory Management includes Contiguous Allocation, Paging (fixed-size pages mapped to frames via Page Table), Segmentation (variable-size logical segments), and Virtual Memory (demand paging with page replacement algorithms: FIFO, LRU, Optimal).`,
+      comparisonTable: {
+        headers: ["Algorithm", "Type", "Advantage", "Disadvantage"],
+        rows: [
+          ["FCFS", "Non-preemptive", "Simple implementation", "Convoy effect, high avg wait"],
+          ["SJF", "Non-preemptive", "Optimal avg waiting time", "Requires burst time prediction"],
+          ["Round Robin", "Preemptive", "Fair, good response time", "High context switch overhead"],
+          ["Priority", "Both", "Important tasks run first", "Starvation of low priority"],
+          ["MLFQ", "Preemptive", "Adaptive, balances all needs", "Complex to configure"]
+        ]
+      },
+      keyPoints: [
+        "Process vs Thread: Process has separate memory space; threads share memory within a process.",
+        "Deadlock requires ALL four conditions: Mutual Exclusion, Hold & Wait, No Preemption, Circular Wait.",
+        "Banker's Algorithm checks for Safe State before allocating resources to prevent deadlock.",
+        "Page Fault: When accessed page is not in RAM, OS loads it from disk (demand paging).",
+        "Belady's Anomaly: FIFO page replacement can have MORE faults with MORE frames. LRU does not suffer from this."
+      ],
+      example: `# Round Robin Scheduling Simulation
+def round_robin(processes, burst_times, quantum):
+    n = len(processes)
+    remaining = list(burst_times)
+    waiting_time = [0] * n
+    time = 0
+    
+    while any(r > 0 for r in remaining):
+        for i in range(n):
+            if remaining[i] > 0:
+                execute = min(quantum, remaining[i])
+                time += execute
+                remaining[i] -= execute
+                if remaining[i] == 0:
+                    waiting_time[i] = time - burst_times[i]
+    
+    avg_wait = sum(waiting_time) / n
+    return waiting_time, avg_wait
+
+# Example: processes P1(10), P2(5), P3(8) with quantum=3
+wt, avg = round_robin(['P1','P2','P3'], [10,5,8], 3)
+print(f"Waiting times: {wt}, Average: {avg}")`,
+      complexity: "Context Switch: ~1-10μs | Page Table Lookup: O(1) with TLB | Banker's Algorithm: O(n*m²)"
+    },
+    aiExplain: {
+      steps: [
+        "1. Process is created (New) and placed in Ready Queue.",
+        "2. CPU Scheduler picks a process based on the scheduling algorithm.",
+        "3. Process runs on CPU (Running state) until it completes, gets preempted, or waits for I/O.",
+        "4. If process requests a resource held by another, potential Deadlock is checked.",
+        "5. Virtual Memory maps logical addresses to physical frames using Page Table + TLB cache."
+      ],
+      analogy: "An OS is like a restaurant manager: scheduling CPU time is like assigning tables to waiting customers, deadlock is when two waiters each hold a dish the other needs, and virtual memory is like having a small dining room but a large parking lot — you bring in customers as tables free up!"
+    },
+    debug: [
+      {
+        title: "Fix Deadlock in Thread Synchronization",
+        buggy: `# Thread 1: lock_A -> lock_B\n# Thread 2: lock_B -> lock_A  (DEADLOCK!)\nimport threading\nlock_a = threading.Lock()\nlock_b = threading.Lock()\ndef thread1():\n    lock_a.acquire()\n    lock_b.acquire()  # Waits for lock_b held by thread2\ndef thread2():\n    lock_b.acquire()\n    lock_a.acquire()  # Waits for lock_a held by thread1`,
+        fixed: `# Fix: Always acquire locks in the SAME order\nimport threading\nlock_a = threading.Lock()\nlock_b = threading.Lock()\ndef thread1():\n    lock_a.acquire()\n    lock_b.acquire()\n    lock_b.release()\n    lock_a.release()\ndef thread2():\n    lock_a.acquire()  # Same order as thread1\n    lock_b.acquire()\n    lock_b.release()\n    lock_a.release()`,
+        hint: "Deadlock prevention: enforce a global ordering on lock acquisition. All threads must acquire locks in the same order to break circular wait."
+      }
+    ],
+    quiz: [
+      { q: "Which scheduling algorithm is optimal for average waiting time?", options: ["FCFS", "SJF (Shortest Job First)", "Round Robin", "Priority"], answer: 1 },
+      { q: "Which condition is NOT required for deadlock?", options: ["Mutual Exclusion", "Hold and Wait", "Preemption", "Circular Wait"], answer: 2 },
+      { q: "What does TLB stand for in memory management?", options: ["Table Lookup Buffer", "Translation Lookaside Buffer", "Transfer Load Balance", "Thread Level Block"], answer: 1 },
+      { q: "Belady's Anomaly occurs with which page replacement algorithm?", options: ["LRU", "Optimal", "FIFO", "LFU"], answer: 2 },
+      { q: "What is a semaphore used for?", options: ["Memory allocation", "Process synchronization", "Disk scheduling", "Network routing"], answer: 1 }
+    ],
+    mnc: [
+      { company: "Microsoft", year: "2023", question: "Explain the difference between process and thread", answer: "Process: independent execution unit with own memory space, heavier context switch. Thread: lightweight, shares process memory/resources, faster context switch. Threads within a process can communicate via shared memory." },
+      { company: "Google", year: "2023", question: "How does virtual memory work?", answer: "OS uses page tables to map virtual addresses to physical frames. Pages not in RAM are stored on disk. On page fault, OS loads the page from disk, potentially evicting another page using LRU/FIFO replacement." },
+      { company: "VMware", year: "2022", question: "Explain different types of process scheduling", answer: "Long-term (job scheduler, controls degree of multiprogramming), Short-term (CPU scheduler, picks next process from ready queue), Medium-term (swapper, moves processes between RAM and disk)." }
+    ],
+    mock: [
+      { type: "Technical", question: "What happens when you type a URL in the browser from an OS perspective?", tip: "OS creates a process for the browser, allocates virtual memory, the process creates threads for rendering/networking, system calls are made for socket creation (network I/O), DNS resolution uses the OS resolver cache, and file I/O reads the disk cache for cached pages." }
+    ],
+    coding: {
+      problem: "Implement LRU Page Replacement",
+      desc: "Given a sequence of page references and number of frames, simulate LRU page replacement and count page faults.",
+      input: "pages = [7, 0, 1, 2, 0, 3, 0, 4, 2, 3], frames = 3",
+      output: "Page faults: 8",
+      starter: `def lru_page_faults(pages, num_frames):\n    # Return total number of page faults\n    pass`
+    }
+  },
+
+  // ═══════════════════════════════════════════════════════════════
+  // MODULE 9: Computer Networks – OSI, TCP/IP, HTTP
+  // ═══════════════════════════════════════════════════════════════
+  {
+    moduleTitle: "Computer Networks – OSI, TCP/IP, HTTP",
+    level: "Level 3 – Networking",
+    branch: ["cse", "it"],
+    videos: makeVideoLinks("Computer Networks OSI Model TCP IP HTTP DNS"),
+    studyMaterial: {
+      summary: `Computer Networks enable communication between devices. The OSI (Open Systems Interconnection) model has 7 layers:
+Layer 7 (Application): HTTP, FTP, SMTP, DNS — user-facing protocols.
+Layer 6 (Presentation): Data formatting, encryption (SSL/TLS), compression.
+Layer 5 (Session): Session management, authentication, checkpointing.
+Layer 4 (Transport): TCP (reliable, connection-oriented) and UDP (fast, connectionless). Port numbers.
+Layer 3 (Network): IP addressing, routing (RIP, OSPF, BGP). Subnetting, NAT.
+Layer 2 (Data Link): MAC addressing, Ethernet, switches, ARP, error detection (CRC).
+Layer 1 (Physical): Cables, signals, hubs, bit transmission.
+
+TCP uses a 3-way handshake (SYN → SYN-ACK → ACK) for connection establishment and provides reliable delivery via sequence numbers, acknowledgments, retransmission, and flow control (sliding window). UDP provides no guarantees but has lower latency — ideal for video streaming, gaming, DNS queries.
+
+HTTP (Hypertext Transfer Protocol) operates on port 80 (HTTPS on 443). Methods: GET (retrieve), POST (create), PUT (update), DELETE (remove). Status codes: 2xx (success), 3xx (redirect), 4xx (client error), 5xx (server error).
+
+DNS (Domain Name System) resolves domain names to IP addresses through recursive queries: Browser cache → OS cache → Recursive resolver → Root server → TLD server → Authoritative server.`,
+      comparisonTable: {
+        headers: ["Feature", "TCP", "UDP"],
+        rows: [
+          ["Connection", "Connection-oriented (3-way handshake)", "Connectionless"],
+          ["Reliability", "Guaranteed delivery, ordering, retransmission", "Best-effort, no guarantees"],
+          ["Speed", "Slower due to overhead", "Faster, lower latency"],
+          ["Use Cases", "HTTP, FTP, Email, SSH", "DNS, Video streaming, Gaming, VoIP"],
+          ["Header Size", "20-60 bytes", "8 bytes"],
+          ["Flow Control", "Sliding window", "None"]
+        ]
+      },
+      keyPoints: [
+        "OSI has 7 layers (Please Do Not Throw Sausage Pizza Away); TCP/IP has 4 layers (Network Access, Internet, Transport, Application).",
+        "TCP 3-way handshake: SYN → SYN-ACK → ACK. Termination: FIN → ACK → FIN → ACK (4-way).",
+        "Subnetting divides a network into smaller segments. CIDR notation: 192.168.1.0/24 means 256 addresses.",
+        "ARP resolves IP addresses to MAC addresses within a local network.",
+        "HTTPS = HTTP + TLS/SSL encryption. TLS handshake establishes symmetric session keys using asymmetric key exchange."
+      ],
+      example: `# Python: Simple TCP Server and Client
+import socket
+
+# SERVER
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.bind(('localhost', 8080))
+server.listen(1)
+conn, addr = server.accept()
+data = conn.recv(1024)
+conn.send(b"Hello from server!")
+conn.close()
+
+# CLIENT
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client.connect(('localhost', 8080))
+client.send(b"Hello from client!")
+response = client.recv(1024)
+print(response.decode())
+client.close()`,
+      complexity: "DNS Lookup: ~50-200ms | TCP Handshake: 1.5 RTT | HTTP Request: Variable"
+    },
+    aiExplain: {
+      steps: [
+        "1. Application layer generates an HTTP request (GET /index.html).",
+        "2. Transport layer wraps it in a TCP segment with source/destination ports.",
+        "3. Network layer adds IP header with source/destination IP addresses.",
+        "4. Data Link layer adds MAC addresses and creates an Ethernet frame.",
+        "5. Physical layer transmits bits over the wire/wireless medium to the next hop."
+      ],
+      analogy: "Sending data across a network is like mailing a package: the Application layer writes the letter (HTTP), Transport adds tracking and insurance (TCP), Network writes the city/zip code (IP), Data Link writes the street address (MAC), and Physical is the actual postal truck driving on roads!"
+    },
+    debug: [
+      {
+        title: "Fix TCP Socket Connection Refused Error",
+        buggy: `# Client connects before server starts listening\nclient = socket.socket(socket.AF_INET, socket.SOCK_STREAM)\nclient.connect(('localhost', 9999))  # ConnectionRefusedError!\nclient.send(b"data")`,
+        fixed: `# Ensure server is listening BEFORE client connects\n# Add retry logic with exponential backoff\nimport time\nclient = socket.socket(socket.AF_INET, socket.SOCK_STREAM)\nfor attempt in range(5):\n    try:\n        client.connect(('localhost', 9999))\n        break\n    except ConnectionRefusedError:\n        time.sleep(2 ** attempt)  # Exponential backoff`,
+        hint: "Always ensure the server socket is bound and listening before clients attempt to connect. Implement retry with exponential backoff for resilience."
+      }
+    ],
+    quiz: [
+      { q: "How many layers does the OSI model have?", options: ["4", "5", "6", "7"], answer: 3 },
+      { q: "Which protocol uses a 3-way handshake?", options: ["UDP", "TCP", "ICMP", "ARP"], answer: 1 },
+      { q: "What port does HTTPS use by default?", options: ["80", "443", "8080", "3000"], answer: 1 },
+      { q: "Which layer of the OSI model handles routing?", options: ["Transport", "Network", "Data Link", "Session"], answer: 1 },
+      { q: "What does DNS resolve?", options: ["MAC to IP", "Domain name to IP", "IP to port", "URL to MAC"], answer: 1 }
+    ],
+    mnc: [
+      { company: "Cisco", year: "2023", question: "Explain the difference between a router and a switch", answer: "Router operates at Layer 3 (Network), routes packets between different networks using IP addresses. Switch operates at Layer 2 (Data Link), forwards frames within the same network using MAC addresses." },
+      { company: "Cloudflare", year: "2023", question: "How does a CDN improve web performance?", answer: "CDN caches content at edge servers geographically close to users, reducing latency. Uses DNS-based load balancing, anycast routing, and cache invalidation strategies." },
+      { company: "Juniper", year: "2022", question: "Explain the TCP sliding window protocol", answer: "Sender can transmit multiple packets without waiting for individual ACKs. Window size controls flow. Receiver advertises available buffer space. Enables pipelining and congestion control." }
+    ],
+    mock: [
+      { type: "Technical", question: "What happens step-by-step when you type google.com in the browser?", tip: "1. Browser checks cache for DNS record. 2. DNS query resolves google.com to IP. 3. TCP 3-way handshake with server. 4. TLS handshake (if HTTPS). 5. HTTP GET request sent. 6. Server responds with HTML. 7. Browser parses HTML, requests CSS/JS/images. 8. DOM is built and page renders." }
+    ],
+    coding: {
+      problem: "Subnet Calculator",
+      desc: "Given an IP address and CIDR prefix length, calculate the network address, broadcast address, and number of usable hosts.",
+      input: "ip = '192.168.1.100', prefix = 24",
+      output: "Network: 192.168.1.0, Broadcast: 192.168.1.255, Hosts: 254",
+      starter: `def subnet_calc(ip, prefix):\n    # Return dict with network, broadcast, num_hosts\n    pass`
+    }
+  },
+
+  // ═══════════════════════════════════════════════════════════════
+  // MODULE 10: OOP Concepts – Inheritance, Polymorphism, SOLID
+  // ═══════════════════════════════════════════════════════════════
+  {
+    moduleTitle: "OOP Concepts – Inheritance, Polymorphism, SOLID",
+    level: "Level 3 – Software Engineering",
+    branch: ["cse", "it"],
+    videos: makeVideoLinks("OOP Inheritance Polymorphism SOLID Principles Design Patterns"),
+    studyMaterial: {
+      summary: `Object-Oriented Programming (OOP) models software as interacting objects that encapsulate data (attributes) and behavior (methods). The four pillars of OOP are:
+
+1. Abstraction: Hiding complex implementation details, exposing only essential features. Example: a Car class exposes drive() and brake() but hides engine internals.
+
+2. Encapsulation: Bundling data and methods together, controlling access via access modifiers (public, private, protected). Getters/setters provide controlled access to private fields.
+
+3. Inheritance: A child class inherits properties and methods from a parent class, enabling code reuse. Types: Single, Multiple (via interfaces in Java/C#), Multilevel, Hierarchical, Hybrid.
+
+4. Polymorphism: Same interface, different implementations.
+   - Compile-time (Static): Method overloading — same method name, different parameter types/counts.
+   - Runtime (Dynamic): Method overriding — child class provides specific implementation of parent's method. Achieved via virtual functions and vtable in C++.
+
+SOLID Principles for clean, maintainable OOP design:
+S – Single Responsibility: A class should have only one reason to change.
+O – Open/Closed: Open for extension, closed for modification.
+L – Liskov Substitution: Subtypes must be substitutable for their base types.
+I – Interface Segregation: Many specific interfaces are better than one general-purpose interface.
+D – Dependency Inversion: Depend on abstractions, not concrete implementations.`,
+      comparisonTable: {
+        headers: ["Concept", "Compile-time", "Runtime"],
+        rows: [
+          ["Polymorphism", "Method Overloading", "Method Overriding"],
+          ["Binding", "Early (static) binding", "Late (dynamic) binding"],
+          ["Resolution", "Resolved by compiler", "Resolved at runtime via vtable"],
+          ["Example", "add(int) vs add(float)", "Shape.area() → Circle.area()"]
+        ]
+      },
+      keyPoints: [
+        "Encapsulation: Private fields + public getters/setters. Protects invariants.",
+        "Polymorphism: Method overloading (compile-time) vs overriding (runtime via virtual dispatch).",
+        "SOLID: SRP (one reason to change), OCP (extend don't modify), LSP (subtypes replaceable), ISP (small interfaces), DIP (depend on abstractions).",
+        "Design Patterns: Singleton (one instance), Factory (create without specifying class), Observer (pub-sub), Strategy (interchangeable algorithms).",
+        "Composition over Inheritance: Prefer 'has-a' relationships over deep inheritance hierarchies to reduce coupling."
+      ],
+      example: `# Python: OOP with SOLID principles
+from abc import ABC, abstractmethod
+
+# Interface Segregation: Small, focused interfaces
+class Drawable(ABC):
+    @abstractmethod
+    def draw(self): pass
+
+class Resizable(ABC):
+    @abstractmethod
+    def resize(self, factor): pass
+
+# Open/Closed: Extend via new classes, don't modify existing
+class Shape(Drawable):
+    @abstractmethod
+    def area(self) -> float: pass
+
+class Circle(Shape, Resizable):
+    def __init__(self, radius):
+        self._radius = radius  # Encapsulation
+    
+    def area(self) -> float:  # Runtime Polymorphism
+        return 3.14159 * self._radius ** 2
+    
+    def draw(self):
+        print(f"Drawing circle with radius {self._radius}")
+    
+    def resize(self, factor):
+        self._radius *= factor
+
+class Rectangle(Shape, Resizable):
+    def __init__(self, width, height):
+        self._width = width
+        self._height = height
+    
+    def area(self) -> float:
+        return self._width * self._height
+    
+    def draw(self):
+        print(f"Drawing rectangle {self._width}x{self._height}")
+    
+    def resize(self, factor):
+        self._width *= factor
+        self._height *= factor
+
+# Liskov Substitution: Any Shape works here
+def print_area(shape: Shape):
+    print(f"Area: {shape.area()}")
+
+print_area(Circle(5))       # Area: 78.53975
+print_area(Rectangle(4, 6)) # Area: 24`,
+      complexity: "Virtual dispatch (vtable): O(1) | Interface lookup: O(1)"
+    },
+    aiExplain: {
+      steps: [
+        "1. Define abstract base classes (interfaces) that specify WHAT, not HOW.",
+        "2. Encapsulate data with private fields and expose through public methods.",
+        "3. Extend functionality through Inheritance without modifying existing classes.",
+        "4. Override methods in child classes for runtime Polymorphism.",
+        "5. Apply SOLID principles to keep code maintainable, testable, and loosely coupled."
+      ],
+      analogy: "OOP is like a vehicle factory: Abstraction is the blueprint showing only what matters. Encapsulation is the locked engine compartment (private parts). Inheritance is making a SportsCar from a Car template. Polymorphism is the 'start()' button working differently on electric vs diesel cars!"
+    },
+    debug: [
+      {
+        title: "Fix Liskov Substitution Principle Violation",
+        buggy: `class Bird:\n    def fly(self):\n        return "Flying!"\n\nclass Penguin(Bird):  # LSP Violation!\n    def fly(self):\n        raise Exception("Penguins can't fly!")  # Breaks substitutability`,
+        fixed: `from abc import ABC, abstractmethod\n\nclass Bird(ABC):\n    @abstractmethod\n    def move(self): pass\n\nclass FlyingBird(Bird):\n    def move(self):\n        return "Flying!"\n\nclass Penguin(Bird):  # LSP Compliant\n    def move(self):\n        return "Swimming!"`,
+        hint: "If a subclass can't honor the parent's contract (Penguin can't fly), refactor the hierarchy. Use more specific base classes that correctly model the domain."
+      }
+    ],
+    quiz: [
+      { q: "Which OOP pillar hides internal implementation details?", options: ["Inheritance", "Polymorphism", "Abstraction", "Encapsulation"], answer: 2 },
+      { q: "What does the 'L' in SOLID stand for?", options: ["Loose Coupling", "Liskov Substitution", "Lazy Loading", "Linear Dependency"], answer: 1 },
+      { q: "Method overloading is an example of which type of polymorphism?", options: ["Runtime", "Compile-time", "Dynamic", "Virtual"], answer: 1 },
+      { q: "Which design pattern ensures only one instance of a class exists?", options: ["Factory", "Observer", "Singleton", "Strategy"], answer: 2 },
+      { q: "What is the principle 'Depend on abstractions, not concretions'?", options: ["SRP", "OCP", "ISP", "DIP"], answer: 3 }
+    ],
+    mnc: [
+      { company: "Google", year: "2023", question: "Explain the difference between abstract class and interface", answer: "Abstract class can have implemented methods and state (fields); Interface (in Java/C#) only declares method signatures (Java 8+ allows default methods). A class can implement multiple interfaces but extend only one abstract class." },
+      { company: "Microsoft", year: "2023", question: "What is the Dependency Inversion Principle and why is it important?", answer: "High-level modules should not depend on low-level modules; both should depend on abstractions. This enables unit testing with mocks, loose coupling, and easy swapping of implementations." },
+      { company: "Infosys", year: "2022", question: "Explain the Factory Design Pattern with a real-world example", answer: "Factory creates objects without exposing instantiation logic. Example: a NotificationFactory.create('email') returns EmailNotification, while create('sms') returns SMSNotification. Client code depends on the Notification interface, not concrete classes." }
+    ],
+    mock: [
+      { type: "Technical", question: "When would you prefer composition over inheritance?", tip: "Prefer composition when: classes don't have a clear 'is-a' relationship, you need multiple behaviors (no multiple inheritance in Java), you want to change behavior at runtime, or the inheritance hierarchy would become too deep. Composition ('has-a') is more flexible and avoids fragile base class problem." }
+    ],
+    coding: {
+      problem: "Implement Strategy Pattern",
+      desc: "Create a payment system using the Strategy pattern where different payment methods (CreditCard, PayPal, UPI) implement the same PaymentStrategy interface.",
+      input: "amount = 100, method = 'upi'",
+      output: "Paid ₹100 via UPI",
+      starter: `from abc import ABC, abstractmethod\n\nclass PaymentStrategy(ABC):\n    @abstractmethod\n    def pay(self, amount): pass\n\n# Implement CreditCard, PayPal, UPI strategies\n# Implement PaymentContext class`
+    }
   }
 ];

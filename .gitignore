@@ -1,13 +1,22 @@
 # Dependencies and generated output
 node_modules/
-ascend/node_modules/
-ascend/dist/
+**/node_modules/
+dist/
+**/dist/
+build/
+**/build/
 
 # Local configuration — never commit deployment credentials/configuration
 .env
+**/.env
+.env.local
 .env.*
 !*.env.example
 
-# Local tooling
+# Local tooling & OS
 .vercel/
 *.log
+npm-debug.log*
+.DS_Store
+.vscode/
+.idea/

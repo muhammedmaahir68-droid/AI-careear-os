@@ -508,6 +508,10 @@ export default function Dashboard() {
 
           {/* Stats */}
           <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 shadow-sm" title="Duolingo Placement Diamonds">
+              <span className="text-sm">💎</span>
+              <span className="text-sm font-bold text-cyan-300">{Math.floor((xp ?? 0) * 0.4) + 50} 💎</span>
+            </div>
             <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20">
               <Flame className="text-orange-400" size={16} />
               <span className="text-sm font-bold text-orange-300">{streak} Day Streak</span>

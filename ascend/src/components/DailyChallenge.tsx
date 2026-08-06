@@ -9,6 +9,7 @@ import {
 import { supabase } from "../lib/supabase";
 import { getDaily40Questions, type QuestionItem } from "../data/questionBank";
 import { getBranchModules, type BranchModuleData, type VideoLink } from "../data/branchModules";
+import GamificationModal from "./GamificationModal";
 
 interface DailyChallengeProps {
   onComplete: () => void;
@@ -751,6 +752,10 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
   const [daily40Submitted, setDaily40Submitted] = useState(false);
   const [daily40Timer, setDaily40Timer] = useState(2400);
 
+  // Gamification Loot Modal State
+  const [showLootModal, setShowLootModal] = useState(false);
+  const [lootConfig, setLootConfig] = useState({ xp: 150, diamonds: 50, badge: "Master Placement Specialist" });
+
   // Load branch-specific modules
   const branchModules = getBranchModules(branchId ?? null);
 
@@ -903,6 +908,8 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
       setRunning(false);
       onComplete();
       setActiveStep(8);
+      setLootConfig({ xp: 250, diamonds: 50, badge: `${mod.moduleTitle} Master` });
+      setShowLootModal(true);
     }, 1500);
   };
 
@@ -1567,6 +1574,8 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
                   onClick={() => {
                     setDaily40Submitted(true);
                     onComplete();
+                    setLootConfig({ xp: 400, diamonds: 100, badge: "Daily 40Q Placement Legend" });
+                    setShowLootModal(true);
                   }}
                   className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-600 font-bold text-xs text-slate-950 hover:from-amber-600 hover:to-yellow-700 transition cursor-pointer"
                 >
@@ -1692,6 +1701,14 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
           )}
         </div>
       )}
+
+      <GamificationModal
+        isOpen={showLootModal}
+        onClose={() => setShowLootModal(false)}
+        xpEarned={lootConfig.xp}
+        diamondsEarned={lootConfig.diamonds}
+        badgeName={lootConfig.badge}
+      />
     </div>
   );
 }
