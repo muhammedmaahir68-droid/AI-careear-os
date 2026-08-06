@@ -43,6 +43,10 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok', time: new Date() });
 });
 
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'ok', database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected', time: new Date() });
+});
+
 app.use(errorHandler);
 
 const connectDB = async () => {
