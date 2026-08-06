@@ -2,15 +2,20 @@
   "version": 2,
   "buildCommand": "cd ascend && npm install && npm run build",
   "outputDirectory": "ascend/dist",
-  "framework": "vite",
   "rewrites": [
     {
-      "source": "/api/(.*)",
+      "source": "/api/:path*",
       "destination": "/api"
     },
     {
-      "source": "/(.*)",
+      "source": "/((?!api).*)",
       "destination": "/index.html"
     }
-  ]
+  ],
+  "functions": {
+    "api/index.ts": {
+      "memory": 512,
+      "maxDuration": 30
+    }
+  }
 }
