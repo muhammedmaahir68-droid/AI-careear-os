@@ -1,13 +1,16 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   Trophy, Gem, Lock, CheckCircle2, Sparkles, BookOpen,
   ArrowRight, Gift, X, Zap, Target, ChevronDown, ChevronRight,
   Code2, Brain, Cpu, Bolt, Wrench, Building, Database, Shield,
-  Lightbulb, HelpCircle, FileText, Check, Award
+  Lightbulb, HelpCircle, FileText, Check, Award, Video, Play,
+  Briefcase, UserCheck, Layers, FileCheck, Terminal, Bug
 } from "lucide-react";
 import GamificationModal, { LEAGUES } from "./GamificationModal";
 import { recordUserProgress } from "../services/api";
+import { getBranchModules, makeVideoLinks } from "../data/branchModules";
+import type { BranchModuleData, VideoLink } from "../data/branchModules/types";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // TYPES
@@ -15,11 +18,14 @@ import { recordUserProgress } from "../services/api";
 export interface LessonNode {
   id: string;
   step: number;
-  category: string;
+  phaseNumber: number; // 1 to 5
+  category: string;    // e.g. "Phase 1: Aptitude Foundation"
+  subTopic: string;    // e.g. "Quantitative Aptitude"
   title: string;
   type: "lesson" | "quiz" | "code" | "chest" | "boss";
   xpReward: number;
   diamondReward: number;
+  videos?: VideoLink[];
   theory?: {
     summary: string;
     detailedContent?: string;      // Multi-paragraph textbook-grade study material
@@ -28,6 +34,15 @@ export interface LessonNode {
     code?: string;
     examples?: string[];           // Real worked examples
     placementTips?: string[];       // Secret tips for TCS / Amazon / Google placement exams
+    authorReferences?: Array<{ author: string; bookTitle: string; coreInsight: string }>;
+    comparisonTable?: { headers: string[]; rows: string[][] };
+    flowchartSteps?: string[];
+  };
+  debugChallenge?: {
+    title: string;
+    buggy: string;
+    fixed: string;
+    hint: string;
   };
   questions?: Array<{
     prompt: string;
@@ -40,411 +55,586 @@ export interface LessonNode {
 interface LearningGamePathProps {
   branchId?: string | null;
   roleId?: string | null;
+  targetPhase?: number;
   onNodeComplete?: (xp: number, diamonds: number) => void;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// MASSIVE DETAILED SYLLABUS DATA — TEXTBOOK GRADE CONTENT
+// 5-PHASE DEPARTMENT & ROLE SPECIFIC ROADMAP GENERATOR
 // ─────────────────────────────────────────────────────────────────────────────
 export function getCoursePath(branchId: string, roleId?: string | null): LessonNode[] {
   const b = (branchId || "cse").toLowerCase();
   const r = (roleId || "").toLowerCase();
 
-  // ── CSE ──────────────────────────────────────────────────────────────────
-  if (b === "cse") {
-    const base: LessonNode[] = [
-      // Phase 1 — Math & Aptitude Foundations
-      {
-        id: "cse-1",
-        step: 1,
-        category: "Phase 1 – Aptitude Foundations",
-        title: "Number Systems, Divisibility & HCF/LCM Mastery",
-        type: "lesson",
-        xpReward: 40,
-        diamondReward: 10,
-        theory: {
-          summary: "Master fundamental arithmetic principles, prime factorizations, remainder theorems, and rapid HCF/LCM shortcuts essential for TCS NQT, Wipro, Infosys, and Amazon written assessment rounds.",
-          detailedContent: `
+  // Load department-specific rich branch modules (CSE, IT, AIML, AIDS, ECE, EEE, MECH)
+  const branchModules = getBranchModules(b, r);
+
+  const nodes: LessonNode[] = [];
+  let currentStep = 1;
+
+  // Helper to attach video search links across 11 Indian languages
+  const attachVideos = (topicName: string) => makeVideoLinks(topicName);
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // PHASE 1: APTITUDE FOUNDATION
+  // ─────────────────────────────────────────────────────────────────────────
+  // Sub-topics: Quantitative Aptitude, Logical Reasoning, Verbal Ability
+  nodes.push(
+    // Quant 1
+    {
+      id: `${b}-p1-quant-1`,
+      step: currentStep++,
+      phaseNumber: 1,
+      category: "Phase 1: Aptitude Foundation",
+      subTopic: "Quantitative Aptitude",
+      title: "Number Systems, Cyclicity & Divisibility Rules",
+      type: "lesson",
+      xpReward: 40,
+      diamondReward: 10,
+      videos: attachVideos("Number Systems and Cyclicity Quant Aptitude"),
+      theory: {
+        summary: "Master core arithmetic principles, unit digit cyclicity, remainder theorems, and rapid HCF/LCM shortcuts essential for TCS NQT, Wipro NTH, Infosys, and Amazon written tests.",
+        detailedContent: `
 ### 1. Fundamental Properties of Number Systems
-Numbers form the backbone of quantitative aptitude and computer algorithms. Understanding their classification allows fast pattern recognition in competitive exams:
+Numbers form the foundation of quantitative aptitude and computer algorithms:
 - Natural Numbers: {1, 2, 3, ...}
-- Prime Numbers: Numbers greater than 1 with exactly two distinct positive divisors (1 and itself). Note that 2 is the only even prime number.
+- Prime Numbers: Numbers greater than 1 with exactly two distinct positive divisors (1 and itself). 2 is the only even prime number.
 - Co-Prime Numbers: Two numbers a and b are co-prime if GCD(a, b) = 1.
 
-### 2. Divisibility Rules Shortcut Table
+### 2. Divisibility Rules Shortcut Matrix
 - Divisibility by 3: Sum of digits must be divisible by 3.
 - Divisibility by 4: Last two digits formed must be divisible by 4.
-- Divisibility by 7: Double the last digit and subtract it from the remaining number. If the result is divisible by 7, the original number is too.
+- Divisibility by 7: Double the last digit and subtract it from the remaining number.
 - Divisibility by 11: Difference between sum of digits at odd places and sum of digits at even places must be 0 or a multiple of 11.
 
 ### 3. Highest Common Factor (HCF) & Least Common Multiple (LCM)
-The HCF (or GCD) is the largest positive integer that divides each of the integers without a remainder. The LCM is the smallest positive integer divisible by each of the integers.
-
-Key Theorem:
-HCF(a, b) * LCM(a, b) = a * b
-
-Fraction Formulae:
-HCF of Fractions = HCF of Numerators / LCM of Denominators
-LCM of Fractions = LCM of Numerators / HCF of Denominators
+- HCF(a, b) * LCM(a, b) = a * b (Valid ONLY for 2 numbers)
+- HCF of Fractions = HCF(Numerators) / LCM(Denominators)
+- LCM of Fractions = LCM(Numerators) / HCF(Denominators)
 
 ### 4. Cyclicity of Unit Digits
-To find the unit digit of x^n, look at the base's last digit:
-- 0, 1, 5, 6: Always repeat as the last digit (6^k always ends in 6).
-- 4, 9: Cyclicity of 2 (4^1=4, 4^2=6, 4^3=4...).
-- 2, 3, 7, 8: Cyclicity of 4 (7^1=7, 7^2=9, 7^3=3, 7^4=1). Divide exponent by 4 and use remainder as exponent.
-          `,
-          keyPoints: [
-            "HCF × LCM = Product of two numbers (valid ONLY for 2 numbers)",
-            "HCF of fractions = HCF(Numerators) / LCM(Denominators)",
-            "Unit digit of numbers ending in 2, 3, 7, 8 repeats every 4 powers",
-            "Sum of first N natural numbers = N(N + 1) / 2",
-            "Sum of squares of first N natural numbers = N(N + 1)(2N + 1) / 6"
-          ],
-          formula: "HCF(a, b) × LCM(a, b) = a × b",
-          examples: [
-            "Example 1: Find the HCF and LCM of 36 and 48.\nFactorization: 36 = 2² × 3², 48 = 2⁴ × 3¹.\nHCF = 2² × 3¹ = 12.\nLCM = 2⁴ × 3² = 144.\nVerification: 12 × 144 = 1728 = 36 × 48.",
-            "Example 2: Find the unit digit of 7^{95} - 3^{58}.\n7 has cyclicity 4. 95 mod 4 = 3 → 7³ ends in 3.\n3 has cyclicity 4. 58 mod 4 = 2 → 3² ends in 9.\nUnit digit = 13 - 9 = 4."
-          ],
-          placementTips: [
-            "TCS NQT loves questions asking for the smallest number which leaves a specific remainder when divided by a set of numbers. Use LCM(a, b, c) + Remainder.",
-            "Infosys frequently asks questions involving unit digits of huge exponents like 23^{4567}."
-          ]
-        },
-        questions: [
-          { prompt: "Find the HCF of 36 and 48.", options: ["6", "12", "18", "24"], correct: 1, explanation: "Prime factorizations: 36 = 2²×3², 48 = 2⁴×3¹. Lowest power of common factors: 2²×3¹ = 12." },
-          { prompt: "What is the unit digit of 7^105?", options: ["1", "3", "7", "9"], correct: 2, explanation: "7 has cyclicity of 4. 105 mod 4 = 1. So 7^1 = 7." },
-          { prompt: "The product of two numbers is 2028 and their HCF is 13. How many such pairs exist?", options: ["1", "2", "3", "4"], correct: 1, explanation: "Let numbers be 13a & 13b. 13a × 13b = 2028 → a × b = 12. Co-prime pairs for (a,b) are (1,12) and (3,4). So 2 pairs." }
-        ]
-      },
-      {
-        id: "cse-2",
-        step: 2,
-        category: "Phase 1 – Aptitude Foundations",
-        title: "Percentages, Profit, Loss & Discount Formulas",
-        type: "quiz",
-        xpReward: 40,
-        diamondReward: 10,
-        theory: {
-          summary: "Complete mastery of percentage increases/decreases, markups, successive discounts, and margin calculations required for campus recruitment screening tests.",
-          detailedContent: `
-### 1. Understanding Percentages as Multipliers
-Percentage means "per hundred". Converting percentages into decimal multipliers simplifies complex multi-step problems:
-- A 20% increase => multiply by 1.20
-- A 15% decrease => multiply by 0.85
-- Successive changes of +a% and +b% result in a net change of: Net Change % = a + b + (a * b) / 100
-
-### 2. Profit and Loss Essentials
-- Cost Price (CP): Price at which an article is bought.
-- Selling Price (SP): Price at which an article is sold.
-- Profit % = (SP - CP) / CP * 100
-- Loss % = (CP - SP) / CP * 100
-
-### 3. Marked Price (MP) and Discount
-Discounts are ALWAYS calculated on the Marked Price (List Price):
-- Discount = MP - SP
-- Discount % = Discount / MP * 100
-- Two successive discounts of d1% and d2% are equivalent to a single discount of: Single Discount % = d1 + d2 - (d1 * d2) / 100
-          `,
-          keyPoints: [
-            "Net percentage change for +x% followed by -x% is ALWAYS a loss of (x/100)² %",
-            "Discounts are calculated on Marked Price (MP), while Profit/Loss is on Cost Price (CP)",
-            "If CP of X articles = SP of Y articles, Profit/Loss % = (X - Y) / Y × 100"
-          ],
-          formula: "Net % Change = a + b + (a × b) / 100",
-          examples: [
-            "Example: A trader marks goods 30% above CP and offers a 10% discount. Find profit %.\nLet CP = 100. MP = 130.\nDiscount = 10% of 130 = 13.\nSP = 130 - 13 = 117.\nProfit = SP - CP = 17%."
-          ],
-          placementTips: [
-            "When given 'Buy 3 Get 1 Free', discount % = Free Quantity / Total Quantity × 100 = 1/4 × 100 = 25%."
-          ]
-        },
-        questions: [
-          { prompt: "A 20% increase in price followed by a 20% decrease yields a net change of:", options: ["0%", "-4%", "+4%", "-2%"], correct: 1, explanation: "Net change = 20 - 20 + (20×(-20))/100 = -4% (a 4% decrease)." },
-          { prompt: "If cost price of 15 articles equals selling price of 12 articles, profit percentage is:", options: ["20%", "25%", "30%", "33.3%"], correct: 1, explanation: "Profit % = (15 - 12) / 12 × 100 = 3/12 × 100 = 25%." }
-        ]
-      },
-      {
-        id: "cse-3",
-        step: 3,
-        category: "Phase 1 – Aptitude Foundations",
-        title: "Time, Speed, Distance & Work Efficiency",
-        type: "quiz",
-        xpReward: 40,
-        diamondReward: 10,
-        theory: {
-          summary: "Comprehensive breakdown of relative velocity, train crossing problems, pipes & cisterns, and collaborative work efficiency rates.",
-          detailedContent: `
-### 1. Time, Speed and Distance
-Speed = Distance / Time
-- Unit Conversions: 1 km/h = 5/18 m/s, 1 m/s = 18/5 km/h
-
-### 2. Relative Speed
-- Objects moving in opposite directions: Relative Speed = v1 + v2
-- Objects moving in same direction: Relative Speed = |v1 - v2|
-
-### 3. Work & Time (Unitary Method)
-If a person completes a job in N days, their 1-day work rate is 1/N.
-If Person A takes A days and Person B takes B days, together they complete the work in:
-Combined Time = (A * B) / (A + B) days
-          `,
-          keyPoints: [
-            "Speed is inversely proportional to Time when Distance is constant",
-            "Average Speed for equal distances at speeds u and v = 2uv / (u + v)",
-            "Pipes filling a tank add to rate; inlet (+) and outlet (-) pipe rates combine linearly"
-          ],
-          formula: "Combined Work Time = (A × B) / (A + B)",
-          examples: [
-            "Example: A train 150m long crosses a pole in 9 seconds. Find speed in km/h.\nSpeed = 150m / 9s = 50/3 m/s.\nIn km/h = (50/3) × (18/5) = 60 km/h."
-          ]
-        },
-        questions: [
-          { prompt: "Person A finishes a task in 6 days, Person B in 12 days. Working together, they finish in:", options: ["4 days", "3 days", "8 days", "5 days"], correct: 0, explanation: "Combined time = (6 × 12) / (6 + 12) = 72 / 18 = 4 days." },
-          { prompt: "Two trains 100m and 120m long move towards each other at 54 km/h and 36 km/h. Time to cross each other completely?", options: ["6.2s", "8.8s", "12s", "15s"], correct: 1, explanation: "Total Distance = 100+120=220m. Relative Speed = 54+36 = 90 km/h = 90×(5/18) = 25 m/s. Time = 220/25 = 8.8s." }
-        ]
-      },
-      { id: "cse-chest-1", step: 4, category: "Phase 1 – Aptitude Foundations", title: "🎁 Aptitude Champion Chest", type: "chest", xpReward: 100, diamondReward: 40 },
-
-      // Phase 2 — Core Programming & DSA
-      {
-        id: "cse-5",
-        step: 5,
-        category: "Phase 2 – Core DSA", title: "Arrays, Memory Allocation & Sliding Window", type: "lesson", xpReward: 60, diamondReward: 15,
-        theory: {
-          summary: "Deep dive into memory layout of multi-dimensional arrays, Kadane's algorithm, two-pointer techniques, and sliding window patterns that appear in 80% of Tier-1 software engineer interviews.",
-          detailedContent: `
-### 1. Array Memory Layout & Pointer Arithmetic
-An array is a contiguous block of memory storing elements of the same data type.
-- Row-Major Order (C, C++, Java): Address(A[i][j]) = Base + (i * N + j) * sizeof(type)
-- Column-Major Order (FORTRAN, MATLAB): Address(A[i][j]) = Base + (j * M + i) * sizeof(type)
-
-### 2. Kadane's Algorithm for Maximum Subarray Sum
-Kadane's algorithm solves the Maximum Subarray Sum problem in O(N) time instead of O(N^2) brute-force.
-
-Intuition: At each index i, we decide whether to add the current element to the existing contiguous subarray sum or start a new subarray beginning at index i.
-current_sum = max(arr[i], current_sum + arr[i])
-max_sum = max(max_sum, current_sum)
-
-### 3. Two-Pointer & Sliding Window Techniques
-- Fixed Sliding Window: Used when subarray size K is given (e.g., max sum of K consecutive elements). Maintain sum by adding incoming element and subtracting outgoing element in O(1).
-- Variable Sliding Window: Expand right pointer to satisfy condition, shrink left pointer to optimize window size (e.g., shortest subarray with sum >= S).
-          `,
-          keyPoints: [
-            "Kadane's algorithm runs in O(N) time and O(1) auxiliary space",
-            "Sliding window reduces sub-array search from O(N²) down to linear O(N)",
-            "Prefix Sum array enables O(1) range sum queries between indices L and R: Sum(L..R) = Prefix[R] - Prefix[L-1]"
-          ],
-          formula: "Address(A[i]) = Base + i × sizeof(Type)",
-          code: `// Fixed Sliding Window: Max sum of subarray of size K
-function maxSubarraySumK(arr, k) {
-  let maxSum = 0, windowSum = 0;
-  for (let i = 0; i < k; i++) windowSum += arr[i];
-  maxSum = windowSum;
-  for (let i = k; i < arr.length; i++) {
-    windowSum += arr[i] - arr[i - k];
-    maxSum = Math.max(maxSum, windowSum);
-  }
-  return maxSum;
-}`,
-          placementTips: [
-            "In LeetCode / Product-company interviews, if a problem asks for contiguous subarrays, immediately evaluate Sliding Window or Kadane's algorithm before considering dynamic programming."
-          ]
-        },
-        questions: [
-          { prompt: "What is the time complexity of Kadane's algorithm for max subarray sum?", options: ["O(N²)", "O(N log N)", "O(N)", "O(1)"], correct: 2, explanation: "Kadane's algorithm performs a single linear scan over the array, making it O(N) time." },
-          { prompt: "Which technique is best suited for finding the longest substring without repeating characters?", options: ["Binary Search", "Variable Sliding Window + Hash Set", "Kadane's Algorithm", "Divide and Conquer"], correct: 1, explanation: "Variable sliding window with 2 pointers (left & right) tracking unique characters in a HashSet achieves optimal O(N) time." }
-        ]
-      },
-      {
-        id: "cse-6",
-        step: 6,
-        category: "Phase 2 – Core DSA", title: "Linked Lists & Floyd's Cycle Detection Algorithm", type: "lesson", xpReward: 60, diamondReward: 15,
-        theory: {
-          summary: "Master singly and doubly linked lists, memory pointer overheads, list reversal algorithms, and Floyd's Tortoise and Hare cycle detection mechanism.",
-          detailedContent: `
-### 1. Linked List Structure vs Array
-Unlike arrays, linked list elements are non-contiguous in memory. Each node consists of:
-- Data Field: Stores the payload.
-- Next Pointer: Stores the memory address of the next node.
-
-Trade-offs:
-- Arrays: O(1) random access, but resizing requires contiguous allocation (O(N) copy).
-- Linked Lists: Dynamic allocation, O(1) head insertion/deletion, but O(N) lookup time and additional pointer memory overhead (8 bytes per pointer on 64-bit systems).
-
-### 2. Floyd's Cycle Detection (Tortoise and Hare)
-To detect if a linked list contains a cycle without extra memory (O(1) space):
-- Maintain two pointers: Slow (moves 1 step at a time) and Fast (moves 2 steps at a time).
-- If there is a cycle, the fast pointer will eventually overlap with the slow pointer inside the loop.
-- Proof of Convergence: Every step, the gap between Fast and Slow decreases by 1 node inside the cycle.
-          `,
-          keyPoints: [
-            "Floyd's Tortoise and Hare algorithm detects cycle in O(N) time and O(1) space",
-            "Reversing a Linked List in-place requires 3 pointers: prev, current, next",
-            "To find the middle of a linked list in 1 pass, move slow by 1 step and fast by 2 steps"
-          ],
-          code: `// In-Place Linked List Reversal
-function reverseList(head) {
-  let prev = null, curr = head;
-  while (curr !== null) {
-    let nextTemp = curr.next;
-    curr.next = prev;
-    prev = curr;
-    curr = nextTemp;
-  }
-  return prev;
-}`,
-          placementTips: [
-            "Amazon and Microsoft frequently ask candidates to find the starting node of the cycle. Once fast and slow meet, reset slow to head; move both 1 step at a time until they meet again at the entry node."
-          ]
-        },
-        questions: [
-          { prompt: "What are the space and time complexities of Floyd's Cycle Detection algorithm?", options: ["Time O(N), Space O(N)", "Time O(N²), Space O(1)", "Time O(N), Space O(1)", "Time O(1), Space O(1)"], correct: 2, explanation: "Floyd's algorithm uses 2 pointers giving O(1) extra space and traverses the list in O(N) time." },
-          { prompt: "To reverse a singly linked list in-place, how many pointer variables are minimally required?", options: ["1", "2", "3", "4"], correct: 2, explanation: "3 pointers are required: 'prev' (previous node), 'curr' (current node being re-linked), and 'nextTemp' (to save pointer to remaining list)." }
-        ]
-      },
-      { id: "cse-chest-2", step: 7, category: "Phase 2 – Core DSA", title: "🎁 DSA Master Diamond Chest", type: "chest", xpReward: 200, diamondReward: 80 },
-
-      // Phase 3 — Systems & CS Core
-      {
-        id: "cse-11",
-        step: 8,
-        category: "Phase 3 – CS Core Theory", title: "Operating Systems: CPU Scheduling & Deadlocks", type: "lesson", xpReward: 70, diamondReward: 18,
-        theory: {
-          summary: "In-depth study of process lifecycle, CPU scheduling algorithms (FCFS, SJF, Round Robin, SRTF), and Coffman's 4 necessary conditions for OS deadlocks.",
-          detailedContent: `
-### 1. Process States & CPU Scheduling Metrics
-A process transitions through states: New -> Ready -> Running -> Waiting -> Terminated.
-
-Key Metrics:
-- Turnaround Time (TAT) = Completion Time - Arrival Time
-- Waiting Time (WT) = Turnaround Time - Burst Time
-- Response Time (RT) = First CPU Allocation Time - Arrival Time
-
-### 2. Scheduling Algorithms
-- First-Come First-Served (FCFS): Non-preemptive. Suffers from Convoy Effect (short processes wait behind long ones).
-- Shortest Job First (SJF): Optimal minimum average waiting time, but susceptible to starvation of long processes.
-- Round Robin (RR): Preemptive with Time Quantum (Q). Gives fast response time for interactive systems.
-
-### 3. Deadlocks & Coffman's 4 Necessary Conditions
-A deadlock occurs when processes are unable to proceed because each is waiting for a resource held by another. All 4 conditions MUST hold simultaneously:
-1. Mutual Exclusion: At least one resource must be held in a non-shareable mode.
-2. Hold and Wait: Process holding resources can request additional resources currently held by others.
-3. No Preemption: Resources cannot be forcibly taken from a process; only voluntarily released.
-4. Circular Wait: A closed chain of processes exists where each process holds resources needed by the next.
-
-Banker's Algorithm: Used for deadlock avoidance by verifying whether allocating a resource leaves the system in a Safe State.
-          `,
-          keyPoints: [
-            "Convoy effect happens in non-preemptive FCFS when long CPU-bound process blocks short I/O-bound processes",
-            "The 4 Coffman conditions for deadlock: Mutual Exclusion, Hold & Wait, No Preemption, Circular Wait",
-            "Banker's Algorithm guarantees deadlock avoidance by checking safe sequences using Work and Need matrices"
-          ],
-          formula: "Turnaround Time = Completion Time − Arrival Time",
-          placementTips: [
-            "GATE CS and MNC technical interviews constantly ask numerical problems to compute average Waiting Time under Round Robin scheduling."
-          ]
-        },
-        questions: [
-          { prompt: "Which CPU scheduling algorithm can cause the Convoy Effect?", options: ["Round Robin", "Shortest Job First", "First-Come First-Served (FCFS)", "Priority Preemptive"], correct: 2, explanation: "FCFS suffers from the Convoy Effect when a heavy process delays all subsequent shorter processes." },
-          { prompt: "Which of the following is NOT one of Coffman's 4 necessary conditions for deadlock?", options: ["Mutual Exclusion", "Preemption allowed", "Hold & Wait", "Circular Wait"], correct: 1, explanation: "The condition is 'No Preemption'. If preemption IS allowed, deadlock cannot occur." }
-        ]
-      },
-      {
-        id: "cse-boss-1",
-        step: 9,
-        category: "Phase 4 – MNC Placement Boss 🏆", title: "BOSS: Tier-1 Product Company Final Placement Round", type: "boss", xpReward: 500, diamondReward: 200,
-        questions: [
-          { prompt: "Given an array nums = [2,7,11,15] and target = 9, what is the most optimal algorithm to return indices of the two numbers that add up to target?", options: ["O(N²) brute force nested loops", "O(N log N) sort array then binary search", "O(N) single-pass HashMap storing target - num complement", "O(N log N) Heap allocation"], correct: 2, explanation: "A single-pass HashMap maps value to index. For each element x, check if (target - x) exists in map. Time O(N), Space O(N)." },
-          { prompt: "Which data structure is naturally used to implement a Min-Heap and Priority Queue with O(log N) insertion and extraction?", options: ["Doubly Linked List", "Binary Heap Array", "B-Tree", "Red-Black Tree"], correct: 1, explanation: "A Binary Heap stored as an array provides parent i at floor((i-1)/2) and children at 2i+1, 2i+2. Provides O(log N) push/pop." }
-        ]
-      }
-    ];
-
-    if (r.includes("backend")) {
-      base.push({
-        id: "cse-be-1", step: 10, category: "Role Track – Backend Engineer", title: "REST API Principles, HTTP Status Codes & DB Indexing", type: "lesson", xpReward: 80, diamondReward: 20,
-        theory: {
-          summary: "Architecting scalable RESTful web APIs, understanding idempotency, B-Tree index structures, and ACID database isolation levels.",
-          detailedContent: `
-### 1. REST Architecture & HTTP Verbs
-REST (Representational State Transfer) uses standard HTTP methods:
-- GET: Retrieve resource. Safe & Idempotent.
-- POST: Create resource. Non-idempotent.
-- PUT: Replace entire resource or create if missing. Idempotent.
-- PATCH: Partial modification of resource.
-- DELETE: Remove resource. Idempotent.
-
-### 2. HTTP Status Code Hierarchy
-- 2xx Success: 200 OK, 201 Created, 204 No Content
-- 3xx Redirection: 301 Moved Permanently, 304 Not Modified
-- 4xx Client Errors: 400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found
-- 5xx Server Errors: 500 Internal Server Error, 502 Bad Gateway, 503 Service Unavailable
-
-### 3. Database B-Tree Indexing
-Indexes speed up read queries at the cost of slower writes (O(log N) search vs O(N) full table scan).
-- B-Tree stores data in balanced leaves, minimizing disk I/O seek operations.
-- Composite Index (A, B) covers queries filtering on A OR (A, B), but CANNOT optimize queries filtering on B alone due to Leftmost Prefix Rule.
-          `,
-          keyPoints: [
-            "GET, PUT, DELETE are idempotent HTTP methods; POST is non-idempotent",
-            "B-Tree indexes reduce database search time from O(N) to O(log N)",
-            "Composite index (A, B) requires Leftmost Prefix Rule: queries on B alone bypass index"
-          ],
-          code: `// Express REST API Endpoint with Error Handling
-app.get('/api/users/:id', async (req, res, next) => {
-  try {
-    const user = await User.findById(req.params.id);
-    if (!user) return res.status(404).json({ error: 'User not found' });
-    res.status(200).json(user);
-  } catch (err) {
-    next(err); // Pass to global error handler
-  }
-});`
-        },
-        questions: [
-          { prompt: "Which of the following HTTP methods is NOT idempotent?", options: ["GET", "PUT", "POST", "DELETE"], correct: 2, explanation: "POST is non-idempotent because making multiple identical POST requests creates multiple duplicate resources." }
-        ]
-      });
-    }
-    return base;
-  }
-
-  // Fallback for other branches with deep detailed content
-  return [
-    {
-      id: "ai-1", step: 1, category: "Phase 1 – AI Foundations", title: "Linear Algebra: Matrices, Vectors & PCA", type: "lesson", xpReward: 50, diamondReward: 12,
-      theory: {
-        summary: "Comprehensive study of vector spaces, matrix multiplication, determinants, eigenvalues, eigenvectors, and Principal Component Analysis (PCA).",
-        detailedContent: `
-### 1. Vectors and Matrix Transformation
-Matrices act as linear transformations mapping vectors from one space to another.
-A * v = λ * v
-Where v is an eigenvector and λ is the corresponding scalar eigenvalue.
-
-### 2. Principal Component Analysis (PCA)
-PCA is an unsupervised dimensionality reduction technique that finds orthogonal directions (principal components) of maximum variance in high-dimensional data.
-1. Center data by subtracting mean vector.
-2. Compute Covariance Matrix Σ = (1/N) * X^T * X.
-3. Calculate eigenvalues and eigenvectors of Σ.
-4. Sort eigenvectors by decreasing eigenvalue; project data onto top K eigenvectors.
+To find unit digit of N^P:
+- 0, 1, 5, 6: Cyclicity 1 (e.g. 6^k always ends in 6)
+- 4, 9: Cyclicity 2 (4^1=4, 4^2=6, 4^3=4...)
+- 2, 3, 7, 8: Cyclicity 4. Divide exponent P by 4; if remainder is r, unit digit is N^r (if r=0, use N^4).
         `,
         keyPoints: [
-          "Eigenvectors represent axes of maximum variance in dataset covariance matrix",
-          "PCA minimizes reconstruction MSE while maximizing projected variance",
-          "Matrix dot product measures directional similarity: a · b = ||a|| ||b|| cos(θ)"
+          "HCF × LCM = Product of two numbers",
+          "HCF of fractions = HCF(Numerators) / LCM(Denominators)",
+          "Unit digit of 2, 3, 7, 8 repeats every 4 powers",
+          "Sum of first N natural numbers = N(N + 1) / 2"
         ],
-        formula: "det(A - λI) = 0"
+        formula: "HCF(a, b) × LCM(a, b) = a × b",
+        examples: [
+          "Find unit digit of 7^105:\n105 mod 4 = 1. Therefore, unit digit of 7^105 is 7^1 = 7.",
+          "Find HCF and LCM of 36 and 48:\n36 = 2² × 3², 48 = 2⁴ × 3¹.\nHCF = 2² × 3¹ = 12. LCM = 2⁴ × 3² = 144."
+        ],
+        placementTips: [
+          "TCS NQT frequently asks for the smallest number which leaves a specific remainder when divided by a set of numbers. Use LCM(a, b, c) + Remainder.",
+          "Infosys quantitative tests repeatedly feature unit digit questions with giant exponents like 23^4567."
+        ],
+        authorReferences: [
+          { author: "Dr. R.S. Aggarwal", bookTitle: "Quantitative Aptitude for Competitive Examinations", coreInsight: "Unit digit cyclicity shortcuts eliminate 90% of manual calculation steps in screening tests." }
+        ]
       },
       questions: [
-        { prompt: "Principal Component Analysis (PCA) computes eigenvectors of which matrix?", options: ["Identity Matrix", "Covariance Matrix", "Hessian Matrix", "Transition Matrix"], correct: 1, explanation: "PCA decomposes the Covariance Matrix of features to find orthogonal axes of maximum variance." }
+        { prompt: "Find the HCF of 36 and 48.", options: ["6", "12", "18", "24"], correct: 1, explanation: "Prime factorizations: 36 = 2²×3², 48 = 2⁴×3¹. Lowest powers: 2²×3¹ = 12." },
+        { prompt: "What is the unit digit of 7^105?", options: ["1", "3", "7", "9"], correct: 2, explanation: "7 has cyclicity of 4. 105 mod 4 = 1. So 7^1 = 7." }
+      ]
+    },
+
+    // Quant 2
+    {
+      id: `${b}-p1-quant-2`,
+      step: currentStep++,
+      phaseNumber: 1,
+      category: "Phase 1: Aptitude Foundation",
+      subTopic: "Quantitative Aptitude",
+      title: "Percentages, Profit, Loss & Successive Discounts",
+      type: "quiz",
+      xpReward: 40,
+      diamondReward: 10,
+      videos: attachVideos("Percentages Profit Loss Discount Shortcut Formulas"),
+      theory: {
+        summary: "Percentage multipliers, markups, successive discounts, and margin calculations required for campus placement screening rounds.",
+        detailedContent: `
+### 1. Percentage as Multipliers
+- A 20% increase => multiply by 1.20
+- A 15% decrease => multiply by 0.85
+- Successive changes of +a% and +b% result in a net change of:
+Net Change % = a + b + (a * b) / 100
+
+### 2. Profit and Loss Essentials
+- Profit % = (SP - CP) / CP * 100
+- Loss % = (CP - SP) / CP * 100
+- If CP of X articles = SP of Y articles: Profit/Loss % = (X - Y) / Y * 100
+
+### 3. Marked Price & Single Equivalent Discount
+- Discount % = (MP - SP) / MP * 100
+- Two successive discounts of d1% and d2% equal a single discount of:
+Single Discount % = d1 + d2 - (d1 * d2) / 100
+        `,
+        keyPoints: [
+          "Net change for +x% followed by -x% is ALWAYS a loss of (x/100)² %",
+          "Discounts are calculated on Marked Price (MP), while Profit/Loss is on Cost Price (CP)",
+          "Buy 3 Get 1 Free = 1/4 × 100 = 25% discount"
+        ],
+        formula: "Net % Change = a + b + (a × b) / 100",
+        examples: [
+          "A trader marks goods 30% above CP and offers a 10% discount. Find profit %.\nLet CP = 100. MP = 130.\nDiscount = 10% of 130 = 13.\nSP = 130 - 13 = 117.\nProfit = 17%."
+        ]
+      },
+      questions: [
+        { prompt: "A 20% increase followed by a 20% decrease yields a net change of:", options: ["0%", "-4%", "+4%", "-2%"], correct: 1, explanation: "Net change = 20 - 20 + (20×(-20))/100 = -4% (4% decrease)." },
+        { prompt: "If cost price of 15 articles equals selling price of 12 articles, profit percentage is:", options: ["20%", "25%", "30%", "33.3%"], correct: 1, explanation: "Profit % = (15 - 12) / 12 × 100 = 25%." }
+      ]
+    },
+
+    // Logical Reasoning
+    {
+      id: `${b}-p1-logical-1`,
+      step: currentStep++,
+      phaseNumber: 1,
+      category: "Phase 1: Aptitude Foundation",
+      subTopic: "Logical Reasoning",
+      title: "Blood Relations, Coding-Decoding & Direction Sense",
+      type: "lesson",
+      xpReward: 40,
+      diamondReward: 10,
+      videos: attachVideos("Logical Reasoning Blood Relations Coding Decoding"),
+      theory: {
+        summary: "Master family tree diagrams, letter-shift substitution patterns, and 2D cardinal direction coordinate navigation.",
+        detailedContent: `
+### 1. Blood Relations Family Tree System
+- Represent males with [+] and females with [-].
+- Represent couples with double lines (=) and siblings with single horizontal lines (-).
+- Vertical lines represent generation gaps (Parents | Children).
+
+### 2. Coding-Decoding Patterns
+- Alphabet Positioning: A=1, B=2 ... Z=26. Reverse positions: A=26, B=25 ... Z=1.
+- Opposite Letter Shortcut (AZ, BY, CX, DW, EV, FU, GT, HS, IR, JK, LO, MN).
+
+### 3. Direction & Distance Vector Math
+- Cardinal Directions: North (+Y), South (-Y), East (+X), West (-X).
+- Shortest distance between starting and ending points uses Pythagoras Theorem:
+Distance = sqrt((dx)^2 + (dy)^2)
+        `,
+        keyPoints: [
+          "Always draw a generation tree diagram for multi-statement blood relation questions",
+          "Opposite letters sum up to 27 in alphabet indexing (e.g. A=1, Z=26 => 1+26 = 27)",
+          "Shadow in the morning is towards West; shadow in the evening is towards East"
+        ],
+        formula: "Shortest Distance = √(Δx² + Δy²)"
+      },
+      questions: [
+        { prompt: "Pointing to a photograph, a man said: 'I have no brother or sister, but that man's father is my father's son.' Whose photo was it?", options: ["His own", "His son's", "His father's", "His nephew's"], correct: 1, explanation: "'My father's son' = himself (since he has no brother). So 'that man's father is myself'. The photo is his son's." }
+      ]
+    },
+
+    // Verbal Ability
+    {
+      id: `${b}-p1-verbal-1`,
+      step: currentStep++,
+      phaseNumber: 1,
+      category: "Phase 1: Aptitude Foundation",
+      subTopic: "Verbal Ability",
+      title: "Reading Comprehension, Grammar Rules & Vocabulary",
+      type: "quiz",
+      xpReward: 40,
+      diamondReward: 10,
+      videos: attachVideos("Verbal Ability Spotting Errors Reading Comprehension"),
+      theory: {
+        summary: "Subject-verb agreement rules, modifier placement, tone identification, and vocabulary roots for corporate communication tests.",
+        detailedContent: `
+### 1. Subject-Verb Agreement Golden Rules
+- Singular subjects take singular verbs; plural subjects take plural verbs.
+- Words joined by 'and' take plural verbs ('John and Mary are going').
+- Words joined by 'either...or' / 'neither...nor' take the verb matching the CLOSER subject ('Neither the teacher nor the students WERE present').
+
+### 2. Active vs Passive Voice & Parallelism
+- Parallelism: Items in a series must share grammatical form ('He likes hiking, swimming, and biking', NOT 'to bike').
+        `,
+        keyPoints: [
+          "Subject and verb must agree in number regardless of intervening prepositional phrases",
+          "Use 'Fewer' for countable nouns (fewer books) and 'Less' for uncountable quantities (less water)",
+          "Root words simplify vocabulary recognition (e.g., 'Mal' = bad, 'Bene' = good)"
+        ]
+      },
+      questions: [
+        { prompt: "Choose the correct sentence:", options: ["Neither the manager nor the employees was present.", "Neither the manager nor the employees were present.", "Neither the manager or the employees was present.", "Neither the manager nor employees has present."], correct: 1, explanation: "With 'neither...nor', verb agrees with the nearest subject ('employees' => plural verb 'were')." }
+      ]
+    },
+
+    // Chest 1
+    {
+      id: `${b}-chest-p1`,
+      step: currentStep++,
+      phaseNumber: 1,
+      category: "Phase 1: Aptitude Foundation",
+      subTopic: "Aptitude Foundation",
+      title: "🎁 Phase 1 Aptitude Master Reward Chest",
+      type: "chest",
+      xpReward: 150,
+      diamondReward: 50
+    }
+  );
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // PHASE 2: TECHNICAL FOUNDATION
+  // ─────────────────────────────────────────────────────────────────────────
+  // Mapped per department (CSE/IT, AIML/AIDS, ECE, EEE, MECH)
+  const isCseIt = b === "cse" || b === "it";
+  const isAimlAids = b === "aiml" || b === "aids";
+  const isEce = b === "ece";
+  const isEee = b === "eee";
+  const isMech = b === "mech";
+
+  // Node 1: Department Core Subject
+  let coreTitle = "Operating Systems & Process Lifecycle";
+  let coreSummary = "Process management, CPU scheduling, thread synchronization, and virtual memory paging.";
+  if (isAimlAids) {
+    coreTitle = "Linear Algebra, Vector Spaces & PCA";
+    coreSummary = "Matrices, eigenvalues, eigenvectors, matrix decompositions, and Principal Component Analysis.";
+  } else if (isEce) {
+    coreTitle = "Digital Electronics & Logic Gate Minimization";
+    coreSummary = "Boolean algebra, K-Maps, combinational logic, flip-flops, and sequential state machines.";
+  } else if (isEee) {
+    coreTitle = "Circuit Theory & Network Theorems";
+    coreSummary = "KCL, KVL, Thevenin theorem, Norton theorem, maximum power transfer, and AC transient analysis.";
+  } else if (isMech) {
+    coreTitle = "Thermodynamics & First/Second Laws";
+    coreSummary = "Carnot cycle, entropy, enthalpy, ideal gas equations, and heat engine efficiencies.";
+  }
+
+  nodes.push({
+    id: `${b}-p2-core-1`,
+    step: currentStep++,
+    phaseNumber: 2,
+    category: "Phase 2: Technical Foundation",
+    subTopic: "Core Subjects",
+    title: coreTitle,
+    type: "lesson",
+    xpReward: 60,
+    diamondReward: 15,
+    videos: attachVideos(`${b.toUpperCase()} ${coreTitle} Engineering Lecture`),
+    theory: {
+      summary: coreSummary,
+      detailedContent: `
+### 1. Department Core Fundamentals (${b.toUpperCase()})
+Deep academic grounding required for technical interview rounds:
+- Principles of domain architecture and physical laws.
+- Mathematical formulations and system behavior modeling.
+- Real-world engineering implementations and industry standards.
+      `,
+      keyPoints: [
+        "Core theoretical concepts form 50% of technical interview questions",
+        "Focus on fundamental laws, mathematical proofs, and system trade-offs"
+      ]
+    },
+    questions: [
+      { prompt: `Which concept is fundamental to ${b.toUpperCase()} technical core evaluations?`, options: [coreTitle, "Generic Aptitude", "Basic Grammar", "Public Speaking"], correct: 0, explanation: `${coreTitle} is a core evaluation pillar in ${b.toUpperCase()} engineering technical interviews.` }
+    ]
+  });
+
+  // Node 2: Programming Languages & Logic
+  nodes.push({
+    id: `${b}-p2-prog-1`,
+    step: currentStep++,
+    phaseNumber: 2,
+    category: "Phase 2: Technical Foundation",
+    subTopic: "Programming Languages",
+    title: "C++ / Java / Python Memory Models & OOP Concepts",
+    type: "lesson",
+    xpReward: 60,
+    diamondReward: 15,
+    videos: attachVideos("Object Oriented Programming C++ Java Python OOPs"),
+    theory: {
+      summary: "Encapsulation, Inheritance, Polymorphism, Abstraction, Stack vs Heap memory allocation, and Garbage Collection.",
+      detailedContent: `
+### 1. The 4 Pillars of OOP
+1. Encapsulation: Binding data members and methods together while restricting direct access (private getters/setters).
+2. Abstraction: Hiding internal implementation details and exposing only essential interfaces.
+3. Inheritance: Reusing attributes and methods from a parent class (Single, Multiple, Multilevel, Hierarchical).
+4. Polymorphism: Ability of a method to take multiple forms (Compile-time Method Overloading vs Runtime Method Overriding).
+
+### 2. Stack vs Heap Memory Management
+- Stack Memory: Stores local variables, function calls, and primitive types. Fast access, managed automatically by call stack.
+- Heap Memory: Dynamic allocation for objects created via 'new' keyword. Slower access, requires manual deallocation (C++) or automatic Garbage Collection (Java/Python).
+      `,
+      keyPoints: [
+        "Method Overloading = Same method name, different parameter signature (Compile-time)",
+        "Method Overriding = Child class redefines virtual/abstract method of parent class (Runtime)",
+        "Stack memory overflow occurs with infinite recursion"
+      ],
+      code: `// C++ Polymorphism & Virtual Function
+class Animal {
+public:
+    virtual void makeSound() { cout << "Generic sound" << endl; }
+};
+class Dog : public Animal {
+public:
+    void makeSound() override { cout << "Bark bark!" << endl; }
+};`
+    },
+    questions: [
+      { prompt: "Which OOP concept allows a subclass to provide a specific implementation of a method already defined in its superclass?", options: ["Method Overloading", "Method Overriding", "Encapsulation", "Abstraction"], correct: 1, explanation: "Method Overriding enables runtime polymorphism by redefining a superclass method in a child class." }
+    ]
+  });
+
+  // Node 3: Coding Basics
+  nodes.push({
+    id: `${b}-p2-code-1`,
+    step: currentStep++,
+    phaseNumber: 2,
+    category: "Phase 2: Technical Foundation",
+    subTopic: "Coding Basics",
+    title: "Logic Building: Loops, Recursion & Pattern Printing",
+    type: "code",
+    xpReward: 70,
+    diamondReward: 20,
+    videos: attachVideos("Logic Building Loops Recursion C++ Python Java"),
+    debugChallenge: {
+      title: "Fix Infinite Recursion Bug in Factorial",
+      buggy: `function factorial(n) {\n  return n * factorial(n - 1);\n}`,
+      fixed: `function factorial(n) {\n  if (n <= 1) return 1;\n  return n * factorial(n - 1);\n}`,
+      hint: "Every recursive function requires a base case to terminate execution!"
+    },
+    questions: [
+      { prompt: "What happens if a recursive function lacks a valid base case?", options: ["Runs infinitely until Stack Overflow", "Returns null automatically", "Executes in O(1) time", "Compiles with warning"], correct: 0, explanation: "Without a base case, recursion fills the call stack continuously until a Stack Overflow error occurs." }
+    ]
+  });
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // PHASE 3: ADVANCED PREPARATION
+  // ─────────────────────────────────────────────────────────────────────────
+  // Mapped using branchModules (DSA, SQL, System Design)
+  branchModules.slice(0, 3).forEach((mod, i) => {
+    nodes.push({
+      id: `${b}-p3-mod-${i}`,
+      step: currentStep++,
+      phaseNumber: 3,
+      category: "Phase 3: Advanced Preparation",
+      subTopic: i === 0 ? "DSA" : i === 1 ? "SQL & Databases" : "System Design / CS Fundamentals",
+      title: mod.moduleTitle,
+      type: "lesson",
+      xpReward: 80,
+      diamondReward: 25,
+      videos: mod.videos,
+      theory: {
+        summary: mod.studyMaterial.summary,
+        detailedContent: mod.studyMaterial.deepDiveTextbook,
+        keyPoints: mod.studyMaterial.keyPoints,
+        authorReferences: mod.studyMaterial.authorReferences,
+        comparisonTable: mod.studyMaterial.comparisonTable,
+        flowchartSteps: mod.studyMaterial.flowchartSteps,
+        examples: [mod.studyMaterial.example]
+      },
+      questions: mod.quiz.map(q => ({
+        prompt: q.q,
+        options: q.options,
+        correct: q.answer,
+        explanation: "Review the module deep dive textbook and comparison table for full solution steps."
+      }))
+    });
+  });
+
+  // Chest 3
+  nodes.push({
+    id: `${b}-chest-p3`,
+    step: currentStep++,
+    phaseNumber: 3,
+    category: "Phase 3: Advanced Preparation",
+    subTopic: "Advanced Preparation",
+    title: "🎁 Phase 3 Advanced Master Diamond Chest",
+    type: "chest",
+    xpReward: 250,
+    diamondReward: 100
+  });
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // PHASE 4: PLACEMENT READINESS
+  // ─────────────────────────────────────────────────────────────────────────
+  // Sub-topics: Resume & Portfolio, Projects, Company-wise Preparation
+  nodes.push(
+    // Resume & Portfolio
+    {
+      id: `${b}-p4-resume`,
+      step: currentStep++,
+      phaseNumber: 4,
+      category: "Phase 4: Placement Readiness",
+      subTopic: "Resume & Portfolio",
+      title: "ATS Resume Optimization, GitHub Portfolio & LinkedIn Branding",
+      type: "lesson",
+      xpReward: 75,
+      diamondReward: 20,
+      videos: attachVideos("ATS Resume Building GitHub Portfolio LinkedIn Placement"),
+      theory: {
+        summary: "Pass Applicant Tracking Systems (ATS) with 85%+ score, build a high-impact GitHub portfolio, and optimize LinkedIn profiles for recruiter outreach.",
+        detailedContent: `
+### 1. ATS Resume Parsing Mechanics
+Applicant Tracking Systems parse resumes using OCR and keyword extraction:
+- Standard Single-Column Layout: Avoid tables, images, text boxes, or fancy graphics that break ATS parsers.
+- Impact Statements (XYZ Formula): "Accomplished [X], as measured by [Y], by doing [Z]."
+  * Bad: "Built a web app for college project."
+  * Good: "Developed a real-time full-stack e-learning portal serving 1,200 active students, reducing server response latency by 35% using Redis caching."
+
+### 2. GitHub Portfolio Best Practices
+- Every project must include a professional README.md with system architecture diagram, live demo link, tech stack badges, and local setup instructions.
+
+### 3. Recruiter LinkedIn Hacks
+- Headline formula: [Target Role] | [Tech Stack Skills] | [Key Accomplishment].
+        `,
+        keyPoints: [
+          "Always use standard bullet points and clear section headers (Education, Experience, Projects, Skills)",
+          "Quantify achievements with percentages, metrics, and latency numbers",
+          "Tailor keywords to match job descriptions before applying"
+        ],
+        placementTips: [
+          "Use Google's official XYZ resume bullet formula to immediately rank in the top 5% of candidate applications."
+        ]
+      },
+      questions: [
+        { prompt: "What is Google's recommended formula for writing resume accomplishment bullet points?", options: ["XYZ Formula: Accomplished X, measured by Y, by doing Z", "ABC Formula: Action, Basic, Code", "SMART Goal Formula", "STAR Method only"], correct: 0, explanation: "Google recommends the XYZ formula: Accomplished [X], as measured by [Y], by doing [Z]." }
+      ]
+    },
+
+    // Company-wise Prep
+    {
+      id: `${b}-p4-company`,
+      step: currentStep++,
+      phaseNumber: 4,
+      category: "Phase 4: Placement Readiness",
+      subTopic: "Company-wise Preparation",
+      title: "TCS NQT, Infosys, Amazon & Google Company Test Patterns",
+      type: "quiz",
+      xpReward: 80,
+      diamondReward: 25,
+      videos: attachVideos("TCS NQT Infosys Amazon Google Placement Preparation"),
+      theory: {
+        summary: "Detailed breakdown of exam patterns, cut-offs, coding platforms, and interview rounds for Service & Product giants.",
+        detailedContent: `
+### 1. TCS NQT (National Qualifier Test)
+- Foundation Section: Numerical Ability, Verbal Ability, Reasoning Ability (75 mins).
+- Advanced Section: Advanced Quantitative & Reasoning (35 mins) + 2 Hands-on Coding Problems (45 mins).
+
+### 2. Amazon SDE Assessment
+- Online Assessment (OA): 2 LeetCode Medium/Hard Coding Questions (90 mins) + Work Style Assessment & Leadership Principles evaluation.
+- Leadership Principles: Customer Obsession, Ownership, Bias for Action, Deep Dive.
+        `,
+        keyPoints: [
+          "Service-based MNCs (TCS, Infosys, Wipro) heavily penalize speed errors in Aptitude screening",
+          "Product MNCs (Amazon, Microsoft, Google) require 100% test case pass on Coding OA rounds"
+        ]
+      },
+      questions: [
+        { prompt: "Which Amazon Leadership Principle evaluates taking initiative without waiting for manager approval?", options: ["Bias for Action", "Frugality", "Hire and Develop the Best", "Think Big"], correct: 0, explanation: "Bias for Action emphasizes calculated risk-taking and fast action without over-deliberation." }
       ]
     }
-  ];
+  );
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // PHASE 5: PLACEMENT ROUNDS
+  // ─────────────────────────────────────────────────────────────────────────
+  // Sub-topics: Aptitude Test, Coding Test, Technical Interview, HR Interview, Managerial, Mock Placement Exam
+  nodes.push(
+    {
+      id: `${b}-p5-apt-test`,
+      step: currentStep++,
+      phaseNumber: 5,
+      category: "Phase 5: Placement Rounds",
+      subTopic: "Aptitude Test",
+      title: "Round 1: Full-Length Online Aptitude Screening Exam",
+      type: "quiz",
+      xpReward: 100,
+      diamondReward: 30,
+      questions: [
+        { prompt: "A train 200m long passes a 300m platform in 25 seconds. Speed of the train in km/h?", options: ["54 km/h", "72 km/h", "90 km/h", "108 km/h"], correct: 1, explanation: "Total distance = 200+300 = 500m. Speed = 500/25 = 20 m/s = 20 × (18/5) = 72 km/h." },
+        { prompt: "If log10(x) = 3, what is the value of x?", options: ["30", "100", "1000", "3000"], correct: 2, explanation: "log10(x) = 3 => x = 10³ = 1000." }
+      ]
+    },
+    {
+      id: `${b}-p5-tech-interview`,
+      step: currentStep++,
+      phaseNumber: 5,
+      category: "Phase 5: Placement Rounds",
+      subTopic: "Technical Interview",
+      title: "Round 3: Live Technical Panel Interview & System Deep Dive",
+      type: "lesson",
+      xpReward: 120,
+      diamondReward: 40,
+      videos: attachVideos("Technical Interview Round Questions and Answers"),
+      theory: {
+        summary: "Handling live whiteboard coding, system architecture questions, project deep dives, and edge case defenses.",
+        detailedContent: `
+### Technical Interview Survival Strategy
+1. Think Out Loud: Explain your thought process to the interviewer before writing code.
+2. Clarify Constraints: Ask about input size N, memory limits, and handling null/invalid inputs.
+3. Start with Brute Force: State brute force complexity first, then optimize using Hash Maps, Two Pointers, or Dynamic Programming.
+        `,
+        keyPoints: [
+          "Never stay silent for more than 30 seconds during a technical interview",
+          "State space and time complexity explicitly after completing solution"
+        ]
+      },
+      questions: [
+        { prompt: "What should you do first when given a coding problem in a live technical interview?", options: ["Start typing code immediately", "Ask clarifying questions and state constraints", "Memorize code", "Ask for solution"], correct: 1, explanation: "Always clarify problem constraints, edge cases, and sample inputs before writing any code." }
+      ]
+    },
+    {
+      id: `${b}-p5-hr-round`,
+      step: currentStep++,
+      phaseNumber: 5,
+      category: "Phase 5: Placement Rounds",
+      subTopic: "HR Interview",
+      title: "Round 4: Behavioral HR Round & STAR Method Mastery",
+      type: "quiz",
+      xpReward: 100,
+      diamondReward: 30,
+      videos: attachVideos("HR Interview Questions Answers STAR Method"),
+      theory: {
+        summary: "Answering 'Tell me about yourself', conflict resolution, salary expectations, and company culture alignment using the STAR technique.",
+        detailedContent: `
+### STAR Method (Situation, Task, Action, Result)
+- Situation: Describe the specific event or situation.
+- Task: Explain the challenge or goal you had to complete.
+- Action: Detail the specific steps YOU took to solve it.
+- Result: Share the measurable outcomes and takeaways.
+        `,
+        keyPoints: [
+          "Focus 70% of your STAR response on your specific Actions and positive Results",
+          "Never speak negatively about past teammates, professors, or employers"
+        ]
+      },
+      questions: [
+        { prompt: "What does the 'A' in the STAR method stand for?", options: ["Aptitude", "Action", "Achievement", "Assessment"], correct: 1, explanation: "STAR stands for Situation, Task, Action, Result." }
+      ]
+    },
+
+    // FINAL BOSS EXAM
+    {
+      id: `${b}-p5-boss-exam`,
+      step: currentStep++,
+      phaseNumber: 5,
+      category: "Phase 5: Placement Rounds",
+      subTopic: "Mock Placement Exam",
+      title: "🏆 GRAND BOSS: Tier-1 MNC Full Mock Placement Certification",
+      type: "boss",
+      xpReward: 500,
+      diamondReward: 200,
+      questions: [
+        { prompt: "Given an array nums = [2,7,11,15] and target = 9, what is the most optimal algorithm to return indices of the two numbers that add up to target?", options: ["O(N²) brute force nested loops", "O(N log N) sort array then binary search", "O(N) single-pass HashMap storing target - num complement", "O(N log N) Heap allocation"], correct: 2, explanation: "A single-pass HashMap maps value to index. For each element x, check if (target - x) exists in map. Time O(N), Space O(N)." },
+        { prompt: "Which data structure is naturally used to implement a Min-Heap and Priority Queue with O(log N) insertion and extraction?", options: ["Doubly Linked List", "Binary Heap Array", "B-Tree", "Red-Black Tree"], correct: 1, explanation: "A Binary Heap stored as an array provides parent i at floor((i-1)/2) and children at 2i+1, 2i+2. Provides O(log N) push/pop." }
+      ]
+    }
+  );
+
+  return nodes;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // MAIN GAME PATH COMPONENT
 // ─────────────────────────────────────────────────────────────────────────────
-export default function LearningGamePath({ branchId = "cse", roleId, onNodeComplete }: LearningGamePathProps) {
+export default function LearningGamePath({ branchId = "cse", roleId, targetPhase, onNodeComplete }: LearningGamePathProps) {
   const [userXp, setUserXp] = useState(() => parseInt(localStorage.getItem("user_xp") || "0", 10));
   const [userDiamonds, setUserDiamonds] = useState(() => parseInt(localStorage.getItem("user_diamonds") || "0", 10));
   const [completedIds, setCompletedIds] = useState<Set<string>>(() => {
@@ -453,7 +643,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, onNodeCompl
   });
 
   const [activeNode, setActiveNode] = useState<LessonNode | null>(null);
-  const [modalTab, setModalTab] = useState<"textbook" | "formulas" | "placement">("textbook");
+  const [modalTab, setModalTab] = useState<"textbook" | "formulas" | "videos" | "placement">("textbook");
   const [step, setStep] = useState<"theory" | "quiz">("theory");
   const [qIdx, setQIdx] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
@@ -461,8 +651,11 @@ export default function LearningGamePath({ branchId = "cse", roleId, onNodeCompl
   const [showReward, setShowReward] = useState(false);
   const [lastCompleted, setLastCompleted] = useState<LessonNode | null>(null);
 
+  const phaseRefs = useRef<Record<number, HTMLDivElement | null>>({});
+
   const nodes = useMemo(() => getCoursePath(branchId || "cse", roleId), [branchId, roleId]);
 
+  // Group nodes by Category (Phase 1 to 5)
   const phases = useMemo(() => {
     const map = new Map<string, LessonNode[]>();
     for (const n of nodes) {
@@ -472,7 +665,12 @@ export default function LearningGamePath({ branchId = "cse", roleId, onNodeCompl
     return Array.from(map.entries());
   }, [nodes]);
 
-  const currentLeague = LEAGUES.slice().reverse().find(l => userXp >= l.minXp) || LEAGUES[0];
+  // Auto-scroll when targetPhase is selected
+  useEffect(() => {
+    if (targetPhase && phaseRefs.current[targetPhase]) {
+      phaseRefs.current[targetPhase]?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [targetPhase]);
 
   const isUnlocked = (node: LessonNode): boolean => {
     if (completedIds.has(node.id)) return true;
@@ -544,18 +742,18 @@ export default function LearningGamePath({ branchId = "cse", roleId, onNodeCompl
           <div>
             <div className="flex flex-wrap gap-2 mb-2">
               <span className="text-[11px] font-extrabold uppercase tracking-widest text-purple-400 bg-purple-500/10 px-3 py-1 rounded-full border border-purple-500/20">
-                {branchId?.toUpperCase() || "CSE"} — Comprehensive Study Path
+                {branchId?.toUpperCase() || "CSE"} — 5-Phase Placement Roadmap
               </span>
               {nextNode && (
                 <span className="text-[11px] font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20 animate-pulse">
-                  ▶ Active: Step {nextNode.step}
+                  ▶ Active Step {nextNode.step}: {nextNode.subTopic}
                 </span>
               )}
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white flex items-center gap-2">
-              Deep Technical Curriculum <Sparkles size={22} className="text-amber-400" />
+              Comprehensive Placement Curriculum <Sparkles size={22} className="text-amber-400" />
             </h2>
-            <p className="text-xs sm:text-sm text-slate-400 mt-1">Read textbook-grade theory notes, review interview formulas, solve practice exams, and get placement certified.</p>
+            <p className="text-xs sm:text-sm text-slate-400 mt-1">Master Aptitude, Technical Core, DSA, Projects, ATS Resumes, and MNC Placement Interview Rounds.</p>
           </div>
           <div className="flex flex-wrap gap-2">
             <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-300 text-sm font-bold">
@@ -583,67 +781,81 @@ export default function LearningGamePath({ branchId = "cse", roleId, onNodeCompl
         </div>
       </div>
 
-      {/* ── PATH NODES ── */}
-      <div className="space-y-10">
-        {phases.map(([category, phaseNodes]) => (
-          <div key={category} className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="h-px flex-1 bg-slate-800" />
-              <span className="text-xs font-bold uppercase tracking-widest text-slate-400 px-4 py-1.5 rounded-full border border-slate-800 bg-slate-900 whitespace-nowrap">
-                {category}
-              </span>
-              <div className="h-px flex-1 bg-slate-800" />
-            </div>
+      {/* ── PATH NODES (5 PHASES) ── */}
+      <div className="space-y-12">
+        {phases.map(([category, phaseNodes]) => {
+          const phaseNum = phaseNodes[0]?.phaseNumber || 1;
 
-            <div className="flex flex-col items-center gap-10 relative">
-              {phaseNodes.map((node, idx) => {
-                const done = completedIds.has(node.id);
-                const unlocked = isUnlocked(node);
-                const offsets = [0, -100, 100, -60, 60, 0, -80, 80];
-                const xOffset = offsets[idx % offsets.length];
+          return (
+            <div
+              key={category}
+              ref={el => { phaseRefs.current[phaseNum] = el; }}
+              className="space-y-6 pt-2"
+            >
+              <div className="flex items-center gap-3">
+                <div className="h-px flex-1 bg-slate-800" />
+                <div className="flex items-center gap-2 px-5 py-2 rounded-full border border-purple-500/30 bg-slate-900 shadow-lg">
+                  <span className="w-2.5 h-2.5 rounded-full bg-purple-400 animate-pulse" />
+                  <span className="text-xs font-extrabold uppercase tracking-widest text-purple-300">
+                    {category}
+                  </span>
+                </div>
+                <div className="h-px flex-1 bg-slate-800" />
+              </div>
 
-                return (
-                  <div key={node.id} className="flex flex-col items-center relative" style={{ transform: `translateX(${xOffset}px)` }}>
-                    {idx < phaseNodes.length - 1 && (
-                      <div className="absolute top-[72px] left-1/2 -translate-x-1/2 w-0.5 h-12 bg-gradient-to-b from-purple-500/40 to-transparent" />
-                    )}
+              <div className="flex flex-col items-center gap-10 relative">
+                {phaseNodes.map((node, idx) => {
+                  const done = completedIds.has(node.id);
+                  const unlocked = isUnlocked(node);
+                  const offsets = [0, -100, 100, -60, 60, 0, -80, 80];
+                  const xOffset = offsets[idx % offsets.length];
 
-                    <motion.button
-                      whileHover={{ scale: unlocked ? 1.08 : 1 }}
-                      whileTap={{ scale: unlocked ? 0.95 : 1 }}
-                      onClick={() => openNode(node)}
-                      disabled={!unlocked}
-                      className={`relative w-[72px] h-[72px] rounded-full border-4 flex items-center justify-center shadow-xl transition-all ${
-                        done
-                          ? "bg-gradient-to-tr from-amber-400 to-yellow-300 border-amber-200 shadow-amber-400/40"
-                          : unlocked
-                          ? node.type === "boss"
-                            ? "bg-gradient-to-tr from-rose-600 to-orange-500 border-orange-300 shadow-rose-500/40 animate-pulse"
-                            : node.type === "chest"
-                            ? "bg-gradient-to-tr from-amber-500 to-yellow-400 border-yellow-200 shadow-amber-400/40"
-                            : "bg-gradient-to-tr from-purple-600 to-cyan-500 border-cyan-300 shadow-purple-500/40 animate-pulse"
-                          : "bg-slate-900 border-slate-700 cursor-not-allowed"
-                      }`}
-                    >
-                      {nodeIcon(node, done, unlocked)}
-                      <span className="absolute -top-1 -left-1 w-5 h-5 rounded-full bg-slate-900 border border-slate-700 text-[9px] font-bold text-slate-400 flex items-center justify-center">
-                        {node.step}
-                      </span>
-                    </motion.button>
+                  return (
+                    <div key={node.id} className="flex flex-col items-center relative" style={{ transform: `translateX(${xOffset}px)` }}>
+                      {idx < phaseNodes.length - 1 && (
+                        <div className="absolute top-[72px] left-1/2 -translate-x-1/2 w-0.5 h-12 bg-gradient-to-b from-purple-500/40 to-transparent" />
+                      )}
 
-                    <div className="mt-2 text-center max-w-[180px]">
-                      <p className="text-xs font-bold text-white line-clamp-2">{node.title}</p>
-                      <div className="flex items-center justify-center gap-2 mt-0.5">
-                        <span className="text-[10px] text-amber-400 font-mono">+{node.xpReward} XP</span>
-                        <span className="text-[10px] text-cyan-400 font-mono">+{node.diamondReward} 💎</span>
+                      <motion.button
+                        whileHover={{ scale: unlocked ? 1.08 : 1 }}
+                        whileTap={{ scale: unlocked ? 0.95 : 1 }}
+                        onClick={() => openNode(node)}
+                        disabled={!unlocked}
+                        className={`relative w-[72px] h-[72px] rounded-full border-4 flex items-center justify-center shadow-xl transition-all ${
+                          done
+                            ? "bg-gradient-to-tr from-amber-400 to-yellow-300 border-amber-200 shadow-amber-400/40"
+                            : unlocked
+                            ? node.type === "boss"
+                              ? "bg-gradient-to-tr from-rose-600 to-orange-500 border-orange-300 shadow-rose-500/40 animate-pulse"
+                              : node.type === "chest"
+                              ? "bg-gradient-to-tr from-amber-500 to-yellow-400 border-yellow-200 shadow-amber-400/40"
+                              : "bg-gradient-to-tr from-purple-600 to-cyan-500 border-cyan-300 shadow-purple-500/40 animate-pulse"
+                            : "bg-slate-900 border-slate-700 cursor-not-allowed"
+                        }`}
+                      >
+                        {nodeIcon(node, done, unlocked)}
+                        <span className="absolute -top-1 -left-1 w-5 h-5 rounded-full bg-slate-900 border border-slate-700 text-[9px] font-bold text-slate-400 flex items-center justify-center">
+                          {node.step}
+                        </span>
+                      </motion.button>
+
+                      <div className="mt-2 text-center max-w-[200px]">
+                        <span className="text-[9px] font-bold uppercase tracking-wider text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded-full border border-purple-500/20">
+                          {node.subTopic}
+                        </span>
+                        <p className="text-xs font-bold text-white mt-1 line-clamp-2">{node.title}</p>
+                        <div className="flex items-center justify-center gap-2 mt-0.5">
+                          <span className="text-[10px] text-amber-400 font-mono">+{node.xpReward} XP</span>
+                          <span className="text-[10px] text-cyan-400 font-mono">+{node.diamondReward} 💎</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* ── EXPANDED DETAILED STUDY MODAL ── */}
@@ -659,9 +871,14 @@ export default function LearningGamePath({ branchId = "cse", roleId, onNodeCompl
               {/* Modal Header */}
               <div className="p-6 border-b border-slate-800 flex justify-between items-start bg-slate-950/60">
                 <div>
-                  <span className="text-[11px] font-extrabold uppercase tracking-widest text-purple-400">
-                    Step {activeNode.step} • {activeNode.category}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[11px] font-extrabold uppercase tracking-widest text-purple-400">
+                      Step {activeNode.step} • {activeNode.category}
+                    </span>
+                    <span className="text-[10px] font-bold text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded-full border border-cyan-500/20">
+                      {activeNode.subTopic}
+                    </span>
+                  </div>
                   <h3 className="text-2xl font-extrabold text-white mt-1">{activeNode.title}</h3>
                 </div>
                 <button
@@ -674,91 +891,141 @@ export default function LearningGamePath({ branchId = "cse", roleId, onNodeCompl
 
               {/* Sub-Navigation Tabs inside Lesson Modal */}
               {step === "theory" && (
-                <div className="flex border-b border-slate-800 bg-slate-950/40 px-6 gap-2 pt-2">
+                <div className="flex border-b border-slate-800 bg-slate-950/40 px-6 gap-2 pt-2 overflow-x-auto custom-scrollbar">
                   <button
                     onClick={() => setModalTab("textbook")}
-                    className={`pb-3 px-4 text-xs font-bold transition-all border-b-2 flex items-center gap-1.5 ${
+                    className={`pb-3 px-4 text-xs font-bold transition-all border-b-2 whitespace-nowrap flex items-center gap-1.5 ${
                       modalTab === "textbook"
                         ? "border-purple-500 text-purple-400"
                         : "border-transparent text-slate-400 hover:text-slate-200"
                     }`}
                   >
-                    <BookOpen size={15} /> 📖 Detailed Study Guide
+                    <BookOpen size={15} /> 📖 Textbook Chapter
                   </button>
                   <button
                     onClick={() => setModalTab("formulas")}
-                    className={`pb-3 px-4 text-xs font-bold transition-all border-b-2 flex items-center gap-1.5 ${
+                    className={`pb-3 px-4 text-xs font-bold transition-all border-b-2 whitespace-nowrap flex items-center gap-1.5 ${
                       modalTab === "formulas"
                         ? "border-cyan-500 text-cyan-400"
                         : "border-transparent text-slate-400 hover:text-slate-200"
                     }`}
                   >
-                    <Code2 size={15} /> ⚡ Key Formulas & Code
+                    <Code2 size={15} /> ⚡ Formulas & Debugging
+                  </button>
+                  <button
+                    onClick={() => setModalTab("videos")}
+                    className={`pb-3 px-4 text-xs font-bold transition-all border-b-2 whitespace-nowrap flex items-center gap-1.5 ${
+                      modalTab === "videos"
+                        ? "border-emerald-500 text-emerald-400"
+                        : "border-transparent text-slate-400 hover:text-slate-200"
+                    }`}
+                  >
+                    <Video size={15} /> 📺 11 Indian Languages Videos
                   </button>
                   <button
                     onClick={() => setModalTab("placement")}
-                    className={`pb-3 px-4 text-xs font-bold transition-all border-b-2 flex items-center gap-1.5 ${
+                    className={`pb-3 px-4 text-xs font-bold transition-all border-b-2 whitespace-nowrap flex items-center gap-1.5 ${
                       modalTab === "placement"
                         ? "border-amber-500 text-amber-400"
                         : "border-transparent text-slate-400 hover:text-slate-200"
                     }`}
                   >
-                    <Lightbulb size={15} /> 💡 Interview Secrets
+                    <Lightbulb size={15} /> 💡 MNC Interview Secrets
                   </button>
                 </div>
               )}
 
               {/* Modal Body */}
               <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
-                {step === "theory" && activeNode.theory && (
+                {step === "theory" && (
                   <>
-                    {/* TAB 1: TEXTBOOK DETAILED CONTENT */}
+                    {/* TAB 1: TEXTBOOK CHAPTER */}
                     {modalTab === "textbook" && (
                       <div className="space-y-6">
-                        <div className="p-4 rounded-2xl bg-purple-950/40 border border-purple-500/20 text-slate-200 text-sm leading-relaxed">
-                          <strong>Summary:</strong> {activeNode.theory.summary}
-                        </div>
+                        {activeNode.theory && (
+                          <>
+                            <div className="p-4 rounded-2xl bg-purple-950/40 border border-purple-500/20 text-slate-200 text-sm leading-relaxed">
+                              <strong>Summary:</strong> {activeNode.theory.summary}
+                            </div>
 
-                        {activeNode.theory.detailedContent && (
-                          <div className="prose prose-invert max-w-none text-slate-300 text-sm leading-relaxed whitespace-pre-line font-sans space-y-4">
-                            {activeNode.theory.detailedContent}
-                          </div>
-                        )}
-
-                        <div className="space-y-3 pt-2">
-                          <h4 className="text-xs font-extrabold uppercase tracking-wider text-purple-400">Core Takeaways</h4>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                            {activeNode.theory.keyPoints.map((kp, i) => (
-                              <div key={i} className="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-start gap-2 text-xs text-slate-300">
-                                <CheckCircle2 size={15} className="text-emerald-400 shrink-0 mt-0.5" />
-                                <span>{kp}</span>
+                            {activeNode.theory.detailedContent && (
+                              <div className="prose prose-invert max-w-none text-slate-300 text-sm leading-relaxed whitespace-pre-line font-sans space-y-4">
+                                {activeNode.theory.detailedContent}
                               </div>
-                            ))}
-                          </div>
-                        </div>
+                            )}
+
+                            {/* Author References */}
+                            {activeNode.theory.authorReferences?.length && (
+                              <div className="space-y-3 pt-2">
+                                <h4 className="text-xs font-extrabold uppercase tracking-wider text-cyan-400">Author Textbook References</h4>
+                                {activeNode.theory.authorReferences.map((ref, i) => (
+                                  <div key={i} className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-1">
+                                    <div className="text-xs font-bold text-white">{ref.bookTitle}</div>
+                                    <div className="text-[11px] text-purple-400 font-medium">— {ref.author}</div>
+                                    <div className="text-xs text-slate-300 italic pt-1">"{ref.coreInsight}"</div>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+
+                            {/* Key Takeaways */}
+                            <div className="space-y-3 pt-2">
+                              <h4 className="text-xs font-extrabold uppercase tracking-wider text-purple-400">Core Takeaways</h4>
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                {activeNode.theory.keyPoints.map((kp, i) => (
+                                  <div key={i} className="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-start gap-2 text-xs text-slate-300">
+                                    <CheckCircle2 size={15} className="text-emerald-400 shrink-0 mt-0.5" />
+                                    <span>{kp}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          </>
+                        )}
                       </div>
                     )}
 
-                    {/* TAB 2: FORMULAS & WORKED EXAMPLES */}
+                    {/* TAB 2: FORMULAS & DEBUGGING */}
                     {modalTab === "formulas" && (
                       <div className="space-y-6">
-                        {activeNode.theory.formula && (
+                        {activeNode.theory?.formula && (
                           <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-300 font-mono text-sm">
                             <span className="font-bold text-amber-400 block mb-1">⚡ Core Mathematical Formula:</span>
                             {activeNode.theory.formula}
                           </div>
                         )}
 
-                        {activeNode.theory.code && (
+                        {activeNode.debugChallenge && (
+                          <div className="p-5 rounded-2xl bg-rose-950/40 border border-rose-500/30 space-y-3">
+                            <h4 className="text-xs font-extrabold uppercase tracking-wider text-rose-400 flex items-center gap-1.5">
+                              <Bug size={16} /> Bug Debugging Challenge: {activeNode.debugChallenge.title}
+                            </h4>
+                            <div className="space-y-2">
+                              <span className="text-[10px] font-bold uppercase text-rose-300">Buggy Implementation:</span>
+                              <pre className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-rose-400 overflow-x-auto">
+                                <code>{activeNode.debugChallenge.buggy}</code>
+                              </pre>
+                            </div>
+                            <div className="space-y-2">
+                              <span className="text-[10px] font-bold uppercase text-emerald-300">Fixed Production Code:</span>
+                              <pre className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-emerald-300 overflow-x-auto">
+                                <code>{activeNode.debugChallenge.fixed}</code>
+                              </pre>
+                            </div>
+                            <p className="text-xs text-amber-300 italic">💡 Hint: {activeNode.debugChallenge.hint}</p>
+                          </div>
+                        )}
+
+                        {activeNode.theory?.code && (
                           <div className="space-y-2">
-                            <span className="text-xs font-bold text-cyan-400 uppercase tracking-wider">Implementation Blueprint</span>
+                            <span className="text-xs font-bold text-cyan-400 uppercase tracking-wider">Implementation Code Blueprint</span>
                             <pre className="p-4 rounded-2xl bg-slate-950 border border-slate-800 font-mono text-xs text-cyan-300 overflow-x-auto">
                               <code>{activeNode.theory.code}</code>
                             </pre>
                           </div>
                         )}
 
-                        {activeNode.theory.examples?.length && (
+                        {activeNode.theory?.examples?.length && (
                           <div className="space-y-3">
                             <span className="text-xs font-bold text-purple-400 uppercase tracking-wider">Worked Step-by-Step Examples</span>
                             {activeNode.theory.examples.map((ex, i) => (
@@ -771,7 +1038,40 @@ export default function LearningGamePath({ branchId = "cse", roleId, onNodeCompl
                       </div>
                     )}
 
-                    {/* TAB 3: PLACEMENT & INTERVIEW TIPS */}
+                    {/* TAB 3: 11 INDIAN LANGUAGES YOUTUBE VIDEOS */}
+                    {modalTab === "videos" && (
+                      <div className="space-y-4">
+                        <div className="p-4 rounded-2xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-200 text-xs leading-relaxed space-y-1">
+                          <h4 className="font-extrabold text-emerald-400 text-sm flex items-center gap-1.5">
+                            <Video size={18} /> Multi-Lingual Video Tutorials (11 Indian Languages)
+                          </h4>
+                          <p>Learn this topic in your mother tongue! Click any language button to launch top-rated YouTube tutorial searches instantly:</p>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                          {activeNode.videos?.map((v, i) => (
+                            <a
+                              key={i}
+                              href={v.url}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 hover:border-emerald-500/50 hover:bg-slate-800/80 transition-all flex items-center justify-between group"
+                            >
+                              <div className="flex items-center gap-2.5">
+                                <span className="text-xl">{v.flag}</span>
+                                <div>
+                                  <div className="text-xs font-bold text-white group-hover:text-emerald-300 transition-colors">{v.language}</div>
+                                  <div className="text-[10px] text-slate-400 line-clamp-1">{v.title}</div>
+                                </div>
+                              </div>
+                              <Play size={14} className="text-emerald-400 shrink-0 group-hover:scale-125 transition-transform" />
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* TAB 4: PLACEMENT & MNC INTERVIEW SECRETS */}
                     {modalTab === "placement" && (
                       <div className="space-y-4">
                         <div className="p-5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-xs leading-relaxed space-y-2">
@@ -781,7 +1081,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, onNodeCompl
                           <p>These specialized interview secrets help candidates clear technical rounds on their first attempt:</p>
                         </div>
 
-                        {activeNode.theory.placementTips?.map((tip, i) => (
+                        {activeNode.theory?.placementTips?.map((tip, i) => (
                           <div key={i} className="p-4 rounded-2xl bg-slate-950 border border-slate-800 flex items-start gap-3 text-xs text-slate-300">
                             <Lightbulb size={18} className="text-amber-400 shrink-0 mt-0.5" />
                             <span className="leading-relaxed">{tip}</span>

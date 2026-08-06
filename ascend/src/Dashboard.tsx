@@ -266,7 +266,8 @@ export default function Dashboard() {
   const [resumeAtsFeedback, setResumeAtsFeedback] = useState<string[]>([]);
   const [resumeScoring, setResumeScoring] = useState(false);
 
-  // Selected concept from roadmap tree
+  // Selected phase jump target
+  const [targetPhase, setTargetPhase] = useState<number | undefined>(undefined);
   const [selectedConcept, setSelectedConcept] = useState<{ name: string; level: string } | null>(null);
 
   const xp = profile?.xp ?? 0;
@@ -575,7 +576,10 @@ export default function Dashboard() {
                 diamonds={Math.floor((xp ?? 0) * 0.4) + 50}
                 level={level}
                 placementScore={placementScore}
-                onStartJourney={() => setActiveTab("journey")}
+                onStartJourney={(phase) => {
+                  setTargetPhase(phase);
+                  setActiveTab("journey");
+                }}
                 onOpenCertification={() => setShowCertification(true)}
               />
             </motion.div>
@@ -587,6 +591,7 @@ export default function Dashboard() {
               <LearningGamePath
                 branchId={branchId}
                 roleId={roleId}
+                targetPhase={targetPhase}
                 onNodeComplete={(xpEarned) => {
                   updateXP(xpEarned);
                   updateStreak();

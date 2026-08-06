@@ -14,7 +14,7 @@ interface HomePanelProps {
   diamonds: number;
   level: number;
   placementScore: number;
-  onStartJourney: () => void;
+  onStartJourney: (targetPhase?: number) => void;
   onOpenCertification: () => void;
 }
 
@@ -48,7 +48,7 @@ export default function HomePanel({
               </span>
             )}
             <span className="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-3.5 py-1 rounded-full border border-emerald-500/30 flex items-center gap-1">
-              <Sparkles size={12} /> Single Linear Learning Path
+              <Sparkles size={12} /> 5-Phase Placement Curriculum
             </span>
           </div>
 
@@ -57,7 +57,7 @@ export default function HomePanel({
               Welcome Back, <span className="bg-gradient-to-r from-purple-400 via-cyan-300 to-amber-300 bg-clip-text text-transparent">{userName}</span>! 🚀
             </h1>
             <p className="text-base md:text-lg text-slate-300 max-w-2xl">
-              Your customized step-by-step placement path is ready. One click takes you to your active step — learn theory, solve practice MCQs, and unlock placement rewards.
+              Your comprehensive 5-phase placement roadmap is active. Master Aptitude, Department Core Theory, DSA, Projects, and AI Placement Mock Rounds.
             </p>
           </div>
 
@@ -66,7 +66,7 @@ export default function HomePanel({
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              onClick={onStartJourney}
+              onClick={() => onStartJourney(1)}
               className="px-8 py-5 rounded-2xl bg-gradient-to-r from-purple-600 via-cyan-500 to-emerald-500 hover:from-purple-500 hover:to-emerald-400 text-white font-extrabold text-lg shadow-2xl shadow-purple-500/40 flex items-center justify-center gap-3 transition-all cursor-pointer"
             >
               <Play size={24} className="fill-white" />
@@ -150,44 +150,92 @@ export default function HomePanel({
         </div>
       </div>
 
-      {/* ── STEP-BY-STEP LANDMARK PREVIEW CARDS ── */}
+      {/* ── 5-PHASE INTEGRATED PATH LANDMARKS ── */}
       <div className="space-y-4">
-        <h4 className="text-sm font-extrabold uppercase tracking-wider text-slate-400">Integrated Path Landmarks</h4>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="flex justify-between items-center">
+          <h4 className="text-sm font-extrabold uppercase tracking-wider text-slate-400">5-Phase Master Curriculum Roadmap</h4>
+          <span className="text-xs text-purple-400 font-bold">100% Department & Role Customized</span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          {/* Phase 1 */}
           <div
-            onClick={onStartJourney}
-            className="p-6 rounded-2xl bg-slate-900/70 border border-slate-800 hover:border-purple-500/50 hover:bg-slate-900 transition-all cursor-pointer space-y-3"
+            onClick={() => onStartJourney(1)}
+            className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-purple-500/50 hover:bg-slate-900 transition-all cursor-pointer space-y-3 group"
           >
-            <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400">
+            <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 group-hover:scale-110 transition-transform">
               <BookOpen size={20} />
             </div>
-            <h5 className="text-base font-bold text-white">Phase 1: Aptitude & Theory</h5>
-            <p className="text-xs text-slate-400">Master number systems, speed math, percentage tricks & core department fundamentals.</p>
-            <span className="text-xs font-bold text-purple-400 flex items-center gap-1">Jump to Phase 1 <ArrowRight size={14} /></span>
+            <div>
+              <span className="text-[10px] font-extrabold uppercase text-purple-400 tracking-wider">Phase 1</span>
+              <h5 className="text-sm font-bold text-white">Aptitude Foundation</h5>
+            </div>
+            <p className="text-xs text-slate-400 leading-relaxed">Quantitative Aptitude, Logical Reasoning & Verbal Ability for TCS, Wipro, Infosys.</p>
+            <span className="text-xs font-bold text-purple-400 flex items-center gap-1 pt-1">Jump to Phase 1 <ArrowRight size={14} /></span>
           </div>
 
+          {/* Phase 2 */}
           <div
-            onClick={onStartJourney}
-            className="p-6 rounded-2xl bg-slate-900/70 border border-slate-800 hover:border-cyan-500/50 hover:bg-slate-900 transition-all cursor-pointer space-y-3"
+            onClick={() => onStartJourney(2)}
+            className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-cyan-500/50 hover:bg-slate-900 transition-all cursor-pointer space-y-3 group"
           >
-            <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+            <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 group-hover:scale-110 transition-transform">
               <Code2 size={20} />
             </div>
-            <h5 className="text-base font-bold text-white">Phase 2: Core Coding & Systems</h5>
-            <p className="text-xs text-slate-400">Data structures, sliding window algorithms, SQL joins, and operating system scheduling.</p>
-            <span className="text-xs font-bold text-cyan-400 flex items-center gap-1">Jump to Phase 2 <ArrowRight size={14} /></span>
+            <div>
+              <span className="text-[10px] font-extrabold uppercase text-cyan-400 tracking-wider">Phase 2</span>
+              <h5 className="text-sm font-bold text-white">Technical Foundation</h5>
+            </div>
+            <p className="text-xs text-slate-400 leading-relaxed">Department Core Subjects, Programming Languages (C++, Java, Python) & Coding Logic.</p>
+            <span className="text-xs font-bold text-cyan-400 flex items-center gap-1 pt-1">Jump to Phase 2 <ArrowRight size={14} /></span>
           </div>
 
+          {/* Phase 3 */}
           <div
-            onClick={onStartJourney}
-            className="p-6 rounded-2xl bg-slate-900/70 border border-slate-800 hover:border-emerald-500/50 hover:bg-slate-900 transition-all cursor-pointer space-y-3"
+            onClick={() => onStartJourney(3)}
+            className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-amber-500/50 hover:bg-slate-900 transition-all cursor-pointer space-y-3 group"
           >
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+            <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 group-hover:scale-110 transition-transform">
+              <BrainCircuit size={20} />
+            </div>
+            <div>
+              <span className="text-[10px] font-extrabold uppercase text-amber-400 tracking-wider">Phase 3</span>
+              <h5 className="text-sm font-bold text-white">Advanced Preparation</h5>
+            </div>
+            <p className="text-xs text-slate-400 leading-relaxed">Data Structures & Algorithms, SQL Databases, System Design & Scaling Patterns.</p>
+            <span className="text-xs font-bold text-amber-400 flex items-center gap-1 pt-1">Jump to Phase 3 <ArrowRight size={14} /></span>
+          </div>
+
+          {/* Phase 4 */}
+          <div
+            onClick={() => onStartJourney(4)}
+            className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-emerald-500/50 hover:bg-slate-900 transition-all cursor-pointer space-y-3 group"
+          >
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
+              <Building2 size={20} />
+            </div>
+            <div>
+              <span className="text-[10px] font-extrabold uppercase text-emerald-400 tracking-wider">Phase 4</span>
+              <h5 className="text-sm font-bold text-white">Placement Readiness</h5>
+            </div>
+            <p className="text-xs text-slate-400 leading-relaxed">ATS Resume & Portfolio, Capstone Industry Projects, Company-wise Prep (Amazon/TCS).</p>
+            <span className="text-xs font-bold text-emerald-400 flex items-center gap-1 pt-1">Jump to Phase 4 <ArrowRight size={14} /></span>
+          </div>
+
+          {/* Phase 5 */}
+          <div
+            onClick={() => onStartJourney(5)}
+            className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-rose-500/50 hover:bg-slate-900 transition-all cursor-pointer space-y-3 group"
+          >
+            <div className="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-400 group-hover:scale-110 transition-transform">
               <Trophy size={20} />
             </div>
-            <h5 className="text-base font-bold text-white">Phase 3: Placement Boss Exam</h5>
-            <p className="text-xs text-slate-400">Simulate real MNC rounds from TCS, Infosys, Amazon & Google with AI evaluations.</p>
-            <span className="text-xs font-bold text-emerald-400 flex items-center gap-1">Jump to Phase 3 <ArrowRight size={14} /></span>
+            <div>
+              <span className="text-[10px] font-extrabold uppercase text-rose-400 tracking-wider">Phase 5</span>
+              <h5 className="text-sm font-bold text-white">Placement Rounds</h5>
+            </div>
+            <p className="text-xs text-slate-400 leading-relaxed">Aptitude, Coding, Technical, HR, Managerial & Full AI Mock Placement Exams.</p>
+            <span className="text-xs font-bold text-rose-400 flex items-center gap-1 pt-1">Jump to Phase 5 <ArrowRight size={14} /></span>
           </div>
         </div>
       </div>
