@@ -500,7 +500,13 @@ async function seed() {
   console.log(`📡 Connecting to: ${MONGODB_URI}`);
 
   try {
-    await mongoose.connect(MONGODB_URI);
+    await mongoose.connect(MONGODB_URI, {
+      serverSelectionTimeoutMS: 30000,
+      connectTimeoutMS: 30000,
+      socketTimeoutMS: 30000,
+      tls: true,
+      tlsAllowInvalidCertificates: true,
+    });
     console.log('✅ Connected to MongoDB\n');
 
     // Drop existing data
