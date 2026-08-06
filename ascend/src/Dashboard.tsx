@@ -729,6 +729,7 @@ export default function Dashboard() {
             <motion.div key="path" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
               <LearningGamePath
                 branchId={branchId}
+                roleId={roleId}
                 onNodeComplete={(xpEarned) => {
                   updateXP(xpEarned);
                   updateStreak();
