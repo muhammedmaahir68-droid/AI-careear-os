@@ -5,12 +5,14 @@ import {
   ArrowRight, Gift, X, Zap, Target, ChevronDown, ChevronRight,
   Code2, Brain, Cpu, Bolt, Wrench, Building, Database, Shield,
   Lightbulb, HelpCircle, FileText, Check, Award, Video, Play,
-  Briefcase, UserCheck, Layers, FileCheck, Terminal, Bug, Filter, Layers3
+  Briefcase, UserCheck, Layers, FileCheck, Terminal, Bug, Filter, Layers3,
+  Download
 } from "lucide-react";
 import GamificationModal, { LEAGUES } from "./GamificationModal";
 import { recordUserProgress } from "../services/api";
 import { getBranchModules, makeVideoLinks } from "../data/branchModules";
 import type { BranchModuleData, VideoLink } from "../data/branchModules/types";
+import { getPhase1Nodes, downloadLessonAsDocument } from "./expandedSyllabus";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // TYPES
@@ -119,207 +121,11 @@ export function getCoursePath(branchId: string, roleId?: string | null): LessonN
   const attachVideos = (topicName: string) => makeVideoLinks(topicName);
 
   // ───────────────────────────────────────────────────────────────────────────
-  // PHASE 1: APTITUDE FOUNDATION
+  // PHASE 1: APTITUDE FOUNDATION (EXPANDED — 10 MASSIVE STUDY NODES)
   // ─────────────────────────────────────────────────────────────────────────
-  nodes.push(
-    // Quant 1
-    {
-      id: `${b}-p1-quant-1`,
-      step: currentStep++,
-      phaseNumber: 1,
-      category: "Phase 1: Aptitude Foundation",
-      subTopic: "Quantitative Aptitude",
-      title: "Number Systems, Cyclicity & Divisibility Rules",
-      type: "lesson",
-      xpReward: 40,
-      diamondReward: 10,
-      videos: attachVideos("Number Systems and Cyclicity Quant Aptitude"),
-      theory: {
-        summary: "Master core arithmetic principles, unit digit cyclicity, remainder theorems, and rapid HCF/LCM shortcuts essential for TCS NQT, Wipro NTH, Infosys, and Amazon written tests.",
-        detailedContent: `
-### 1. Fundamental Properties of Number Systems
-Numbers form the foundation of quantitative aptitude and computer algorithms:
-- Natural Numbers: {1, 2, 3, ...}
-- Prime Numbers: Numbers greater than 1 with exactly two distinct positive divisors (1 and itself). 2 is the only even prime number.
-- Co-Prime Numbers: Two numbers a and b are co-prime if GCD(a, b) = 1.
-
-### 2. Divisibility Rules Shortcut Matrix
-- Divisibility by 3: Sum of digits must be divisible by 3.
-- Divisibility by 4: Last two digits formed must be divisible by 4.
-- Divisibility by 7: Double the last digit and subtract it from the remaining number.
-- Divisibility by 11: Difference between sum of digits at odd places and sum of digits at even places must be 0 or a multiple of 11.
-
-### 3. Highest Common Factor (HCF) & Least Common Multiple (LCM)
-- HCF(a, b) * LCM(a, b) = a * b (Valid ONLY for 2 numbers)
-- HCF of Fractions = HCF(Numerators) / LCM(Denominators)
-- LCM of Fractions = LCM(Numerators) / HCF(Denominators)
-
-### 4. Cyclicity of Unit Digits
-To find unit digit of N^P:
-- 0, 1, 5, 6: Cyclicity 1 (e.g. 6^k always ends in 6)
-- 4, 9: Cyclicity 2 (4^1=4, 4^2=6, 4^3=4...)
-- 2, 3, 7, 8: Cyclicity 4. Divide exponent P by 4; if remainder is r, unit digit is N^r (if r=0, use N^4).
-        `,
-        keyPoints: [
-          "HCF × LCM = Product of two numbers",
-          "HCF of fractions = HCF(Numerators) / LCM(Denominators)",
-          "Unit digit of 2, 3, 7, 8 repeats every 4 powers",
-          "Sum of first N natural numbers = N(N + 1) / 2"
-        ],
-        formula: "HCF(a, b) × LCM(a, b) = a × b",
-        examples: [
-          "Find unit digit of 7^105:\n105 mod 4 = 1. Therefore, unit digit of 7^105 is 7^1 = 7.",
-          "Find HCF and LCM of 36 and 48:\n36 = 2² × 3², 48 = 2⁴ × 3¹.\nHCF = 2² × 3¹ = 12. LCM = 2⁴ × 3² = 144."
-        ],
-        placementTips: [
-          "TCS NQT frequently asks for the smallest number which leaves a specific remainder when divided by a set of numbers. Use LCM(a, b, c) + Remainder.",
-          "Infosys quantitative tests repeatedly feature unit digit questions with giant exponents like 23^4567."
-        ],
-        authorReferences: [
-          { author: "Dr. R.S. Aggarwal", bookTitle: "Quantitative Aptitude for Competitive Examinations", coreInsight: "Unit digit cyclicity shortcuts eliminate 90% of manual calculation steps in screening tests." }
-        ]
-      },
-      questions: [
-        { prompt: "Find the HCF of 36 and 48.", options: ["6", "12", "18", "24"], correct: 1, explanation: "Prime factorizations: 36 = 2²×3², 48 = 2⁴×3¹. Lowest powers: 2²×3¹ = 12." },
-        { prompt: "What is the unit digit of 7^105?", options: ["1", "3", "7", "9"], correct: 2, explanation: "7 has cyclicity of 4. 105 mod 4 = 1. So 7^1 = 7." }
-      ]
-    },
-
-    // Quant 2
-    {
-      id: `${b}-p1-quant-2`,
-      step: currentStep++,
-      phaseNumber: 1,
-      category: "Phase 1: Aptitude Foundation",
-      subTopic: "Quantitative Aptitude",
-      title: "Percentages, Profit, Loss & Successive Discounts",
-      type: "quiz",
-      xpReward: 40,
-      diamondReward: 10,
-      videos: attachVideos("Percentages Profit Loss Discount Shortcut Formulas"),
-      theory: {
-        summary: "Percentage multipliers, markups, successive discounts, and margin calculations required for campus placement screening rounds.",
-        detailedContent: `
-### 1. Percentage as Multipliers
-- A 20% increase => multiply by 1.20
-- A 15% decrease => multiply by 0.85
-- Successive changes of +a% and +b% result in a net change of:
-Net Change % = a + b + (a * b) / 100
-
-### 2. Profit and Loss Essentials
-- Profit % = (SP - CP) / CP * 100
-- Loss % = (CP - SP) / CP * 100
-- If CP of X articles = SP of Y articles: Profit/Loss % = (X - Y) / Y * 100
-
-### 3. Marked Price & Single Equivalent Discount
-- Discount % = (MP - SP) / MP * 100
-- Two successive discounts of d1% and d2% equal a single discount of:
-Single Discount % = d1 + d2 - (d1 * d2) / 100
-        `,
-        keyPoints: [
-          "Net change for +x% followed by -x% is ALWAYS a loss of (x/100)² %",
-          "Discounts are calculated on Marked Price (MP), while Profit/Loss is on Cost Price (CP)",
-          "Buy 3 Get 1 Free = 1/4 × 100 = 25% discount"
-        ],
-        formula: "Net % Change = a + b + (a × b) / 100",
-        examples: [
-          "A trader marks goods 30% above CP and offers a 10% discount. Find profit %.\nLet CP = 100. MP = 130.\nDiscount = 10% of 130 = 13.\nSP = 130 - 13 = 117.\nProfit = 17%."
-        ]
-      },
-      questions: [
-        { prompt: "A 20% increase followed by a 20% decrease yields a net change of:", options: ["0%", "-4%", "+4%", "-2%"], correct: 1, explanation: "Net change = 20 - 20 + (20×(-20))/100 = -4% (4% decrease)." },
-        { prompt: "If cost price of 15 articles equals selling price of 12 articles, profit percentage is:", options: ["20%", "25%", "30%", "33.3%"], correct: 1, explanation: "Profit % = (15 - 12) / 12 × 100 = 25%." }
-      ]
-    },
-
-    // Logical Reasoning
-    {
-      id: `${b}-p1-logical-1`,
-      step: currentStep++,
-      phaseNumber: 1,
-      category: "Phase 1: Aptitude Foundation",
-      subTopic: "Logical Reasoning",
-      title: "Blood Relations, Coding-Decoding & Direction Sense",
-      type: "lesson",
-      xpReward: 40,
-      diamondReward: 10,
-      videos: attachVideos("Logical Reasoning Blood Relations Coding Decoding"),
-      theory: {
-        summary: "Master family tree diagrams, letter-shift substitution patterns, and 2D cardinal direction coordinate navigation.",
-        detailedContent: `
-### 1. Blood Relations Family Tree System
-- Represent males with [+] and females with [-].
-- Represent couples with double lines (=) and siblings with single horizontal lines (-).
-- Vertical lines represent generation gaps (Parents | Children).
-
-### 2. Coding-Decoding Patterns
-- Alphabet Positioning: A=1, B=2 ... Z=26. Reverse positions: A=26, B=25 ... Z=1.
-- Opposite Letter Shortcut (AZ, BY, CX, DW, EV, FU, GT, HS, IR, JK, LO, MN).
-
-### 3. Direction & Distance Vector Math
-- Cardinal Directions: North (+Y), South (-Y), East (+X), West (-X).
-- Shortest distance between starting and ending points uses Pythagoras Theorem:
-Distance = sqrt((dx)^2 + (dy)^2)
-        `,
-        keyPoints: [
-          "Always draw a generation tree diagram for multi-statement blood relation questions",
-          "Opposite letters sum up to 27 in alphabet indexing (e.g. A=1, Z=26 => 1+26 = 27)",
-          "Shadow in the morning is towards West; shadow in the evening is towards East"
-        ],
-        formula: "Shortest Distance = √(Δx² + Δy²)"
-      },
-      questions: [
-        { prompt: "Pointing to a photograph, a man said: 'I have no brother or sister, but that man's father is my father's son.' Whose photo was it?", options: ["His own", "His son's", "His father's", "His nephew's"], correct: 1, explanation: "'My father's son' = himself (since he has no brother). So 'that man's father is myself'. The photo is his son's." }
-      ]
-    },
-
-    // Verbal Ability
-    {
-      id: `${b}-p1-verbal-1`,
-      step: currentStep++,
-      phaseNumber: 1,
-      category: "Phase 1: Aptitude Foundation",
-      subTopic: "Verbal Ability",
-      title: "Reading Comprehension, Grammar Rules & Vocabulary",
-      type: "quiz",
-      xpReward: 40,
-      diamondReward: 10,
-      videos: attachVideos("Verbal Ability Spotting Errors Reading Comprehension"),
-      theory: {
-        summary: "Subject-verb agreement rules, modifier placement, tone identification, and vocabulary roots for corporate communication tests.",
-        detailedContent: `
-### 1. Subject-Verb Agreement Golden Rules
-- Singular subjects take singular verbs; plural subjects take plural verbs.
-- Words joined by 'and' take plural verbs ('John and Mary are going').
-- Words joined by 'either...or' / 'neither...nor' take the verb matching the CLOSER subject ('Neither the teacher nor the students WERE present').
-
-### 2. Active vs Passive Voice & Parallelism
-- Parallelism: Items in a series must share grammatical form ('He likes hiking, swimming, and biking', NOT 'to bike').
-        `,
-        keyPoints: [
-          "Subject and verb must agree in number regardless of intervening prepositional phrases",
-          "Use 'Fewer' for countable nouns (fewer books) and 'Less' for uncountable quantities (less water)",
-          "Root words simplify vocabulary recognition (e.g., 'Mal' = bad, 'Bene' = good)"
-        ]
-      },
-      questions: [
-        { prompt: "Choose the correct sentence:", options: ["Neither the manager nor the employees was present.", "Neither the manager nor the employees were present.", "Neither the manager or the employees was present.", "Neither the manager nor employees has present."], correct: 1, explanation: "With 'neither...nor', verb agrees with the nearest subject ('employees' => plural verb 'were')." }
-      ]
-    },
-
-    // Chest 1
-    {
-      id: `${b}-chest-p1`,
-      step: currentStep++,
-      phaseNumber: 1,
-      category: "Phase 1: Aptitude Foundation",
-      subTopic: "Aptitude Foundation",
-      title: "🎁 Phase 1 Aptitude Master Reward Chest",
-      type: "chest",
-      xpReward: 150,
-      diamondReward: 50
-    }
-  );
+  const phase1Nodes = getPhase1Nodes(b, currentStep);
+  nodes.push(...phase1Nodes);
+  currentStep += phase1Nodes.length;
 
   // ───────────────────────────────────────────────────────────────────────────
   // PHASE 2: TECHNICAL FOUNDATION
@@ -1027,12 +833,23 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                   </div>
                   <h3 className="text-2xl font-extrabold text-white mt-1">{activeNode.title}</h3>
                 </div>
-                <button
-                  onClick={() => setActiveNode(null)}
-                  className="p-2.5 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors"
-                >
-                  <X size={18} />
-                </button>
+                <div className="flex items-center gap-2">
+                  {/* Download Study Document Button */}
+                  <button
+                    onClick={() => downloadLessonAsDocument(activeNode)}
+                    className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 hover:text-emerald-300 text-xs font-bold transition-all"
+                    title="Download this lesson as a study document"
+                  >
+                    <Download size={14} />
+                    <span className="hidden sm:inline">Download Notes</span>
+                  </button>
+                  <button
+                    onClick={() => setActiveNode(null)}
+                    className="p-2.5 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors"
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
               </div>
 
               {/* Sub-Navigation Tabs inside Lesson Modal */}
