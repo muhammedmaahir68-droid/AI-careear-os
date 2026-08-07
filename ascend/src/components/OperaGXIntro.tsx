@@ -8,35 +8,128 @@ interface OperaGXIntroProps {
 
 export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
   const [stage, setStage] = useState<"ignite" | "shockwave" | "exit">("ignite");
+  const [audioUnlocked, setAudioUnlocked] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioCtxRef = useRef<AudioContext | null>(null);
 
-  useEffect(() => {
-    // 1. Play HTML5 Base64 audio stream immediately on mount
+  // Play sound via dual engine (HTML5 Audio + Web Audio API)
+  const executeOperaGXSound = () => {
+    // Engine 1: HTML5 Audio Element with Base64 WAV
     if (audioRef.current) {
       audioRef.current.volume = 1.0;
-      audioRef.current.play().catch(() => {
-        // Fallback for strict browser policies
-      });
+      audioRef.current.currentTime = 0;
+      const playPromise = audioRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setAudioUnlocked(true);
+          })
+          .catch((err) => {
+            console.warn("Autoplay blocked by browser policy until user gesture:", err);
+          });
+      }
     }
 
-    // 2. Play Web Audio Context synthesized audio in parallel
+    // Engine 2: Web Audio API Oscillator Matrix with Boosted Master Gain
     try {
-      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
-      if (AudioCtx) {
-        const ctx = new AudioCtx();
-        if (ctx.state === "suspended") ctx.resume();
+      const AudioCtxClass = window.AudioContext || (window as any).webkitAudioContext;
+      if (AudioCtxClass) {
+        if (!audioCtxRef.current) {
+          audioCtxRef.current = new AudioCtxClass();
+        }
+        const ctx = audioCtxRef.current;
+        if (ctx.state === "suspended") {
+          ctx.resume();
+        }
+
+        const now = ctx.currentTime;
+        // Master Gain Boost
+        const masterGain = ctx.createGain();
+        masterGain.gain.setValueAtTime(0.8, now);
+        masterGain.connect(ctx.destination);
+
+        // Sub-Bass Drop (180Hz -> 35Hz)
+        const subOsc = ctx.createOscillator();
+        const subGain = ctx.createGain();
+        subOsc.type = "sawtooth";
+        subOsc.frequency.setValueAtTime(200, now);
+        subOsc.frequency.exponentialRampToValueAtTime(35, now + 1.4);
+
+        const filter = ctx.createBiquadFilter();
+        filter.type = "lowpass";
+        filter.frequency.setValueAtTime(800, now);
+        filter.frequency.exponentialRampToValueAtTime(120, now + 1.2);
+
+        subGain.gain.setValueAtTime(0.8, now);
+        subGain.gain.exponentialRampToValueAtTime(0.001, now + 1.8);
+        subOsc.connect(filter);
+        filter.connect(subGain);
+        subGain.connect(masterGain);
+        subOsc.start(now);
+        subOsc.stop(now + 1.8);
+
+        // Cyber Laser Sweep
+        const sweepOsc = ctx.createOscillator();
+        const sweepGain = ctx.createGain();
+        sweepOsc.type = "square";
+        sweepOsc.frequency.setValueAtTime(250, now + 0.1);
+        sweepOsc.frequency.exponentialRampToValueAtTime(3200, now + 0.8);
+        sweepGain.gain.setValueAtTime(0.01, now + 0.1);
+        sweepGain.gain.linearRampToValueAtTime(0.2, now + 0.7);
+        sweepGain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+        sweepOsc.connect(sweepGain);
+        sweepGain.connect(masterGain);
+        sweepOsc.start(now + 0.1);
+        sweepOsc.stop(now + 1.2);
+
+        // Metallic Impact Chime (C5, G5, C6)
+        [523.25, 783.99, 1046.50, 1318.51].forEach((f, idx) => {
+          const chime = ctx.createOscillator();
+          const chimeGain = ctx.createGain();
+          chime.type = idx % 2 === 0 ? "triangle" : "sine";
+          chime.frequency.setValueAtTime(f, now + 0.7 + idx * 0.03);
+          chimeGain.gain.setValueAtTime(0.35, now + 0.7 + idx * 0.03);
+          chimeGain.gain.exponentialRampToValueAtTime(0.0001, now + 2.2);
+          chime.connect(chimeGain);
+          chimeGain.connect(masterGain);
+          chime.start(now + 0.7 + idx * 0.03);
+          chime.stop(now + 2.2);
+        });
       }
     } catch {}
+  };
 
-    // Intro timeline: ignite -> shockwave -> exit
+  useEffect(() => {
+    // 1. Attempt immediate playback on mount
+    executeOperaGXSound();
+
+    // 2. Global gesture listener: unlock audio instantly on ANY touch, tap, click, or keydown (fixes Mobile Chrome & Safari)
+    const handleUserGesture = () => {
+      executeOperaGXSound();
+      setAudioUnlocked(true);
+    };
+
+    window.addEventListener("touchstart", handleUserGesture, { passive: true });
+    window.addEventListener("pointerdown", handleUserGesture, { passive: true });
+    window.addEventListener("click", handleUserGesture, { passive: true });
+    window.addEventListener("keydown", handleUserGesture, { passive: true });
+
+    // Timeline for visual presentation
     const t1 = setTimeout(() => setStage("shockwave"), 700);
-    const t2 = setTimeout(() => setStage("exit"), 2300);
-    const t3 = setTimeout(() => onComplete(), 2800);
+    const t2 = setTimeout(() => setStage("exit"), 2500);
+    const t3 = setTimeout(() => onComplete(), 3000);
 
     return () => {
+      window.removeEventListener("touchstart", handleUserGesture);
+      window.removeEventListener("pointerdown", handleUserGesture);
+      window.removeEventListener("click", handleUserGesture);
+      window.removeEventListener("keydown", handleUserGesture);
       clearTimeout(t1);
       clearTimeout(t2);
       clearTimeout(t3);
+      if (audioCtxRef.current) {
+        try { audioCtxRef.current.close(); } catch {}
+      }
     };
   }, []);
 
@@ -46,12 +139,14 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
     <AnimatePresence>
       {stage !== "exit" && (
         <motion.div
+          onClick={executeOperaGXSound}
+          onTouchStart={executeOperaGXSound}
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, scale: 1.25, filter: "blur(20px)" }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
-          className="fixed inset-0 z-[99999] bg-[#02040a] text-white flex flex-col items-center justify-center overflow-hidden select-none"
+          className="fixed inset-0 z-[99999] bg-[#02040a] text-white flex flex-col items-center justify-center overflow-hidden select-none cursor-pointer"
         >
-          {/* HTML5 Audio Element for mobile hardware playback */}
+          {/* HTML5 Audio Element */}
           <audio
             ref={audioRef}
             src={OPERA_GX_SOUND_BASE64}
@@ -60,7 +155,7 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
             preload="auto"
           />
 
-          {/* Ambient Cyber Light */}
+          {/* Ambient Cyber Glow */}
           <div className="absolute w-[600px] h-[600px] md:w-[900px] md:h-[900px] rounded-full bg-gradient-to-r from-[#7C3AED]/25 via-[#00E5FF]/25 to-transparent blur-[130px] pointer-events-none animate-pulse" />
 
           {/* Cyber Grid */}
@@ -74,7 +169,7 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
             className="absolute left-0 right-0 h-1.5 bg-gradient-to-r from-transparent via-[#00E5FF] to-transparent shadow-[0_0_40px_#00E5FF] opacity-90 pointer-events-none"
           />
 
-          {/* Radial Energy Shockwave Ring */}
+          {/* Energy Shockwave Ring */}
           {stage === "shockwave" && (
             <>
               <motion.div
@@ -98,7 +193,7 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
           <div className="absolute bottom-6 left-6 border-b-4 border-l-4 border-[#7C3AED] w-8 h-8 pointer-events-none" />
           <div className="absolute bottom-6 right-6 border-b-4 border-r-4 border-[#00E5FF] w-8 h-8 pointer-events-none" />
 
-          {/* Equalizer Audio Frequency Spectrum Bars */}
+          {/* Audio Frequency Spectrum Equalizer */}
           <div className="absolute inset-x-0 bottom-24 flex justify-center items-end gap-1.5 h-14 opacity-40 pointer-events-none">
             {[40, 80, 35, 95, 60, 100, 50, 85, 70, 90, 45, 75].map((h, i) => (
               <motion.div
@@ -186,16 +281,31 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
             >
               REACH YOUR CAREER VERTEX
             </motion.p>
+
+            {/* Audio Unlock Helper Banner if browser silenced autoplay */}
+            {!audioUnlocked && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.8 }}
+                className="mt-2 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-[11px] font-mono animate-pulse"
+              >
+                🔊 TAP ANYWHERE TO UNMUTE AUDIO
+              </motion.div>
+            )}
           </div>
 
           {/* Bottom Controls */}
           <div className="absolute bottom-6 flex items-center justify-between w-full max-w-4xl px-6 text-xs font-mono text-slate-400 z-20">
             <span className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-400" />
-              STATUS: <strong className="text-white">ONLINE</strong>
+              <span className={`w-2 h-2 rounded-full ${audioUnlocked ? "bg-emerald-400" : "bg-cyan-400"}`} />
+              AUDIO ENGINE: <strong className="text-white">{audioUnlocked ? "ACTIVE 🔊" : "TAP TO UNMUTE"}</strong>
             </span>
             <button
-              onClick={() => onComplete()}
+              onClick={(e) => {
+                e.stopPropagation();
+                onComplete();
+              }}
               className="px-4 py-2 rounded-full bg-white/10 text-white font-bold text-xs hover:bg-white/20 transition-all cursor-pointer"
             >
               SKIP ➔
