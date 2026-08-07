@@ -175,10 +175,20 @@ export default function LoginPage() {
 
           {/* Google Login */}
           <motion.button
-            onClick={signInWithGoogle}
+            onClick={async () => {
+              setError(null);
+              setLoading(true);
+              try {
+                await signInWithGoogle();
+              } catch (authError) {
+                setError(authError instanceof Error ? authError.message : "Google sign-in could not be started.");
+                setLoading(false);
+              }
+            }}
+            disabled={loading}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="w-full flex items-center justify-center gap-3 py-3 rounded-2xl border border-border bg-white/5 hover:bg-white/10 transition-colors text-sm font-medium"
+            className="w-full flex items-center justify-center gap-3 py-3 rounded-2xl border border-border bg-white/5 hover:bg-white/10 transition-colors text-sm font-medium disabled:opacity-50"
           >
             <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
               <path
