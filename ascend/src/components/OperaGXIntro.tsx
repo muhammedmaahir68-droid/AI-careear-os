@@ -13,9 +13,9 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
   const audioCtxRef = useRef<AudioContext | null>(null);
 
   // Play user's exact Opera GX audio track with 100% hardware volume
-  const igniteEngine = (e?: React.SyntheticEvent) => {
-    if (e) {
-      e.stopPropagation();
+  const igniteEngine = (e?: React.SyntheticEvent | Event) => {
+    if (e && e.preventDefault && typeof e.preventDefault === "function") {
+      try { e.preventDefault(); } catch {}
     }
     if (ignited) return;
 
@@ -28,7 +28,7 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
       audioRef.current.play().catch(() => {});
     }
 
-    // 2. JS Audio fallback
+    // 2. Direct JS Audio instance fallback
     try {
       const snd = new Audio("/opera-gx.mpeg");
       snd.volume = 1.0;
@@ -52,26 +52,28 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
       }
     } catch {}
 
-    // Presentation timeline: full 4.5s so sound completes fully before exit
+    // Presentation timeline: full 4.8s so sound completes fully before exit
     setTimeout(() => setStage("shockwave"), 700);
     setTimeout(() => setStage("exit"), 4300);
     setTimeout(() => onComplete(), 4800);
   };
 
   useEffect(() => {
-    // Attach window listeners for keydown / pointerdown / touchstart
-    const handleWindowIgnite = () => {
-      igniteEngine();
+    // Attach mobile-certified touchstart & touchend listeners to window
+    const handleTouchIgnite = (e: Event) => {
+      igniteEngine(e);
     };
 
-    window.addEventListener("keydown", handleWindowIgnite, { once: true });
-    window.addEventListener("pointerdown", handleWindowIgnite, { once: true });
-    window.addEventListener("touchstart", handleWindowIgnite, { once: true });
+    window.addEventListener("touchstart", handleTouchIgnite, { passive: true });
+    window.addEventListener("touchend", handleTouchIgnite, { passive: true });
+    window.addEventListener("pointerdown", handleTouchIgnite, { passive: true });
+    window.addEventListener("keydown", handleTouchIgnite, { passive: true });
 
     return () => {
-      window.removeEventListener("keydown", handleWindowIgnite);
-      window.removeEventListener("pointerdown", handleWindowIgnite);
-      window.removeEventListener("touchstart", handleWindowIgnite);
+      window.removeEventListener("touchstart", handleTouchIgnite);
+      window.removeEventListener("touchend", handleTouchIgnite);
+      window.removeEventListener("pointerdown", handleTouchIgnite);
+      window.removeEventListener("keydown", handleTouchIgnite);
       if (audioCtxRef.current) {
         try { audioCtxRef.current.close(); } catch {}
       }
@@ -84,12 +86,13 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
     <AnimatePresence>
       {stage !== "exit" && (
         <motion.div
-          onClick={() => igniteEngine()}
-          onTouchStart={() => igniteEngine()}
+          onClick={(e) => igniteEngine(e)}
+          onTouchStart={(e) => igniteEngine(e)}
+          onTouchEnd={(e) => igniteEngine(e)}
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, scale: 1.25, filter: "blur(20px)" }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
-          className="fixed inset-0 z-[99999] bg-[#02040a] text-white flex flex-col items-center justify-center overflow-hidden select-none cursor-pointer"
+          className="fixed inset-0 z-[99999] bg-[#02040a] text-white flex flex-col items-center justify-center overflow-hidden select-none cursor-pointer touch-none"
         >
           {/* HTML5 Audio element streaming exact user Opera GX track */}
           <audio
@@ -190,7 +193,7 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
                   key={index}
                   initial={{ y: 50, opacity: 0, scale: 0.4, filter: "blur(12px)" }}
                   animate={{
-                    y: ignited ? 0 : 0,
+                    y: 0,
                     opacity: ignited ? 1 : 0.85,
                     scale: stage === "shockwave" ? [1, 1.2, 1] : 1,
                     filter: "blur(0px)",
@@ -225,17 +228,21 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
               REACH YOUR CAREER VERTEX
             </motion.p>
 
-            {/* AAA Gaming Startup Prompt */}
+            {/* Mobile Native Button Trigger */}
             {!ignited ? (
-              <motion.div
+              <motion.button
+                type="button"
+                onClick={(e) => igniteEngine(e)}
+                onTouchStart={(e) => igniteEngine(e)}
+                onTouchEnd={(e) => igniteEngine(e)}
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: [0.95, 1.05, 0.95] }}
                 transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}
-                className="mt-6 px-8 py-3.5 rounded-2xl bg-gradient-to-r from-[#7C3AED] via-purple-600 to-[#00E5FF] text-white font-extrabold text-xs sm:text-sm shadow-[0_0_40px_rgba(0,229,255,0.8)] border border-white/30 flex items-center gap-3"
+                className="mt-6 px-8 py-4 rounded-2xl bg-gradient-to-r from-[#7C3AED] via-purple-600 to-[#00E5FF] text-white font-extrabold text-xs sm:text-sm shadow-[0_0_40px_rgba(0,229,255,0.8)] border border-white/30 flex items-center gap-3 cursor-pointer z-30"
               >
                 <span className="text-base animate-bounce">🔊</span>
-                <span>TAP ANYWHERE OR PRESS ANY KEY TO IGNITE</span>
-              </motion.div>
+                <span>TAP HERE OR TOUCH SCREEN TO IGNITE</span>
+              </motion.button>
             ) : (
               <motion.div
                 initial={{ opacity: 0 }}
@@ -251,14 +258,19 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
           <div className="absolute bottom-6 flex items-center justify-between w-full max-w-4xl px-6 text-xs font-mono text-slate-400 z-20">
             <span className="flex items-center gap-2">
               <span className={`w-2 h-2 rounded-full ${ignited ? "bg-emerald-400" : "bg-amber-400"} animate-pulse`} />
-              AUDIO: <strong className="text-white">{ignited ? "PLAYING 🔊" : "AWAITING TAP 👆"}</strong>
+              AUDIO: <strong className="text-white">{ignited ? "PLAYING 🔊" : "TOUCH SCREEN 👆"}</strong>
             </span>
             <button
+              type="button"
               onClick={(e) => {
                 e.stopPropagation();
                 onComplete();
               }}
-              className="px-4 py-2 rounded-full bg-white/10 text-white font-bold text-xs hover:bg-white/20 transition-all cursor-pointer"
+              onTouchStart={(e) => {
+                e.stopPropagation();
+                onComplete();
+              }}
+              className="px-4 py-2 rounded-full bg-white/10 text-white font-bold text-xs hover:bg-white/20 transition-all cursor-pointer z-30"
             >
               SKIP ➔
             </button>
