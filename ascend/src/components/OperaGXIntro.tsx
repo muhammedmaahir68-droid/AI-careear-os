@@ -20,31 +20,38 @@ function base64ToArrayBuffer(base64: string): ArrayBuffer {
 
 export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
   const [stage, setStage] = useState<"ignite" | "shockwave" | "exit">("ignite");
+  const [soundPlayed, setSoundPlayed] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
   const decodedBufferRef = useRef<AudioBuffer | null>(null);
 
   // Play the user's exact Opera GX MPEG audio stream
   const playOperaGXAudioTrack = () => {
+    setSoundPlayed(true);
+
+    // 1. Direct JS Audio Object with /opera-gx.mpeg
     try {
-      // Direct JS Audio instantiation for guaranteed mobile & laptop playback
       const snd1 = new Audio("/opera-gx.mpeg");
       snd1.volume = 1.0;
-      snd1.play().catch(() => {
-        const snd2 = new Audio(OPERA_GX_SOUND_BASE64);
-        snd2.volume = 1.0;
-        snd2.play().catch(() => {});
-      });
+      const p1 = snd1.play();
+      if (p1 !== undefined) {
+        p1.catch(() => {
+          // Fallback to Base64 data URI audio
+          const snd2 = new Audio(OPERA_GX_SOUND_BASE64);
+          snd2.volume = 1.0;
+          snd2.play().catch(() => {});
+        });
+      }
     } catch {}
 
-    // HTML5 Audio element ref
+    // 2. HTML5 Audio element ref
     if (audioRef.current) {
       audioRef.current.volume = 1.0;
       audioRef.current.currentTime = 0;
       audioRef.current.play().catch(() => {});
     }
 
-    // Web Audio API Context
+    // 3. Web Audio API Context Buffer Source
     try {
       const AudioCtxClass = window.AudioContext || (window as any).webkitAudioContext;
       if (AudioCtxClass) {
@@ -60,22 +67,13 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
           const source = ctx.createBufferSource();
           source.buffer = decodedBufferRef.current;
           const gainNode = ctx.createGain();
-          gainNode.gain.setValueAtTime(1.8, ctx.currentTime); // Boosted volume
+          gainNode.gain.setValueAtTime(2.0, ctx.currentTime); // 200% volume boost
           source.connect(gainNode);
           gainNode.connect(ctx.destination);
           source.start(0);
         }
       }
-    } catch (e) {
-      console.warn("WebAudio play error:", e);
-    }
-
-    // 2. HTML5 Audio Element Playback
-    if (audioRef.current) {
-      audioRef.current.volume = 1.0;
-      audioRef.current.currentTime = 0;
-      audioRef.current.play().catch(() => {});
-    }
+    } catch {}
   };
 
   useEffect(() => {
@@ -89,10 +87,8 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
         
         ctx.decodeAudioData(arrayBuf, (decoded) => {
           decodedBufferRef.current = decoded;
-          // Attempt immediate playback once decoded
           playOperaGXAudioTrack();
-        }, (err) => {
-          console.warn("Decode audio error:", err);
+        }, () => {
           playOperaGXAudioTrack();
         });
       }
@@ -100,30 +96,29 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
       playOperaGXAudioTrack();
     }
 
-    // Immediate HTML5 audio attempt
+    // Immediate playback attempt
     playOperaGXAudioTrack();
 
-    // Attach silent touch/pointer/click listener to wake up audio on first user touch on phone/laptop
-    const wakeAudioOnGesture = () => {
-      if (audioCtxRef.current && audioCtxRef.current.state === "suspended") {
-        audioCtxRef.current.resume();
-      }
+    // Attach user gesture listeners: if browser blocked autoplay, the FIRST tap/touch/click un-mutes and plays audio
+    const handleGestureUnlock = () => {
       playOperaGXAudioTrack();
     };
 
-    window.addEventListener("touchstart", wakeAudioOnGesture, { passive: true });
-    window.addEventListener("pointerdown", wakeAudioOnGesture, { passive: true });
-    window.addEventListener("click", wakeAudioOnGesture, { passive: true });
+    window.addEventListener("touchstart", handleGestureUnlock, { passive: true });
+    window.addEventListener("pointerdown", handleGestureUnlock, { passive: true });
+    window.addEventListener("click", handleGestureUnlock, { passive: true });
+    window.addEventListener("keydown", handleGestureUnlock, { passive: true });
 
-    // Intro presentation timing
+    // Timeline for visual presentation
     const t1 = setTimeout(() => setStage("shockwave"), 700);
-    const t2 = setTimeout(() => setStage("exit"), 2300);
-    const t3 = setTimeout(() => onComplete(), 2800);
+    const t2 = setTimeout(() => setStage("exit"), 2400);
+    const t3 = setTimeout(() => onComplete(), 2900);
 
     return () => {
-      window.removeEventListener("touchstart", wakeAudioOnGesture);
-      window.removeEventListener("pointerdown", wakeAudioOnGesture);
-      window.removeEventListener("click", wakeAudioOnGesture);
+      window.removeEventListener("touchstart", handleGestureUnlock);
+      window.removeEventListener("pointerdown", handleGestureUnlock);
+      window.removeEventListener("click", handleGestureUnlock);
+      window.removeEventListener("keydown", handleGestureUnlock);
       clearTimeout(t1);
       clearTimeout(t2);
       clearTimeout(t3);
@@ -146,10 +141,10 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
           transition={{ duration: 0.5, ease: "easeInOut" }}
           className="fixed inset-0 z-[99999] bg-[#02040a] text-white flex flex-col items-center justify-center overflow-hidden select-none cursor-pointer"
         >
-          {/* HTML5 Audio Element with base64 MP3 and file fallback */}
+          {/* HTML5 Audio Element */}
           <audio
             ref={audioRef}
-            src={OPERA_GX_SOUND_BASE64}
+            src="/opera-gx.mpeg"
             autoPlay
             playsInline
             preload="auto"
@@ -281,6 +276,18 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
             >
               REACH YOUR CAREER VERTEX
             </motion.p>
+
+            {/* Tap Sound Activation Banner if Autoplay Silenced */}
+            {!soundPlayed && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.6 }}
+                className="mt-2 px-5 py-2 rounded-full bg-cyan-500/20 border border-cyan-400/40 text-cyan-200 text-xs font-mono animate-pulse shadow-[0_0_20px_rgba(0,229,255,0.4)]"
+              >
+                🔊 TAP ANYWHERE TO UNMUTE AUDIO
+              </motion.div>
+            )}
           </div>
 
           {/* Bottom Controls */}
