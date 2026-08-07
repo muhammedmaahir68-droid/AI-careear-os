@@ -4,7 +4,8 @@ import {
   ArrowLeft, Trophy, Flame, Star, MessageSquare,
   ChevronRight, Target, BookOpen, Code2, BarChart3,
   Zap, Users, Medal, CheckCircle2, Send, LayoutDashboard,
-  Map, Mic, FileText, Building2, LogOut, Download, AlertCircle, Play, RefreshCw, Award
+  Map, Mic, FileText, Building2, LogOut, Download, AlertCircle, Play, RefreshCw, Award,
+  Brain, Briefcase, Palette
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import SyllabusModule from "./components/SyllabusModule";
@@ -19,6 +20,8 @@ import BranchRolePicker from "./components/BranchRolePicker";
 import { getBranchCompanies, type CompanyTrack } from "./data/companyData";
 import HomePanel from "./components/HomePanel";
 import LearningGamePath from "./components/LearningGamePath";
+import PortfolioCreatorPanel from "./components/PortfolioCreatorPanel";
+import MaahirAIPanel from "./components/MaahirAIPanel";
 
 function formatEventTime(isoString: string): string {
   const date = new Date(isoString);
@@ -33,7 +36,7 @@ function formatEventTime(isoString: string): string {
   return date.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" }) + `, ${timeStr}`;
 }
 
-type Tab = "home" | "journey" | "community";
+type Tab = "home" | "journey" | "community" | "resume" | "portfolio" | "maahir-ai";
 
 interface CompanyDetails {
   name: string;
@@ -483,6 +486,9 @@ export default function Dashboard() {
     { id: "home", label: "Home", icon: <LayoutDashboard size={18} /> },
     { id: "journey", label: "My Journey (Placement Path)", icon: <Trophy size={18} /> },
     { id: "community", label: "Community", icon: <Users size={18} /> },
+    { id: "resume", label: "Resume & ATS", icon: <FileText size={18} /> },
+    { id: "portfolio", label: "Portfolio Creator", icon: <Palette size={18} /> },
+    { id: "maahir-ai", label: "Maahir AI", icon: <Brain size={18} /> },
   ] as const;
 
   if (branchLoading) {
@@ -835,6 +841,92 @@ export default function Dashboard() {
               </div>
             </motion.div>
           )}
+
+          {/* ── RESUME BUILDER & ATS ANALYZER (STANDALONE) ── */}
+          {activeTab === "resume" && (
+            <motion.div key="resume" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+              <h2 className="text-3xl font-display mb-2 flex items-center gap-3"><FileText className="text-emerald-400" size={28} /> Resume Builder & ATS Analyzer</h2>
+              <p className="text-muted-foreground mb-6">Build your ATS-optimized resume, analyze keyword scores, and download in multiple formats. <span className="text-emerald-400 font-bold">No level progression required.</span></p>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Left: Resume Editor */}
+                <div className="p-6 rounded-3xl border border-border bg-white/5 space-y-4">
+                  <h3 className="text-lg font-display flex items-center gap-2"><Briefcase size={20} className="text-purple-400" /> Personal Details</h3>
+                  <input value={resumeName} onChange={e => setResumeName(e.target.value)} placeholder="Full Name" className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-400" />
+                  <div className="grid grid-cols-2 gap-3">
+                    <input value={resumeEmail} onChange={e => setResumeEmail(e.target.value)} placeholder="Email" className="bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-400" />
+                    <input value={resumePhone} onChange={e => setResumePhone(e.target.value)} placeholder="Phone" className="bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-400" />
+                  </div>
+                  <textarea value={resumeSummary} onChange={e => setResumeSummary(e.target.value)} placeholder="Professional Summary (use industry keywords)" rows={3} className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-400 resize-none" />
+                  <textarea value={resumeExperience} onChange={e => setResumeExperience(e.target.value)} placeholder="Experience (quantify achievements, e.g. 'Improved efficiency by 30%')" rows={4} className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-400 resize-none" />
+                  <textarea value={resumeEducation} onChange={e => setResumeEducation(e.target.value)} placeholder="Education (Degree, University, Year)" rows={2} className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-400 resize-none" />
+                  <textarea value={resumeSkills} onChange={e => setResumeSkills(e.target.value)} placeholder="Skills (comma-separated: React, Python, SQL, Docker...)" rows={2} className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-400 resize-none" />
+                  <textarea value={resumeJobDesc} onChange={e => setResumeJobDesc(e.target.value)} placeholder="Paste Target Job Description (for ATS keyword matching)" rows={3} className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-cyan-400 resize-none" />
+                </div>
+
+                {/* Right: ATS Score + Actions */}
+                <div className="space-y-6">
+                  {/* ATS Score Card */}
+                  <div className="p-6 rounded-3xl border border-border bg-white/5 text-center space-y-4">
+                    <h3 className="text-lg font-display">ATS Compatibility Score</h3>
+                    <div className="relative w-32 h-32 mx-auto">
+                      <svg className="w-32 h-32 -rotate-90" viewBox="0 0 120 120">
+                        <circle cx="60" cy="60" r="52" fill="none" stroke="#1e293b" strokeWidth="10" />
+                        <circle cx="60" cy="60" r="52" fill="none" stroke={resumeAtsScore !== null ? (resumeAtsScore >= 80 ? "#22c55e" : resumeAtsScore >= 60 ? "#eab308" : "#ef4444") : "#334155"} strokeWidth="10" strokeDasharray={`${((resumeAtsScore || 0) / 100) * 327} 327`} strokeLinecap="round" />
+                      </svg>
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="text-3xl font-bold">{resumeAtsScore !== null ? `${resumeAtsScore}%` : "—"}</span>
+                      </div>
+                    </div>
+                    <button onClick={handleAtsCheck} disabled={resumeScoring} className="px-6 py-3 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white font-bold text-sm transition-all disabled:opacity-50">
+                      {resumeScoring ? "Analyzing..." : "🔍 Run ATS Analysis"}
+                    </button>
+                  </div>
+
+                  {/* Feedback */}
+                  {resumeAtsFeedback.length > 0 && (
+                    <div className="p-5 rounded-3xl border border-border bg-white/5 space-y-3">
+                      <h4 className="text-sm font-bold text-amber-400 flex items-center gap-2"><AlertCircle size={16} /> ATS Feedback</h4>
+                      {resumeAtsFeedback.map((fb, i) => (
+                        <div key={i} className="p-3 rounded-xl bg-black/30 border border-white/5 text-xs text-slate-300 flex items-start gap-2">
+                          <CheckCircle2 size={14} className="text-emerald-400 shrink-0 mt-0.5" />
+                          <span>{fb}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Download Buttons */}
+                  <div className="p-5 rounded-3xl border border-border bg-white/5 space-y-3">
+                    <h4 className="text-sm font-bold text-purple-400">Download Resume</h4>
+                    <div className="flex flex-wrap gap-3">
+                      <button onClick={() => downloadResume("pdf")} className="px-4 py-2.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-300 text-xs font-bold transition-all flex items-center gap-1.5"><Download size={14} /> PDF</button>
+                      <button onClick={() => downloadResume("doc")} className="px-4 py-2.5 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 text-blue-300 text-xs font-bold transition-all flex items-center gap-1.5"><Download size={14} /> DOC</button>
+                      <button onClick={() => downloadResume("json")} className="px-4 py-2.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-xs font-bold transition-all flex items-center gap-1.5"><Download size={14} /> JSON</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {/* ── PORTFOLIO CREATOR (STANDALONE) ── */}
+          {activeTab === "portfolio" && (
+            <motion.div key="portfolio" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+              <h2 className="text-3xl font-display mb-2 flex items-center gap-3"><Palette className="text-fuchsia-400" size={28} /> Portfolio Creator</h2>
+              <p className="text-muted-foreground mb-6">Build a stunning developer portfolio page. Fill in your details, pick a theme, and download a complete HTML portfolio. <span className="text-fuchsia-400 font-bold">No level progression required.</span></p>
+              <PortfolioCreatorPanel />
+            </motion.div>
+          )}
+
+          {/* ── MAAHIR AI (STANDALONE) ── */}
+          {activeTab === "maahir-ai" && (
+            <motion.div key="maahir-ai" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+              <h2 className="text-3xl font-display mb-2 flex items-center gap-3"><Brain className="text-fuchsia-400 animate-pulse" size={28} /> Maahir AI — Career Co-Pilot</h2>
+              <p className="text-muted-foreground mb-6">Your inbuilt large-scale AI assistant. Summarize text, get coding puzzles, analyze resumes, and get placement tips. <span className="text-fuchsia-400 font-bold">100% offline, 0 latency, no API keys.</span></p>
+              <MaahirAIPanel branchId={branchId} roleId={roleId} />
+            </motion.div>
+          )}
+
         </AnimatePresence>
       </main>
 
