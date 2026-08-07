@@ -22,6 +22,7 @@ import HomePanel from "./components/HomePanel";
 import LearningGamePath from "./components/LearningGamePath";
 import PortfolioCreatorPanel from "./components/PortfolioCreatorPanel";
 import MaahirAIPanel from "./components/MaahirAIPanel";
+import LifeOSPanel from "./components/LifeOSPanel";
 
 function formatEventTime(isoString: string): string {
   const date = new Date(isoString);
@@ -36,7 +37,7 @@ function formatEventTime(isoString: string): string {
   return date.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" }) + `, ${timeStr}`;
 }
 
-type Tab = "home" | "journey" | "community" | "resume" | "portfolio" | "maahir-ai";
+type Tab = "home" | "journey" | "community" | "resume" | "portfolio" | "maahir-ai" | "life-os";
 
 interface CompanyDetails {
   name: string;
@@ -489,6 +490,7 @@ export default function Dashboard() {
     { id: "resume", label: "Resume & ATS", icon: <FileText size={18} /> },
     { id: "portfolio", label: "Portfolio Creator", icon: <Palette size={18} /> },
     { id: "maahir-ai", label: "Maahir AI", icon: <Brain size={18} /> },
+    { id: "life-os", label: "Life OS AI Planner", icon: <Target size={18} /> },
   ] as const;
 
   if (branchLoading) {
@@ -924,6 +926,15 @@ export default function Dashboard() {
               <h2 className="text-3xl font-display mb-2 flex items-center gap-3"><Brain className="text-fuchsia-400 animate-pulse" size={28} /> Maahir AI — Career Co-Pilot</h2>
               <p className="text-muted-foreground mb-6">Your inbuilt large-scale AI assistant. Summarize text, get coding puzzles, analyze resumes, and get placement tips. <span className="text-fuchsia-400 font-bold">100% offline, 0 latency, no API keys.</span></p>
               <MaahirAIPanel branchId={branchId} roleId={roleId} />
+            </motion.div>
+          )}
+
+          {/* ── LIFE OS AI PLANNER (STANDALONE) ── */}
+          {activeTab === "life-os" && (
+            <motion.div key="life-os" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+              <h2 className="text-3xl font-display mb-2 flex items-center gap-3"><Target className="text-cyan-400" size={28} /> Life OS AI Study Planner</h2>
+              <p className="text-muted-foreground mb-6">Real-time study schedule generator, habits tracker, and placement timeline planning. <span className="text-cyan-400 font-bold">No level progression required.</span></p>
+              <LifeOSPanel branchId={branchId} roleId={roleId} />
             </motion.div>
           )}
 
