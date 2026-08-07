@@ -544,8 +544,21 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
 
   const isUnlocked = (node: LessonNode): boolean => {
     if (completedIds.has(node.id)) return true;
-    const prev = nodes.find(n => n.step === node.step - 1);
-    return !prev || completedIds.has(prev.id);
+    
+    // Phase-isolated progression: Find nodes belonging only to this phase
+    const phaseNodes = nodes
+      .filter(n => n.phaseNumber === node.phaseNumber)
+      .sort((a, b) => a.step - b.step);
+      
+    const nodeIndex = phaseNodes.findIndex(n => n.id === node.id);
+    if (nodeIndex <= 0) {
+      // The first level of any phase is always unlocked by default
+      return true;
+    }
+    
+    // Other levels are unlocked only if the preceding level in the same phase is completed
+    const prevNodeInPhase = phaseNodes[nodeIndex - 1];
+    return completedIds.has(prevNodeInPhase.id);
   };
 
   const openNode = (node: LessonNode) => {
