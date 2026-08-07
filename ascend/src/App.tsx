@@ -29,18 +29,9 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  const [showIntro, setShowIntro] = useState(() => {
-    try {
-      return !sessionStorage.getItem("carvex_intro_played");
-    } catch {
-      return true;
-    }
-  });
+  const [showIntro, setShowIntro] = useState(true);
 
   const handleIntroComplete = () => {
-    try {
-      sessionStorage.setItem("carvex_intro_played", "true");
-    } catch {}
     setShowIntro(false);
   };
 

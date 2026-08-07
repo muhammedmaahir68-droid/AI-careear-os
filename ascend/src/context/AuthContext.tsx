@@ -103,12 +103,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signUpWithEmail = async (email: string, password: string, name: string) => {
-    const emailRedirectTo = new URL("/dashboard", window.location.origin).toString();
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: { emailRedirectTo },
-    });
+    const { data, error } = await supabase.auth.signUp({ email, password });
     if (error) return { error: error.message };
 
     if (data.user) {
@@ -128,12 +123,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signInWithGoogle = async () => {
-    const callbackUrl = new URL("/dashboard", window.location.origin).toString();
-    const { error } = await supabase.auth.signInWithOAuth({
+    await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: callbackUrl },
+      options: { redirectTo: window.location.origin + "/dashboard" },
     });
-    if (error) throw error;
   };
 
   const signOut = async () => {
