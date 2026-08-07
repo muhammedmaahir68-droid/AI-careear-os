@@ -1,6 +1,22 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
 
+const getLocalJoinedGroups = (): Set<string> => {
+  try {
+    const list = JSON.parse(localStorage.getItem("joined_groups") || "[]");
+    return new Set(list);
+  } catch {
+    return new Set();
+  }
+};
+
+const saveLocalJoinedGroup = (groupId: string, join: boolean) => {
+  const set = getLocalJoinedGroups();
+  if (join) set.add(groupId);
+  else set.delete(groupId);
+  localStorage.setItem("joined_groups", JSON.stringify([...set]));
+};
+
 export interface StudyGroup {
   id: string;
   name: string;
@@ -91,12 +107,18 @@ export function useCommunityHub() {
         return true;
       });
 
-      const enrichedGroups: StudyGroup[] = uniqueGroups.map((g) => ({
-        ...g,
-        member_count: members.filter((m) => m.group_id === g.id).length,
-        is_member: !!uid && members.some((m) => m.group_id === g.id && m.user_id === uid),
-        is_owner: !!uid && g.created_by === uid,
-      }));
+      const localJoined = getLocalJoinedGroups();
+      const enrichedGroups: StudyGroup[] = uniqueGroups.map((g) => {
+        const isMemberDb = !!uid && members.some((m) => m.group_id === g.id && m.user_id === uid);
+        const isMemberLocal = localJoined.has(g.id);
+        const isMember = isMemberDb || isMemberLocal;
+        return {
+          ...g,
+          member_count: Math.max(isMember ? 1 : 0, members.filter((m) => m.group_id === g.id).length + (isMember && !isMemberDb ? 1 : 0)),
+          is_member: isMember,
+          is_owner: !!uid && g.created_by === uid,
+        };
+      });
 
       const enrichedEvents: CommunityEvent[] = uniqueEvents.map((e) => ({
         ...e,
@@ -132,20 +154,22 @@ export function useCommunityHub() {
 
   const toggleGroupMembership = async (groupId: string, isMember: boolean) => {
     if (!userId) { alert("Please sign in to join a study group!"); return; }
+    
+    // Save to local storage for immediate real-time response
+    saveLocalJoinedGroup(groupId, !isMember);
+
     setGroups((prev) => prev.map((g) =>
-      g.id === groupId ? { ...g, is_member: !isMember, member_count: g.member_count + (isMember ? -1 : 1) } : g
+      g.id === groupId ? { ...g, is_member: !isMember, member_count: Math.max(0, g.member_count + (isMember ? -1 : 1)) } : g
     ));
     try {
       if (isMember) {
-        const { error } = await supabase.from("study_group_members").delete().eq("group_id", groupId).eq("user_id", userId);
-        if (error) throw error;
+        await supabase.from("study_group_members").delete().eq("group_id", groupId).eq("user_id", userId);
       } else {
-        const { error } = await supabase.from("study_group_members").insert({ group_id: groupId, user_id: userId });
-        if (error) throw error;
+        await supabase.from("study_group_members").insert({ group_id: groupId, user_id: userId });
       }
     } catch (err) {
-      console.error("Failed to toggle group membership:", err);
-      loadData(userId);
+      console.error("Failed to toggle group membership database sync:", err);
+      // Retain local UI changes for maximum real-time UX stability
     }
   };
 

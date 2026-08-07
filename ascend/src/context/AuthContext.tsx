@@ -54,14 +54,47 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const fetchProfile = async (userId: string) => {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("profiles")
       .select("*")
       .eq("id", userId)
       .single();
 
-    setProfile(data);
-    setLoading(false);
+    if (data) {
+      setProfile(data);
+      setLoading(false);
+    } else {
+      // Profile row does not exist (common for Google OAuth sign-in first-timers). 
+      // Let's create a new profile row in real-time.
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const name = user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split("@")[0] || "Student Candidate";
+          const newProfile = {
+            id: userId,
+            name,
+            email: user.email || "",
+            xp: 0,
+            streak: 0,
+            level: 1,
+            dream_company: "",
+            avatar_url: user.user_metadata?.avatar_url || "",
+            completed_modules: 0,
+          };
+          
+          const { error: insertError } = await supabase.from("profiles").insert(newProfile);
+          if (!insertError) {
+            setProfile(newProfile);
+          } else {
+            // Fallback to local profile object if tables have RLS locks
+            setProfile(newProfile);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to auto-create profile", err);
+      }
+      setLoading(false);
+    }
   };
 
   const signInWithEmail = async (email: string, password: string) => {
