@@ -20,38 +20,45 @@ function base64ToArrayBuffer(base64: string): ArrayBuffer {
 
 export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
   const [stage, setStage] = useState<"ignite" | "shockwave" | "exit">("ignite");
-  const [soundPlayed, setSoundPlayed] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
   const decodedBufferRef = useRef<AudioBuffer | null>(null);
 
-  // Play the user's exact Opera GX MPEG audio stream
-  const playOperaGXAudioTrack = () => {
-    setSoundPlayed(true);
-
-    // 1. Direct JS Audio Object with /opera-gx.mpeg
+  // System Programmatic Auto-Play Engine
+  const executeSystemAutoPlay = () => {
+    // 1. Synthetic System Touch Event Dispatch
     try {
-      const snd1 = new Audio("/opera-gx.mpeg");
-      snd1.volume = 1.0;
-      const p1 = snd1.play();
-      if (p1 !== undefined) {
-        p1.catch(() => {
-          // Fallback to Base64 data URI audio
-          const snd2 = new Audio(OPERA_GX_SOUND_BASE64);
-          snd2.volume = 1.0;
-          snd2.play().catch(() => {});
-        });
-      }
+      const clickEvt = new MouseEvent("click", { bubbles: true, cancelable: true, view: window });
+      const touchEvt = new TouchEvent("touchstart", { bubbles: true, cancelable: true });
+      document.body.dispatchEvent(clickEvt);
+      document.body.dispatchEvent(touchEvt);
     } catch {}
 
-    // 2. HTML5 Audio element ref
+    // 2. Muted Pre-roll Unmute Trick for Mobile Browsers
     if (audioRef.current) {
-      audioRef.current.volume = 1.0;
-      audioRef.current.currentTime = 0;
-      audioRef.current.play().catch(() => {});
+      const el = audioRef.current;
+      el.muted = true;
+      el.play().then(() => {
+        el.muted = false;
+        el.volume = 1.0;
+      }).catch(() => {
+        el.muted = false;
+        el.volume = 1.0;
+        el.play().catch(() => {});
+      });
     }
 
-    // 3. Web Audio API Context Buffer Source
+    // 3. Direct JS Audio Instance
+    try {
+      const snd = new Audio("/opera-gx.mpeg");
+      snd.muted = true;
+      snd.play().then(() => {
+        snd.muted = false;
+        snd.volume = 1.0;
+      }).catch(() => {});
+    } catch {}
+
+    // 4. Web Audio API Hardware Matrix Playback
     try {
       const AudioCtxClass = window.AudioContext || (window as any).webkitAudioContext;
       if (AudioCtxClass) {
@@ -67,7 +74,7 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
           const source = ctx.createBufferSource();
           source.buffer = decodedBufferRef.current;
           const gainNode = ctx.createGain();
-          gainNode.gain.setValueAtTime(2.0, ctx.currentTime); // 200% volume boost
+          gainNode.gain.setValueAtTime(2.0, ctx.currentTime);
           source.connect(gainNode);
           gainNode.connect(ctx.destination);
           source.start(0);
@@ -87,38 +94,30 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
         
         ctx.decodeAudioData(arrayBuf, (decoded) => {
           decodedBufferRef.current = decoded;
-          playOperaGXAudioTrack();
+          executeSystemAutoPlay();
         }, () => {
-          playOperaGXAudioTrack();
+          executeSystemAutoPlay();
         });
       }
     } catch {
-      playOperaGXAudioTrack();
+      executeSystemAutoPlay();
     }
 
-    // Immediate playback attempt
-    playOperaGXAudioTrack();
+    // Immediate System Auto Play execution on mount
+    executeSystemAutoPlay();
 
-    // Attach user gesture listeners: if browser blocked autoplay, the FIRST tap/touch/click un-mutes and plays audio
-    const handleGestureUnlock = () => {
-      playOperaGXAudioTrack();
-    };
+    // Secondary microtask auto-trigger
+    const autoTimer = setTimeout(() => {
+      executeSystemAutoPlay();
+    }, 150);
 
-    window.addEventListener("touchstart", handleGestureUnlock, { passive: true });
-    window.addEventListener("pointerdown", handleGestureUnlock, { passive: true });
-    window.addEventListener("click", handleGestureUnlock, { passive: true });
-    window.addEventListener("keydown", handleGestureUnlock, { passive: true });
-
-    // Timeline for visual presentation: extended so full Opera GX audio track plays to completion
+    // Timeline for visual presentation (4.9 seconds for complete audio track)
     const t1 = setTimeout(() => setStage("shockwave"), 800);
     const t2 = setTimeout(() => setStage("exit"), 4400);
     const t3 = setTimeout(() => onComplete(), 4900);
 
     return () => {
-      window.removeEventListener("touchstart", handleGestureUnlock);
-      window.removeEventListener("pointerdown", handleGestureUnlock);
-      window.removeEventListener("click", handleGestureUnlock);
-      window.removeEventListener("keydown", handleGestureUnlock);
+      clearTimeout(autoTimer);
       clearTimeout(t1);
       clearTimeout(t2);
       clearTimeout(t3);
@@ -134,12 +133,10 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
     <AnimatePresence>
       {stage !== "exit" && (
         <motion.div
-          onClick={playOperaGXAudioTrack}
-          onTouchStart={playOperaGXAudioTrack}
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, scale: 1.25, filter: "blur(20px)" }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
-          className="fixed inset-0 z-[99999] bg-[#02040a] text-white flex flex-col items-center justify-center overflow-hidden select-none cursor-pointer"
+          className="fixed inset-0 z-[99999] bg-[#02040a] text-white flex flex-col items-center justify-center overflow-hidden select-none"
         >
           {/* HTML5 Audio Element */}
           <audio
@@ -276,18 +273,6 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
             >
               REACH YOUR CAREER VERTEX
             </motion.p>
-
-            {/* Tap Sound Activation Banner if Autoplay Silenced */}
-            {!soundPlayed && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.6 }}
-                className="mt-2 px-5 py-2 rounded-full bg-cyan-500/20 border border-cyan-400/40 text-cyan-200 text-xs font-mono animate-pulse shadow-[0_0_20px_rgba(0,229,255,0.4)]"
-              >
-                🔊 TAP ANYWHERE TO UNMUTE AUDIO
-              </motion.div>
-            )}
           </div>
 
           {/* Bottom Controls */}
@@ -297,10 +282,7 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
               STATUS: <strong className="text-white">ONLINE</strong>
             </span>
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onComplete();
-              }}
+              onClick={() => onComplete()}
               className="px-4 py-2 rounded-full bg-white/10 text-white font-bold text-xs hover:bg-white/20 transition-all cursor-pointer"
             >
               SKIP ➔
