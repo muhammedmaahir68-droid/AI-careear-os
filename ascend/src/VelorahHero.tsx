@@ -28,13 +28,7 @@ export default function VelorahHero() {
         <div className="text-3xl tracking-tight font-display text-foreground">
           
         </div>
-        
         <div className="hidden md:flex items-center gap-8">
-          <a href="#" className="text-sm text-foreground transition-colors">Home</a>
-          <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Studio</a>
-          <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">About</a>
-          <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Journal</a>
-          <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Reach Us</a>
         </div>
 
         <motion.button 
