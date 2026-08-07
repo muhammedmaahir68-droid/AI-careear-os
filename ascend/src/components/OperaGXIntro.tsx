@@ -109,10 +109,10 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
     window.addEventListener("click", handleGestureUnlock, { passive: true });
     window.addEventListener("keydown", handleGestureUnlock, { passive: true });
 
-    // Timeline for visual presentation
-    const t1 = setTimeout(() => setStage("shockwave"), 700);
-    const t2 = setTimeout(() => setStage("exit"), 2400);
-    const t3 = setTimeout(() => onComplete(), 2900);
+    // Timeline for visual presentation: extended so full Opera GX audio track plays to completion
+    const t1 = setTimeout(() => setStage("shockwave"), 800);
+    const t2 = setTimeout(() => setStage("exit"), 4400);
+    const t3 = setTimeout(() => onComplete(), 4900);
 
     return () => {
       window.removeEventListener("touchstart", handleGestureUnlock);
