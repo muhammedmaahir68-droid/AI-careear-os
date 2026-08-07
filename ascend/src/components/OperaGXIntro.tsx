@@ -6,126 +6,77 @@ interface OperaGXIntroProps {
   onComplete: () => void;
 }
 
-// Convert Base64 data URI to ArrayBuffer for Web Audio API decodeAudioData
-function base64ToArrayBuffer(base64: string): ArrayBuffer {
-  const base64Clean = base64.replace(/^data:audio\/\w+;base64,/, "");
-  const binaryString = atob(base64Clean);
-  const len = binaryString.length;
-  const bytes = new Uint8Array(len);
-  for (let i = 0; i < len; i++) {
-    bytes[i] = binaryString.charCodeAt(i);
-  }
-  return bytes.buffer;
-}
-
 export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
-  const [stage, setStage] = useState<"ignite" | "shockwave" | "exit">("ignite");
+  const [ignited, setIgnited] = useState(false);
+  const [stage, setStage] = useState<"ready" | "shockwave" | "exit">("ready");
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
-  const decodedBufferRef = useRef<AudioBuffer | null>(null);
 
-  // System Programmatic Auto-Play Engine
-  const executeSystemAutoPlay = () => {
-    // 1. Synthetic System Touch Event Dispatch
-    try {
-      const clickEvt = new MouseEvent("click", { bubbles: true, cancelable: true, view: window });
-      const touchEvt = new TouchEvent("touchstart", { bubbles: true, cancelable: true });
-      document.body.dispatchEvent(clickEvt);
-      document.body.dispatchEvent(touchEvt);
-    } catch {}
+  // Play user's exact Opera GX audio track with 100% hardware volume
+  const igniteEngine = (e?: React.SyntheticEvent) => {
+    if (e) {
+      e.stopPropagation();
+    }
+    if (ignited) return;
 
-    // 2. Muted Pre-roll Unmute Trick for Mobile Browsers
+    setIgnited(true);
+
+    // 1. Play HTML5 Audio element with exact Opera GX track
     if (audioRef.current) {
-      const el = audioRef.current;
-      el.muted = true;
-      el.play().then(() => {
-        el.muted = false;
-        el.volume = 1.0;
-      }).catch(() => {
-        el.muted = false;
-        el.volume = 1.0;
-        el.play().catch(() => {});
-      });
+      audioRef.current.volume = 1.0;
+      audioRef.current.currentTime = 0;
+      audioRef.current.play().catch(() => {});
     }
 
-    // 3. Direct JS Audio Instance
+    // 2. JS Audio fallback
     try {
       const snd = new Audio("/opera-gx.mpeg");
-      snd.muted = true;
-      snd.play().then(() => {
-        snd.muted = false;
-        snd.volume = 1.0;
-      }).catch(() => {});
+      snd.volume = 1.0;
+      snd.play().catch(() => {
+        const snd2 = new Audio(OPERA_GX_SOUND_BASE64);
+        snd2.volume = 1.0;
+        snd2.play().catch(() => {});
+      });
     } catch {}
 
-    // 4. Web Audio API Hardware Matrix Playback
+    // 3. Web Audio API Context wake up
     try {
       const AudioCtxClass = window.AudioContext || (window as any).webkitAudioContext;
       if (AudioCtxClass) {
         if (!audioCtxRef.current) {
           audioCtxRef.current = new AudioCtxClass();
         }
-        const ctx = audioCtxRef.current;
-        if (ctx.state === "suspended") {
-          ctx.resume();
-        }
-
-        if (decodedBufferRef.current) {
-          const source = ctx.createBufferSource();
-          source.buffer = decodedBufferRef.current;
-          const gainNode = ctx.createGain();
-          gainNode.gain.setValueAtTime(2.0, ctx.currentTime);
-          source.connect(gainNode);
-          gainNode.connect(ctx.destination);
-          source.start(0);
+        if (audioCtxRef.current.state === "suspended") {
+          audioCtxRef.current.resume();
         }
       }
     } catch {}
+
+    // Presentation timeline: full 4.5s so sound completes fully before exit
+    setTimeout(() => setStage("shockwave"), 700);
+    setTimeout(() => setStage("exit"), 4300);
+    setTimeout(() => onComplete(), 4800);
   };
 
   useEffect(() => {
-    // Decode user's MP3 file into Web Audio API AudioBuffer on mount
-    try {
-      const AudioCtxClass = window.AudioContext || (window as any).webkitAudioContext;
-      if (AudioCtxClass) {
-        const ctx = new AudioCtxClass();
-        audioCtxRef.current = ctx;
-        const arrayBuf = base64ToArrayBuffer(OPERA_GX_SOUND_BASE64);
-        
-        ctx.decodeAudioData(arrayBuf, (decoded) => {
-          decodedBufferRef.current = decoded;
-          executeSystemAutoPlay();
-        }, () => {
-          executeSystemAutoPlay();
-        });
-      }
-    } catch {
-      executeSystemAutoPlay();
-    }
+    // Attach window listeners for keydown / pointerdown / touchstart
+    const handleWindowIgnite = () => {
+      igniteEngine();
+    };
 
-    // Immediate System Auto Play execution on mount
-    executeSystemAutoPlay();
-
-    // Secondary microtask auto-trigger
-    const autoTimer = setTimeout(() => {
-      executeSystemAutoPlay();
-    }, 150);
-
-    // Timeline for visual presentation (4.9 seconds for complete audio track)
-    const t1 = setTimeout(() => setStage("shockwave"), 800);
-    const t2 = setTimeout(() => setStage("exit"), 4400);
-    const t3 = setTimeout(() => onComplete(), 4900);
+    window.addEventListener("keydown", handleWindowIgnite, { once: true });
+    window.addEventListener("pointerdown", handleWindowIgnite, { once: true });
+    window.addEventListener("touchstart", handleWindowIgnite, { once: true });
 
     return () => {
-      clearTimeout(autoTimer);
-      clearTimeout(t1);
-      clearTimeout(t2);
-      clearTimeout(t3);
+      window.removeEventListener("keydown", handleWindowIgnite);
+      window.removeEventListener("pointerdown", handleWindowIgnite);
+      window.removeEventListener("touchstart", handleWindowIgnite);
       if (audioCtxRef.current) {
         try { audioCtxRef.current.close(); } catch {}
       }
     };
-  }, []);
+  }, [ignited]);
 
   const letters = ["C", "A", "R", "V", "E", "X"];
 
@@ -133,21 +84,22 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
     <AnimatePresence>
       {stage !== "exit" && (
         <motion.div
+          onClick={() => igniteEngine()}
+          onTouchStart={() => igniteEngine()}
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, scale: 1.25, filter: "blur(20px)" }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
-          className="fixed inset-0 z-[99999] bg-[#02040a] text-white flex flex-col items-center justify-center overflow-hidden select-none"
+          className="fixed inset-0 z-[99999] bg-[#02040a] text-white flex flex-col items-center justify-center overflow-hidden select-none cursor-pointer"
         >
-          {/* HTML5 Audio Element */}
+          {/* HTML5 Audio element streaming exact user Opera GX track */}
           <audio
             ref={audioRef}
             src="/opera-gx.mpeg"
-            autoPlay
-            playsInline
             preload="auto"
+            playsInline
           />
 
-          {/* Ambient Cyber Glow */}
+          {/* Ambient Cyber Light */}
           <div className="absolute w-[600px] h-[600px] md:w-[900px] md:h-[900px] rounded-full bg-gradient-to-r from-[#7C3AED]/25 via-[#00E5FF]/25 to-transparent blur-[130px] pointer-events-none animate-pulse" />
 
           {/* Cyber Grid */}
@@ -161,7 +113,7 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
             className="absolute left-0 right-0 h-1.5 bg-gradient-to-r from-transparent via-[#00E5FF] to-transparent shadow-[0_0_40px_#00E5FF] opacity-90 pointer-events-none"
           />
 
-          {/* Energy Shockwave Ring */}
+          {/* Radial Energy Shockwave Ring */}
           {stage === "shockwave" && (
             <>
               <motion.div
@@ -191,7 +143,7 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
               <motion.div
                 key={i}
                 initial={{ height: 4 }}
-                animate={{ height: [`${h}%`, "15%", `${h * 0.9}%`] }}
+                animate={{ height: ignited ? [`${h}%`, "15%", `${h * 0.9}%`] : ["10%", "25%", "10%"] }}
                 transition={{ repeat: Infinity, duration: 0.35 + (i % 4) * 0.1 }}
                 className="w-1.5 rounded-full bg-gradient-to-t from-[#7C3AED] to-[#00E5FF]"
               />
@@ -201,7 +153,7 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
           {/* Top Status Header */}
           <div className="absolute top-6 flex items-center gap-2.5 text-[11px] font-mono tracking-widest text-cyan-400/90 uppercase">
             <span className="w-2.5 h-2.5 rounded-full bg-[#00E5FF] shadow-[0_0_12px_#00E5FF] animate-ping" />
-            <span>CARVEX ENGINE v2.0 // INITIALIZED</span>
+            <span>CARVEX ENGINE v2.0 // {ignited ? "SYSTEM ONLINE" : "READY FOR IGNITION"}</span>
           </div>
 
           {/* MAIN LOGO & TYPOGRAPHY LOCKUP */}
@@ -209,10 +161,9 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
             
             {/* CARVEX Vertex Mark */}
             <motion.div
-              initial={{ scale: 0.5, rotate: -45, opacity: 0 }}
+              initial={{ scale: 0.8, opacity: 0 }}
               animate={{
                 scale: stage === "shockwave" ? [1, 1.3, 1] : 1,
-                rotate: 0,
                 opacity: 1,
               }}
               transition={{ duration: 0.5, type: "spring", stiffness: 240, damping: 18 }}
@@ -239,8 +190,8 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
                   key={index}
                   initial={{ y: 50, opacity: 0, scale: 0.4, filter: "blur(12px)" }}
                   animate={{
-                    y: 0,
-                    opacity: 1,
+                    y: ignited ? 0 : 0,
+                    opacity: ignited ? 1 : 0.85,
                     scale: stage === "shockwave" ? [1, 1.2, 1] : 1,
                     filter: "blur(0px)",
                   }}
@@ -273,16 +224,40 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
             >
               REACH YOUR CAREER VERTEX
             </motion.p>
+
+            {/* AAA Gaming Startup Prompt */}
+            {!ignited ? (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: [0.95, 1.05, 0.95] }}
+                transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}
+                className="mt-6 px-8 py-3.5 rounded-2xl bg-gradient-to-r from-[#7C3AED] via-purple-600 to-[#00E5FF] text-white font-extrabold text-xs sm:text-sm shadow-[0_0_40px_rgba(0,229,255,0.8)] border border-white/30 flex items-center gap-3"
+              >
+                <span className="text-base animate-bounce">🔊</span>
+                <span>TAP ANYWHERE OR PRESS ANY KEY TO IGNITE</span>
+              </motion.div>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="mt-4 text-xs font-mono tracking-widest text-emerald-400 font-bold"
+              >
+                ✓ OPERA GX AUDIO ENGINE ACTIVE
+              </motion.div>
+            )}
           </div>
 
           {/* Bottom Controls */}
           <div className="absolute bottom-6 flex items-center justify-between w-full max-w-4xl px-6 text-xs font-mono text-slate-400 z-20">
             <span className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              STATUS: <strong className="text-white">ONLINE</strong>
+              <span className={`w-2 h-2 rounded-full ${ignited ? "bg-emerald-400" : "bg-amber-400"} animate-pulse`} />
+              AUDIO: <strong className="text-white">{ignited ? "PLAYING 🔊" : "AWAITING TAP 👆"}</strong>
             </span>
             <button
-              onClick={() => onComplete()}
+              onClick={(e) => {
+                e.stopPropagation();
+                onComplete();
+              }}
               className="px-4 py-2 rounded-full bg-white/10 text-white font-bold text-xs hover:bg-white/20 transition-all cursor-pointer"
             >
               SKIP ➔
