@@ -1111,4 +1111,335 @@ print_area(Rectangle(4, 6)) # Area: 24`,
       starter: `from abc import ABC, abstractmethod\n\nclass PaymentStrategy(ABC):\n    @abstractmethod\n    def pay(self, amount): pass\n\n# Implement CreditCard, PayPal, UPI strategies\n# Implement PaymentContext class`
     }
   }
+,
+  {
+    moduleTitle: "Linked Lists & Reversal",
+    level: "Level 1 – Foundations",
+    branch: ["cse", "it"],
+    videos: makeVideoLinks("Linked List Reversal"),
+    studyMaterial: {
+      summary: "A linked list is a dynamic data structure of nodes each containing data and a pointer to the next node. Reversal is a classic interview problem testing pointer manipulation skills.",
+      deepDiveTextbook: `LINKED LISTS – POINTER MECHANICS\n\nA singly linked list node holds two fields: data and next pointer. Unlike arrays, memory is non-contiguous, making insertion/deletion O(1) at head but O(N) for random access.\n\nReversal Algorithm:\nMaintain three pointers – prev (None), curr (head), next_node.\nIn each iteration: store curr.next in next_node, point curr.next to prev, advance prev to curr, advance curr to next_node.\nAt termination curr is None and prev is the new head.\n\nTime: O(N), Space: O(1).\n\nDouble Linked List adds a prev pointer enabling O(1) bidirectional traversal, used in LRU Cache implementations.\n\nFloyd's Cycle Detection: Slow pointer advances 1 step, fast pointer 2 steps. If they meet, a cycle exists. Meeting point math: distance from head to cycle start equals distance from meeting point to cycle start.`,
+      keyPoints: ["Reversal uses prev/curr/next three-pointer technique","Cycle detection uses slow/fast pointer (Floyd's algorithm)","Doubly linked list allows O(1) both-direction traversal","Random access is O(N) unlike array's O(1)"],
+      example: `def reverse(head):\n    prev, curr = None, head\n    while curr:\n        nxt = curr.next\n        curr.next = prev\n        prev, curr = curr, nxt\n    return prev`,
+      comparisonTable: { headers: ["Operation","Array","Singly LL","Doubly LL"], rows: [["Access","O(1)","O(N)","O(N)"],["Insert Head","O(N)","O(1)","O(1)"],["Delete Middle","O(N)","O(N)","O(N)"],["Reverse","O(N)","O(N)","O(N)"]] },
+      flowchartSteps: ["Set prev=None, curr=head","Store curr.next in nxt","Set curr.next = prev","Advance prev = curr","Advance curr = nxt","Repeat until curr is None","Return prev as new head"],
+      concept3DSimulation: { title: "Three-Pointer Reversal Visualization", description: "Watch prev/curr/next pointers shift as arrows flip direction node by node.", interactiveNodes: [{name:"Prev Pointer",type:"Trailing Anchor",details:"Holds newly reversed chain tail"},{name:"Curr Pointer",type:"Active Node",details:"Node currently being redirected"},{name:"Next Pointer",type:"Look-ahead",details:"Saves reference before link is broken"}] },
+      complexity: "Time O(N) | Space O(1)"
+    },
+    aiExplain: { steps: ["Initialize prev=None","Loop: save next, flip pointer, advance both","Return prev"], analogy: "Like reversing a chain of paper clips — detach one at a time from front, attach to new chain" },
+    debug: [{ title: "Missing next save", buggy: "curr.next = prev\nnxt = curr.next  # bug: already overwritten", fixed: "nxt = curr.next\ncurr.next = prev", hint: "Always save next BEFORE overwriting curr.next" }],
+    quiz: [
+      { q: "What is time complexity of linked list reversal?", options: ["O(1)","O(log N)","O(N)","O(N²)"], answer: 2 },
+      { q: "Floyd's cycle detection uses:", options: ["Two stacks","Slow and fast pointers","Hash set","Recursion"], answer: 1 },
+      { q: "Which structure uses linked lists internally for LRU Cache?", options: ["Array","Doubly Linked List + HashMap","Binary Tree","Stack"], answer: 1 },
+      { q: "Random access complexity in linked list?", options: ["O(1)","O(log N)","O(N)","O(N²)"], answer: 2 }
+    ],
+    mnc: [
+      { company: "Amazon", year: "2023", question: "Reverse a linked list in groups of K", answer: "Recursively reverse each group of K nodes, connect groups. Time O(N), Space O(N/K) recursion stack." },
+      { company: "Microsoft", year: "2022", question: "Detect and remove cycle in linked list", answer: "Use Floyd's algorithm to detect. Then reset slow to head, advance both at same speed — they meet at cycle start. Set that node's next to None." }
+    ],
+    mock: [{ type: "Technical", question: "Design an LRU Cache using O(1) get and put.", tip: "Use HashMap for O(1) lookup + Doubly Linked List for O(1) insertion/deletion. Tail = most recent, head = least recent." }],
+    coding: { problem: "Reverse Linked List", desc: "Reverse a singly linked list iteratively.", input: "1->2->3->4->5", output: "5->4->3->2->1", starter: "def reverse(head):\n    prev, curr = None, head\n    # complete the loop\n    return prev" }
+  },
+  {
+    moduleTitle: "Stack & Monotonic Stack",
+    level: "Level 2 – Intermediate",
+    branch: ["cse", "it"],
+    videos: makeVideoLinks("Monotonic Stack Pattern"),
+    studyMaterial: {
+      summary: "A stack is a LIFO data structure. Monotonic stacks maintain elements in sorted order and solve Next Greater/Smaller Element problems in O(N).",
+      deepDiveTextbook: `MONOTONIC STACK – INTERVIEW WEAPON\n\nA stack supports push, pop, peek in O(1). It is implemented using arrays or linked lists.\n\nMonotonic Decreasing Stack: Pop elements smaller than current before pushing. Result: stack always has elements in decreasing order from bottom to top.\n\nNext Greater Element Pattern:\nFor each element, pop all stack elements smaller than it — those elements found their next greater.\nPush current index onto stack.\nRemaining elements in stack have no next greater (assign -1).\n\nApplications:\n- Stock Span Problem: Days since price was higher\n- Largest Rectangle in Histogram: Use stack to find left/right boundaries\n- Daily Temperatures: Days until warmer temperature\n- Trapping Rain Water: Use stack for boundary tracking\n\nTime: O(N) — each element pushed and popped at most once. Space: O(N) worst case.`,
+      keyPoints: ["Monotonic stack finds next greater/smaller in O(N)","Each element is pushed/popped exactly once","Used for histogram, stock span, rain water problems","Decreasing stack for next greater; increasing for next smaller"],
+      example: `def next_greater(nums):\n    result = [-1] * len(nums)\n    stack = []\n    for i, n in enumerate(nums):\n        while stack and nums[stack[-1]] < n:\n            result[stack.pop()] = n\n        stack.append(i)\n    return result`,
+      comparisonTable: { headers: ["Problem","Approach","Time","Space"], rows: [["Next Greater Element","Monotonic Decreasing Stack","O(N)","O(N)"],["Largest Rectangle","Monotonic Increasing Stack","O(N)","O(N)"],["Brute Force NGE","Nested Loop","O(N²)","O(1)"],["Stock Span","Monotonic Stack","O(N)","O(N)"]] },
+      flowchartSteps: ["Initialize empty stack, result=-1 array","For each index i","While stack not empty AND nums[stack.top] < nums[i]","Pop index j, set result[j] = nums[i]","Push i onto stack","After loop, remaining in stack have no NGE"],
+      concept3DSimulation: { title: "Monotonic Stack NGE Pipeline", description: "Elements stream in; smaller elements are popped when a greater value arrives.", interactiveNodes: [{name:"Input Stream",type:"Array Iterator",details:"Feeds one element at a time"},{name:"Stack Gate",type:"Monotonic Filter",details:"Pops elements when a greater value arrives"},{name:"Result Array",type:"Output Buffer",details:"Records the next greater for each popped index"}] },
+      complexity: "Time O(N) | Space O(N)"
+    },
+    aiExplain: { steps: ["Push indices onto stack","When current > stack top, pop and record answer","Continue until stack empty or current is smaller","Push current index"], analogy: "Like a queue of people waiting to be taller than the next person — shorter ones get eliminated when a taller person arrives" },
+    debug: [{ title: "Wrong condition", buggy: "while stack and nums[stack[-1]] > n:  # decreasing instead of increasing", fixed: "while stack and nums[stack[-1]] < n:", hint: "For next GREATER element, pop when current is GREATER than top" }],
+    quiz: [
+      { q: "Monotonic stack solves Next Greater Element in:", options: ["O(N²)","O(N log N)","O(N)","O(log N)"], answer: 2 },
+      { q: "Largest Rectangle in Histogram uses:", options: ["Queue","Monotonic Increasing Stack","Min-Heap","Segment Tree"], answer: 1 },
+      { q: "Stack is which type of data structure?", options: ["FIFO","LILO","LIFO","Random Access"], answer: 2 },
+      { q: "Stack push/pop time complexity:", options: ["O(N)","O(log N)","O(1)","O(N²)"], answer: 2 }
+    ],
+    mnc: [
+      { company: "Google", year: "2023", question: "Find the largest rectangle in a histogram", answer: "Use monotonic increasing stack. For each bar, pop when current height < stack top, compute area using popped height and width = i - stack[-1] - 1." },
+      { company: "Amazon", year: "2022", question: "Trapping Rain Water", answer: "Use two-pointer or stack approach. Stack stores indices; when taller bar found, pop and calculate trapped water between left boundary and current bar." }
+    ],
+    mock: [{ type: "Technical", question: "Design a stack with getMin() in O(1).", tip: "Use auxiliary min-stack. On push, also push to min-stack if value <= current min. On pop, if popped value == min-stack top, pop from min-stack too." }],
+    coding: { problem: "Daily Temperatures", desc: "Given temperatures array, return days until warmer temperature for each day.", input: "[73,74,75,71,69,72,76,73]", output: "[1,1,4,2,1,1,0,0]", starter: "def dailyTemperatures(temps):\n    result = [0]*len(temps)\n    stack = []\n    # use monotonic decreasing stack" }
+  },
+  {
+    moduleTitle: "Binary Trees – DFS & BFS",
+    level: "Level 2 – Intermediate",
+    branch: ["cse", "it"],
+    videos: makeVideoLinks("Binary Tree DFS BFS traversal"),
+    studyMaterial: {
+      summary: "Binary trees have at most two children per node. DFS (Inorder/Preorder/Postorder) uses recursion or stack. BFS uses a queue for level-order traversal.",
+      deepDiveTextbook: `BINARY TREE TRAVERSALS\n\nDFS Traversals:\n- Inorder (L, Root, R): Gives sorted output for BST. Used for BST validation.\n- Preorder (Root, L, R): Used for tree serialization/cloning.\n- Postorder (L, R, Root): Used for deletion and computing subtree properties.\n\nBFS (Level Order):\nUse a deque. Add root. While queue not empty: pop node, process, add left and right children.\nUsed for finding shortest path in unweighted trees, zigzag traversal, level averages.\n\nKey Tree Problems:\n- Maximum Depth: max(left, right) + 1\n- Diameter: Longest path = max left_height + right_height for each node\n- Path Sum: DFS with remaining target, return True when leaf node reached\n- Lowest Common Ancestor: If both targets in different subtrees, current node is LCA\n\nBST Property: left < root < right at every node. Inorder of BST = sorted array.`,
+      keyPoints: ["Inorder of BST yields sorted sequence","BFS uses queue for level-order traversal","Diameter = max(left_height + right_height) at any node","LCA found when targets split across left and right subtrees"],
+      example: `from collections import deque\ndef level_order(root):\n    if not root: return []\n    q, result = deque([root]), []\n    while q:\n        level = []\n        for _ in range(len(q)):\n            node = q.popleft()\n            level.append(node.val)\n            if node.left: q.append(node.left)\n            if node.right: q.append(node.right)\n        result.append(level)\n    return result`,
+      comparisonTable: { headers: ["Traversal","Order","Use Case","Space"], rows: [["Inorder","L Root R","BST sorted output","O(H)"],["Preorder","Root L R","Serialization","O(H)"],["Postorder","L R Root","Deletion","O(H)"],["BFS","Level by Level","Shortest path","O(W)"]] },
+      flowchartSteps: ["Check if root is None → return","Add root to queue","While queue not empty","Dequeue node, record value","Enqueue left and right children","Append level results"],
+      concept3DSimulation: { title: "BFS Level Order Visualization", description: "Nodes glow level by level as queue processes each row.", interactiveNodes: [{name:"Queue Buffer",type:"FIFO Storage",details:"Holds nodes pending processing"},{name:"Level Counter",type:"Width Tracker",details:"Tracks nodes at current depth"},{name:"Result Builder",type:"Output Array",details:"Appends each level's values"}] },
+      complexity: "Time O(N) | Space O(W) BFS, O(H) DFS"
+    },
+    aiExplain: { steps: ["For DFS: recurse left, process node, recurse right","For BFS: add root to queue, process level by level","Track depth with queue size at each level"], analogy: "DFS is like exploring a maze going as deep as possible; BFS is like expanding outward in ripples from a stone dropped in water" },
+    debug: [{ title: "Missing base case", buggy: "def inorder(node):\n    inorder(node.left)  # crashes if node is None", fixed: "def inorder(node):\n    if not node: return\n    inorder(node.left)", hint: "Always check if node is None before recursing" }],
+    quiz: [
+      { q: "Inorder traversal of BST gives:", options: ["Random order","Reverse sorted","Sorted ascending","Level order"], answer: 2 },
+      { q: "BFS uses which data structure?", options: ["Stack","Queue","Heap","Deque"], answer: 1 },
+      { q: "Tree diameter is:", options: ["Height of tree","Max nodes at any level","Longest path between any two nodes","Root to leaf distance"], answer: 2 },
+      { q: "Preorder traversal visits:", options: ["L Root R","Root L R","L R Root","R Root L"], answer: 1 }
+    ],
+    mnc: [
+      { company: "Facebook/Meta", year: "2023", question: "Binary Tree Zigzag Level Order Traversal", answer: "BFS with a flag. Odd levels: left to right. Even levels: right to left (deque appendleft). Toggle flag each level." },
+      { company: "Google", year: "2022", question: "Serialize and deserialize binary tree", answer: "Preorder DFS serialization with 'null' markers. Deserialization uses a queue of tokens, reconstructing left then right subtrees recursively." }
+    ],
+    mock: [{ type: "Technical", question: "Find the lowest common ancestor of two nodes in a BST.", tip: "In BST: if both nodes < root, LCA is in left. If both > root, LCA is in right. Else root is LCA. O(H) time." }],
+    coding: { problem: "Maximum Depth of Binary Tree", desc: "Return the maximum depth (height) of a binary tree.", input: "root = [3,9,20,null,null,15,7]", output: "3", starter: "def maxDepth(root):\n    if not root: return 0\n    # return max of left and right depths + 1" }
+  },
+  {
+    moduleTitle: "Binary Search – Templates & Variants",
+    level: "Level 2 – Intermediate",
+    branch: ["cse", "it"],
+    videos: makeVideoLinks("Binary Search template variants"),
+    studyMaterial: {
+      summary: "Binary Search finds a target in a sorted array in O(log N) by repeatedly halving the search space. Variants apply to rotated arrays, answer-space problems, and 2D matrices.",
+      deepDiveTextbook: `BINARY SEARCH MASTERY\n\nClassic Binary Search: left=0, right=n-1. mid = left + (right-left)//2. If arr[mid]==target return mid. If arr[mid]<target, left=mid+1. Else right=mid-1.\n\nWhy mid = left + (right-left)//2? Prevents integer overflow in languages like C++/Java where (left+right) can exceed INT_MAX.\n\nTemplate Variants:\n1. Find First/Last Occurrence: Don't return on match; shrink boundary and record answer.\n2. Rotated Sorted Array: Determine which half is sorted, check if target falls in it.\n3. Search in 2D Matrix: Treat matrix as flattened 1D array. mid_row = mid//cols, mid_col = mid%cols.\n4. Answer Space Binary Search: When answer is monotone (feasible/not), binary search on the answer value. E.g., Koko Eating Bananas, Minimum Days to Complete Jobs.\n\nKey insight: Any problem where you can define a monotone predicate can be solved with binary search.`,
+      keyPoints: ["Use mid = left+(right-left)//2 to prevent overflow","Find first/last occurrence by continuing after match","Rotated array: check which half is sorted first","Answer-space BS: search on answer value when predicate is monotone"],
+      example: `def binary_search(arr, target):\n    left, right = 0, len(arr)-1\n    while left <= right:\n        mid = left + (right-left)//2\n        if arr[mid] == target: return mid\n        elif arr[mid] < target: left = mid+1\n        else: right = mid-1\n    return -1`,
+      comparisonTable: { headers: ["Variant","Condition","Time","Space"], rows: [["Classic Search","Sorted Array","O(log N)","O(1)"],["First Occurrence","Don't stop on match","O(log N)","O(1)"],["Rotated Array","Identify sorted half","O(log N)","O(1)"],["2D Matrix","Flatten to 1D index","O(log M*N)","O(1)"]] },
+      flowchartSteps: ["Set left=0, right=n-1","Calculate mid = left+(right-left)//2","Compare arr[mid] with target","If equal: return mid","If target > arr[mid]: left=mid+1","If target < arr[mid]: right=mid-1","Return -1 if not found"],
+      concept3DSimulation: { title: "Binary Search Space Halving", description: "Search space shrinks by half each step, shown as collapsing array segments.", interactiveNodes: [{name:"Left Pointer",type:"Lower Bound",details:"Advances when target is in upper half"},{name:"Right Pointer",type:"Upper Bound",details:"Retreats when target is in lower half"},{name:"Mid Calculator",type:"Pivot",details:"Computes safe midpoint to compare"}] },
+      complexity: "Time O(log N) | Space O(1)"
+    },
+    aiExplain: { steps: ["Define search space with left/right","Compute mid","Compare and eliminate half","Repeat until found or space exhausted"], analogy: "Like guessing a number 1-100: always guess the middle, told higher/lower, halving possibilities each time" },
+    debug: [{ title: "Infinite loop bug", buggy: "while left < right:\n    mid = (left+right)//2\n    if arr[mid] < target: left = mid  # never advances", fixed: "left = mid + 1", hint: "Always advance by mid+1 or mid-1 to avoid infinite loops" }],
+    quiz: [
+      { q: "Binary search time complexity:", options: ["O(N)","O(log N)","O(N log N)","O(1)"], answer: 1 },
+      { q: "Safe midpoint formula is:", options: ["(left+right)/2","left+(right-left)/2","right-(right-left)/2","left*right/2"], answer: 1 },
+      { q: "Binary search requires the array to be:", options: ["Sorted","Unique elements","Non-negative","Fixed size"], answer: 0 },
+      { q: "Search in rotated sorted array time complexity:", options: ["O(N)","O(N²)","O(log N)","O(N log N)"], answer: 2 }
+    ],
+    mnc: [
+      { company: "Google", year: "2023", question: "Find minimum in rotated sorted array", answer: "Binary search: if arr[mid] > arr[right], minimum is in right half. Else in left half including mid. Continue until left==right." },
+      { company: "Amazon", year: "2022", question: "Koko Eating Bananas — find minimum eating speed", answer: "Binary search on speed from 1 to max(piles). For each speed, check if all bananas can be eaten in H hours. Return minimum valid speed." }
+    ],
+    mock: [{ type: "Technical", question: "How would you find the square root of N without using sqrt()?", tip: "Binary search on answer space 1..N. Find largest integer mid where mid*mid <= N. Use long to avoid overflow." }],
+    coding: { problem: "Search in Rotated Sorted Array", desc: "Find target in a rotated sorted array with no duplicates.", input: "nums=[4,5,6,7,0,1,2], target=0", output: "4 (index)", starter: "def search(nums, target):\n    left, right = 0, len(nums)-1\n    while left <= right:\n        mid = (left+right)//2\n        # determine which half is sorted" }
+  },
+  {
+    moduleTitle: "Dynamic Programming – Knapsack",
+    level: "Level 3 – Advanced",
+    branch: ["cse", "it"],
+    videos: makeVideoLinks("0/1 Knapsack Dynamic Programming"),
+    studyMaterial: {
+      summary: "Dynamic Programming solves optimization problems by breaking them into overlapping subproblems and storing results. 0/1 Knapsack is the canonical DP problem for capacity-constrained selection.",
+      deepDiveTextbook: `0/1 KNAPSACK – FOUNDATION OF DP\n\nProblem: N items each with weight w[i] and value v[i]. Knapsack capacity W. Maximize total value without exceeding W. Each item can be included (1) or excluded (0).\n\nRecurrence: dp[i][w] = max(dp[i-1][w], v[i] + dp[i-1][w-w[i]]) if w[i] <= w.\n\n2D Table: dp[i][w] = best value using first i items with capacity w.\nBase: dp[0][w] = 0 for all w.\n\nSpace Optimization: Use 1D array dp[w]. Iterate w from W down to w[i] to avoid using item twice.\n\nVariants:\n- Unbounded Knapsack: Each item usable unlimited times. Iterate w forward.\n- Subset Sum: Can we reach exactly sum S? dp[s] = True/False.\n- Partition Equal Subset: Special case of Subset Sum with target = totalSum/2.\n- Coin Change: Minimum coins for amount. dp[i] = min(dp[i], dp[i-coin]+1).\n\nTime: O(N*W), Space: O(W) with optimization.`,
+      keyPoints: ["Recurrence: include item or exclude it","Space optimize with 1D array iterating W down to w[i]","Unbounded knapsack iterates W upward (reuse allowed)","Coin change is unbounded knapsack variant"],
+      example: `def knapsack(weights, values, W):\n    n = len(weights)\n    dp = [0] * (W+1)\n    for i in range(n):\n        for w in range(W, weights[i]-1, -1):\n            dp[w] = max(dp[w], values[i] + dp[w-weights[i]])\n    return dp[W]`,
+      comparisonTable: { headers: ["Variant","Reuse","Recurrence Direction","Use Case"], rows: [["0/1 Knapsack","No","W down to w[i]","Budget selection"],["Unbounded","Yes","W up from w[i]","Coin denomination"],["Subset Sum","No","W down","Partition check"],["Coin Change","Yes","W up","Min coins"]] },
+      flowchartSteps: ["Initialize dp[0..W] = 0","For each item i","For w from W down to weight[i]","dp[w] = max(dp[w], value[i]+dp[w-weight[i]])","Repeat for all items","Return dp[W]"],
+      concept3DSimulation: { title: "Knapsack DP Table Fill", description: "2D grid fills row by row, each cell choosing max of skip or include decisions.", interactiveNodes: [{name:"Item Iterator",type:"Row Scanner",details:"Processes each item in sequence"},{name:"Capacity Slider",type:"Column Walker",details:"Decrements from W to item weight"},{name:"Decision Node",type:"Max Selector",details:"Picks max(exclude, include) for each cell"}] },
+      complexity: "Time O(N*W) | Space O(W)"
+    },
+    aiExplain: { steps: ["For each item decide: include or exclude","If included: add value, reduce remaining capacity","Take max of both choices","Store in dp table to avoid recomputation"], analogy: "Like packing a travel bag: for each item you decide take it or leave it, choosing what maximizes value within weight limit" },
+    debug: [{ title: "Wrong iteration order", buggy: "for w in range(weights[i], W+1):  # allows reuse", fixed: "for w in range(W, weights[i]-1, -1):", hint: "0/1 knapsack requires reverse iteration to prevent reusing same item" }],
+    quiz: [
+      { q: "0/1 Knapsack time complexity:", options: ["O(N)","O(N²)","O(N*W)","O(2^N)"], answer: 2 },
+      { q: "To prevent item reuse in 0/1 knapsack, iterate:", options: ["Forward","Backward","Randomly","Level order"], answer: 1 },
+      { q: "Coin change is which knapsack variant?", options: ["0/1 Knapsack","Fractional","Unbounded","Multi-Knapsack"], answer: 2 },
+      { q: "Subset Sum target for equal partition:", options: ["totalSum","totalSum/2","totalSum*2","totalSum-1"], answer: 1 }
+    ],
+    mnc: [
+      { company: "Amazon", year: "2023", question: "Given items with weights and values, find max value in knapsack of capacity W", answer: "Use 1D DP array of size W+1. For each item iterate W down to item weight. dp[w] = max(dp[w], val+dp[w-wt]). Return dp[W]." },
+      { company: "Goldman Sachs", year: "2022", question: "Can you partition array into two equal sum subsets?", answer: "If total sum is odd, return False. Target = sum/2. Use Subset Sum DP. dp[0]=True, for each num iterate target down to num, dp[j] |= dp[j-num]." }
+    ],
+    mock: [{ type: "Technical", question: "What is the difference between memoization and tabulation?", tip: "Memoization (top-down): recursive with cache, only computes needed states. Tabulation (bottom-up): iterative, fills entire table. Tabulation is usually faster due to no recursion overhead." }],
+    coding: { problem: "Coin Change", desc: "Find minimum coins to make target amount. Coins can be reused.", input: "coins=[1,5,11], amount=15", output: "3 (five 5s → wrong; optimal: 11+1+1+1+1=5 coins? No: 5+5+5=3)", starter: "def coinChange(coins, amount):\n    dp = [float('inf')] * (amount+1)\n    dp[0] = 0\n    for coin in coins:\n        for i in range(coin, amount+1):\n            dp[i] = min(dp[i], dp[i-coin]+1)\n    return dp[amount] if dp[amount] != float('inf') else -1" }
+  },
+  {
+    moduleTitle: "Graph BFS – Shortest Path",
+    level: "Level 3 – Advanced",
+    branch: ["cse", "it"],
+    videos: makeVideoLinks("Graph BFS Shortest Path"),
+    studyMaterial: {
+      summary: "Graph BFS finds shortest paths in unweighted graphs. Starting from source, it explores all neighbors level by level, guaranteeing minimum hops to each reachable node.",
+      deepDiveTextbook: `GRAPH BFS – SHORTEST PATH GUARANTEE\n\nGraph Representations:\n1. Adjacency List: dict of {node: [neighbors]}. Space O(V+E). Preferred for sparse graphs.\n2. Adjacency Matrix: V×V grid. Space O(V²). Fast edge lookup O(1).\n\nBFS Algorithm:\nUse queue and visited set. Enqueue source with distance 0. While queue not empty: dequeue node, for each neighbor if not visited enqueue with distance+1.\n\nGuarantee: BFS explores by levels. First time a node is reached is via shortest path because all paths of length d are explored before any path of length d+1.\n\nMulti-Source BFS: Start with multiple sources in queue simultaneously. Used for: 0-1 Matrix (distance to nearest 0), Rotting Oranges (minimum minutes for all oranges to rot).\n\nBFS on Grid: Treat each cell as a node, 4 or 8 neighbors. Track visited with a 2D array.\n\nBipartite Check: BFS coloring — alternate colors for each level. If same-color neighbors found, graph is not bipartite (has odd cycle).`,
+      keyPoints: ["BFS guarantees shortest path in unweighted graphs","Use adjacency list for sparse, matrix for dense graphs","Multi-source BFS: add all sources to queue at start","Grid BFS: 4-directional movement with visited 2D array"],
+      example: `from collections import deque\ndef bfs_shortest(graph, src, dst):\n    queue = deque([(src, 0)])\n    visited = {src}\n    while queue:\n        node, dist = queue.popleft()\n        if node == dst: return dist\n        for neighbor in graph[node]:\n            if neighbor not in visited:\n                visited.add(neighbor)\n                queue.append((neighbor, dist+1))\n    return -1`,
+      comparisonTable: { headers: ["Algorithm","Graph Type","Time","Guarantee"], rows: [["BFS","Unweighted","O(V+E)","Shortest hops"],["Dijkstra","Weighted non-neg","O((V+E)logV)","Shortest weight"],["Bellman-Ford","Negative weights","O(V*E)","Shortest weight"],["DFS","Any","O(V+E)","No shortest guarantee"]] },
+      flowchartSteps: ["Add source to queue with distance 0","Mark source as visited","While queue not empty","Dequeue node+distance","For each unvisited neighbor","Enqueue neighbor with distance+1","Return distance when destination reached"],
+      concept3DSimulation: { title: "BFS Wave Expansion", description: "Queue processes nodes in expanding rings from source — each ring one hop farther.", interactiveNodes: [{name:"Queue Manager",type:"FIFO Buffer",details:"Processes nodes level by level"},{name:"Visited Tracker",type:"Set Structure",details:"Prevents revisiting processed nodes"},{name:"Distance Recorder",type:"Map Structure",details:"Records minimum hops to each node"}] },
+      complexity: "Time O(V+E) | Space O(V)"
+    },
+    aiExplain: { steps: ["Add source to queue","Process each node's neighbors","Track visited to avoid cycles","First arrival = shortest path"], analogy: "Like ripples on water — spreading outward equally in all directions from where you drop a stone" },
+    debug: [{ title: "Missing visited check", buggy: "for neighbor in graph[node]:\n    queue.append((neighbor, dist+1))  # infinite loop", fixed: "if neighbor not in visited:\n    visited.add(neighbor)\n    queue.append((neighbor, dist+1))", hint: "Without visited tracking, BFS revisits nodes infinitely in cyclic graphs" }],
+    quiz: [
+      { q: "BFS guarantees shortest path in:", options: ["Weighted graphs","Unweighted graphs","Negative weight graphs","Directed acyclic graphs"], answer: 1 },
+      { q: "BFS time complexity:", options: ["O(V)","O(E)","O(V+E)","O(V²)"], answer: 2 },
+      { q: "Multi-source BFS is used for:", options: ["Single shortest path","Minimum spanning tree","Distance to nearest source","Topological sort"], answer: 2 },
+      { q: "Bipartite graph check uses:", options: ["DFS only","BFS coloring","Dijkstra","Union-Find"], answer: 1 }
+    ],
+    mnc: [
+      { company: "Facebook/Meta", year: "2023", question: "Find shortest path between two users in a social network", answer: "Model as undirected graph. BFS from source user. First time destination user is dequeued, return distance. This is classic BFS 6-degrees-of-separation problem." },
+      { company: "Uber", year: "2022", question: "Rotting Oranges — minimum time for all oranges to rot", answer: "Multi-source BFS starting from all rotten oranges simultaneously. Each minute = one BFS level. Count fresh oranges remaining after BFS completes." }
+    ],
+    mock: [{ type: "Technical", question: "When would you use Dijkstra over BFS?", tip: "Use BFS when all edge weights are equal (unweighted). Use Dijkstra when edges have different positive weights. Dijkstra uses priority queue for minimum distance selection." }],
+    coding: { problem: "Word Ladder", desc: "Find shortest transformation sequence from beginWord to endWord changing one letter at a time.", input: "begin='hit', end='cog', wordList=['hot','dot','dog','lot','log','cog']", output: "5", starter: "from collections import deque\ndef ladderLength(begin, end, wordList):\n    word_set = set(wordList)\n    queue = deque([(begin, 1)])\n    # BFS: try changing each character a-z" }
+  },
+  {
+    moduleTitle: "Dijkstra's Algorithm",
+    level: "Level 3 – Advanced",
+    branch: ["cse", "it"],
+    videos: makeVideoLinks("Dijkstra Algorithm shortest path"),
+    studyMaterial: {
+      summary: "Dijkstra's algorithm finds shortest paths from a single source in weighted graphs with non-negative edges. It uses a min-heap priority queue to greedily select the closest unvisited node.",
+      deepDiveTextbook: `DIJKSTRA'S ALGORITHM – WEIGHTED SHORTEST PATH\n\nAlgorithm Steps:\n1. Initialize dist[src]=0, dist[all others]=infinity.\n2. Use min-heap: push (0, src).\n3. Pop minimum distance node.\n4. For each neighbor: if dist[node]+edge_weight < dist[neighbor], update and push to heap.\n5. Continue until heap empty.\n\nGreedy Proof: Once a node is popped from the heap (finalized), its shortest distance is confirmed because all future paths through unprocessed nodes can only be longer (non-negative edges).\n\nTime Complexity: O((V+E) log V) with binary heap. O(V²) with simple array (better for dense graphs).\n\nLimitations:\n- Fails with negative edge weights (use Bellman-Ford instead).\n- Fails for negative cycles.\n\nVariant – Bidirectional Dijkstra: Run from source and destination simultaneously. Stops when searches meet. Used in Google Maps for faster routing.\n\nA* Algorithm: Dijkstra + heuristic (estimated distance to goal). More efficient for single target shortest path problems.`,
+      keyPoints: ["Uses min-heap to greedily pick minimum distance node","Non-negative edges only — fails with negative weights","Time O((V+E)logV) with priority queue","A* extends Dijkstra with a heuristic for faster single-target search"],
+      example: `import heapq\ndef dijkstra(graph, src):\n    dist = {node: float('inf') for node in graph}\n    dist[src] = 0\n    heap = [(0, src)]\n    while heap:\n        d, u = heapq.heappop(heap)\n        if d > dist[u]: continue\n        for v, w in graph[u]:\n            if dist[u]+w < dist[v]:\n                dist[v] = dist[u]+w\n                heapq.heappush(heap, (dist[v], v))\n    return dist`,
+      comparisonTable: { headers: ["Algorithm","Negative Edges","Time","Use Case"], rows: [["Dijkstra","No","O((V+E)logV)","Maps, routing"],["Bellman-Ford","Yes","O(V*E)","Negative weights"],["Floyd-Warshall","Yes","O(V³)","All pairs shortest path"],["A*","No","O(E)","Game pathfinding"]] },
+      flowchartSteps: ["Set dist[src]=0, others=infinity","Push (0,src) to min-heap","Pop minimum (dist, node)","Skip if dist > recorded","Relax neighbors if shorter path found","Push updated neighbors to heap","Repeat until heap empty"],
+      concept3DSimulation: { title: "Dijkstra Greedy Expansion", description: "Priority queue drives expanding shortest-distance frontier outward from source.", interactiveNodes: [{name:"Min-Heap",type:"Priority Queue",details:"Always extracts globally minimum distance node"},{name:"Distance Table",type:"Array",details:"Stores best known distance to each node"},{name:"Relaxation Engine",type:"Edge Processor",details:"Updates neighbor distances when shorter path found"}] },
+      complexity: "Time O((V+E)logV) | Space O(V)"
+    },
+    aiExplain: { steps: ["Start at source with distance 0","Always process the nearest unvisited node","Relax (update) all its neighbors","Repeat — nearest unvisited node is always correct"], analogy: "Like spreading water on a tilted surface — water always flows to the lowest point first, covering shortest paths naturally" },
+    debug: [{ title: "Missing stale entry check", buggy: "d, u = heapq.heappop(heap)\nfor v, w in graph[u]:  # processes outdated entries", fixed: "d, u = heapq.heappop(heap)\nif d > dist[u]: continue  # skip stale", hint: "Heap may contain outdated entries. Always skip if popped distance > recorded shortest." }],
+    quiz: [
+      { q: "Dijkstra fails with:", options: ["Large graphs","Disconnected graphs","Negative edge weights","Directed graphs"], answer: 2 },
+      { q: "Dijkstra time complexity with min-heap:", options: ["O(V²)","O(E log V)","O((V+E)log V)","O(V log E)"], answer: 2 },
+      { q: "A* extends Dijkstra with:", options: ["Negative weight support","Heuristic function","Multiple sources","Bidirectional BFS"], answer: 1 },
+      { q: "Dijkstra's data structure:", options: ["Queue","Stack","Priority Queue","Deque"], answer: 2 }
+    ],
+    mnc: [
+      { company: "Google", year: "2023", question: "How does Google Maps find the fastest route?", answer: "A* algorithm (Dijkstra + heuristic). Edge weights are travel times. Heuristic is estimated time to destination (Euclidean distance / max speed). Bidirectional A* for long distances." },
+      { company: "Microsoft", year: "2022", question: "Network Delay Time — find time for all nodes to receive signal", answer: "Dijkstra from source node. Return max(dist.values()). If any node unreachable (dist = infinity), return -1." }
+    ],
+    mock: [{ type: "Technical", question: "Explain when to use Bellman-Ford over Dijkstra.", tip: "Bellman-Ford handles negative edge weights and can detect negative cycles (if distance still decreases after V-1 iterations). Dijkstra is faster but only works for non-negative weights." }],
+    coding: { problem: "Cheapest Flights Within K Stops", desc: "Find cheapest price from src to dst with at most k stops.", input: "n=3, flights=[[0,1,100],[1,2,100],[0,2,500]], src=0, dst=2, k=1", output: "200", starter: "import heapq\ndef findCheapestPrice(n, flights, src, dst, k):\n    graph = {i:[] for i in range(n)}\n    for u,v,w in flights:\n        graph[u].append((v,w))\n    # Dijkstra with stops constraint" }
+  },
+  {
+    moduleTitle: "SQL – Joins & Query Optimization",
+    level: "Level 2 – Intermediate",
+    branch: ["cse", "it"],
+    videos: makeVideoLinks("SQL Joins Query Optimization"),
+    studyMaterial: {
+      summary: "SQL joins combine rows from multiple tables based on related columns. Query optimization uses indexes, execution plans, and rewriting to minimize database engine work.",
+      deepDiveTextbook: `SQL JOINS & OPTIMIZATION\n\nJoin Types:\n- INNER JOIN: Only matching rows in both tables.\n- LEFT JOIN: All rows from left + matching from right (NULL if no match).\n- RIGHT JOIN: All rows from right + matching from left.\n- FULL OUTER JOIN: All rows from both, NULL where no match.\n- CROSS JOIN: Cartesian product (all combinations).\n- SELF JOIN: Table joined with itself (manager-employee hierarchy).\n\nQuery Optimization Techniques:\n1. Use Indexes: B-tree indexes on WHERE, JOIN, ORDER BY columns. Avoid full table scans.\n2. Avoid SELECT *: Fetch only required columns to reduce I/O.\n3. Use EXPLAIN/EXPLAIN ANALYZE: View execution plan, identify sequential scans.\n4. Avoid functions on indexed columns in WHERE: WHERE YEAR(date)=2023 prevents index use. Use WHERE date BETWEEN '2023-01-01' AND '2023-12-31'.\n5. Use JOINs over subqueries: JOINs are generally faster than correlated subqueries.\n6. Indexing foreign keys: Always index FK columns used in JOIN conditions.\n\nNormalization: 1NF (atomic values), 2NF (no partial dependency), 3NF (no transitive dependency), BCNF (every determinant is a candidate key).`,
+      keyPoints: ["INNER JOIN returns only matching rows","Use EXPLAIN to identify slow queries and missing indexes","Avoid WHERE on function-wrapped columns — breaks index usage","3NF removes transitive dependencies for data integrity"],
+      example: `-- Find employees with their department name\nSELECT e.name, d.dept_name, e.salary\nFROM employees e\nINNER JOIN departments d ON e.dept_id = d.id\nWHERE e.salary > 50000\nORDER BY e.salary DESC;\n\n-- Index creation\nCREATE INDEX idx_salary ON employees(salary);\nCREATE INDEX idx_dept ON employees(dept_id);`,
+      comparisonTable: { headers: ["Join Type","Returns","NULL Rows","Use Case"], rows: [["INNER JOIN","Matching only","No","Most common lookups"],["LEFT JOIN","All left + matches","Right side","Optional relationships"],["FULL OUTER JOIN","All rows both","Both sides","Data reconciliation"],["SELF JOIN","Same table","No","Hierarchy queries"]] },
+      flowchartSteps: ["Identify tables to join","Define join condition (ON clause)","Select join type based on requirement","Add WHERE filters","Add ORDER BY if needed","Use EXPLAIN to check execution plan","Add missing indexes if sequential scan found"],
+      concept3DSimulation: { title: "JOIN Operation Visual", description: "Two tables shown as overlapping sets — different join types highlight different regions.", interactiveNodes: [{name:"Left Table Scanner",type:"Row Iterator",details:"Scans all rows in left relation"},{name:"Hash Join Probe",type:"Match Engine",details:"Probes hash table built from right relation"},{name:"Result Projector",type:"Column Filter",details:"Projects only requested columns to output"}] },
+      complexity: "JOIN Time O(M*N) naive, O(M+N) with hash join"
+    },
+    aiExplain: { steps: ["Write SELECT with needed columns","FROM left table","JOIN right table ON matching column","Filter with WHERE","Optimize with EXPLAIN and indexes"], analogy: "Like matching two Excel sheets by a common ID column — INNER JOIN keeps only rows that match in both sheets" },
+    debug: [{ title: "Cartesian product bug", buggy: "SELECT * FROM orders, customers  -- missing JOIN condition", fixed: "SELECT * FROM orders o INNER JOIN customers c ON o.customer_id = c.id", hint: "Always specify ON condition in joins, or you get a cartesian product of all rows" }],
+    quiz: [
+      { q: "LEFT JOIN returns:", options: ["Only matching rows","All left rows + matches from right","All right rows + matches from left","All rows from both tables"], answer: 1 },
+      { q: "EXPLAIN command shows:", options: ["Table schema","Query execution plan","Index definitions","Data statistics"], answer: 1 },
+      { q: "Which avoids full table scan?", options: ["SELECT *","Functions on columns","Proper indexes","Subqueries"], answer: 2 },
+      { q: "3NF removes:", options: ["Duplicate rows","Partial dependencies","Transitive dependencies","NULL values"], answer: 2 }
+    ],
+    mnc: [
+      { company: "Microsoft", year: "2023", question: "Find the second highest salary from employee table", answer: "SELECT MAX(salary) FROM employees WHERE salary < (SELECT MAX(salary) FROM employees). Or use: SELECT salary FROM employees ORDER BY salary DESC LIMIT 1 OFFSET 1." },
+      { company: "Oracle", year: "2022", question: "How would you optimize a slow JOIN query on 10M rows?", answer: "1) Add indexes on JOIN columns. 2) Use EXPLAIN to find full table scans. 3) Filter early with WHERE before JOIN. 4) Consider partitioning large table. 5) Use INNER JOIN instead of subquery." }
+    ],
+    mock: [{ type: "Technical", question: "Explain the difference between WHERE and HAVING clauses.", tip: "WHERE filters individual rows before aggregation. HAVING filters groups after GROUP BY. WHERE cannot use aggregate functions; HAVING can. Example: WHERE salary > 50000 vs HAVING AVG(salary) > 50000." }],
+    coding: { problem: "Rank Scores", desc: "Write SQL to rank scores without gaps (DENSE_RANK). Highest score gets rank 1.", input: "Scores table: id, score", output: "score | rank", starter: "SELECT score,\n  DENSE_RANK() OVER (ORDER BY score DESC) as rank\nFROM Scores\nORDER BY score DESC;" }
+  },
+  {
+    moduleTitle: "Operating Systems – Process Scheduling",
+    level: "Level 2 – Intermediate",
+    branch: ["cse", "it"],
+    videos: makeVideoLinks("Process Scheduling OS algorithms"),
+    studyMaterial: {
+      summary: "CPU scheduling algorithms determine which process runs next. Key metrics: CPU utilization, throughput, turnaround time, waiting time, and response time. Understanding scheduling is critical for OS interviews.",
+      deepDiveTextbook: `CPU SCHEDULING ALGORITHMS\n\nScheduling Criteria:\n- CPU Utilization: Keep CPU busy (maximize).\n- Throughput: Processes completed per unit time.\n- Turnaround Time: Total time from submission to completion.\n- Waiting Time: Time spent in ready queue.\n- Response Time: Time from submission to first response.\n\nAlgorithms:\n1. FCFS (First Come First Served): Simple, non-preemptive. Convoy effect — long process blocks all short ones.\n2. SJF (Shortest Job First): Optimal for minimum average waiting time. Requires knowing burst time in advance.\n3. SRTF (Shortest Remaining Time First): Preemptive SJF. Best average waiting time but starvation risk.\n4. Round Robin: Preemptive, time quantum Q. Good response time. Context switch overhead increases with small Q.\n5. Priority Scheduling: Each process has priority. Risk of starvation; solved by Aging (gradually increase priority over time).\n6. Multilevel Queue: Different queues for foreground/background with different algorithms.\n\nContext Switch: Saving and restoring process state (PCB). Pure overhead — no useful work done during switch.\n\nProcess vs Thread: Process has independent memory space. Threads share process memory, lighter to create/switch.`,
+      keyPoints: ["SJF gives minimum average waiting time but needs burst time upfront","Round Robin ensures fairness with time quantum","Priority scheduling risks starvation — solved by aging","Context switch is overhead: saves/restores PCB"],
+      example: `# Round Robin Simulation\ndef round_robin(processes, quantum):\n    queue = processes.copy()\n    time, waiting = 0, {p['name']:0 for p in processes}\n    remaining = {p['name']:p['burst'] for p in processes}\n    while queue:\n        p = queue.pop(0)\n        run = min(quantum, remaining[p['name']])\n        time += run\n        remaining[p['name']] -= run\n        if remaining[p['name']] > 0:\n            queue.append(p)  # back in queue\n    return time`,
+      comparisonTable: { headers: ["Algorithm","Preemptive","Avg Wait","Starvation"], rows: [["FCFS","No","High (convoy)","No"],["SJF","No","Optimal","Yes"],["SRTF","Yes","Optimal","Yes"],["Round Robin","Yes","Medium","No"],["Priority","Both","Varies","Yes"]] },
+      flowchartSteps: ["Process arrives → enters ready queue","Scheduler selects process based on algorithm","Dispatcher loads process (context switch)","Process runs until preemption, I/O wait, or completion","If preempted → back to ready queue","If I/O → moves to waiting queue","If complete → terminates"],
+      concept3DSimulation: { title: "CPU Scheduler Gantt Chart", description: "Timeline shows which process runs each time unit with preemption events marked.", interactiveNodes: [{name:"Ready Queue",type:"Priority Queue",details:"Holds processes waiting for CPU"},{name:"CPU Core",type:"Execution Unit",details:"Runs one process at a time"},{name:"Context Switcher",type:"PCB Manager",details:"Saves/restores registers and memory maps"}] },
+      complexity: "Context Switch: O(1) | Scheduling overhead depends on algorithm"
+    },
+    aiExplain: { steps: ["Processes compete for CPU in ready queue","Scheduler picks next process per algorithm","CPU runs it; preemption or I/O causes switch","Dispatcher handles actual context switch"], analogy: "Like a bank with multiple tellers — different scheduling = different customer queuing strategies (FIFO, priority, time slots)" },
+    debug: [{ title: "Starvation in priority scheduling", buggy: "Always schedule highest priority — low priority processes never run", fixed: "Implement aging: increase priority of waiting processes every N seconds", hint: "Pure priority scheduling causes starvation. Aging prevents it by boosting long-waiting process priorities." }],
+    quiz: [
+      { q: "Which algorithm gives minimum average waiting time?", options: ["FCFS","Round Robin","SJF","Priority"], answer: 2 },
+      { q: "Convoy effect occurs in:", options: ["SJF","FCFS","Round Robin","SRTF"], answer: 1 },
+      { q: "Aging solves:", options: ["Deadlock","Starvation","Memory leak","Thrashing"], answer: 1 },
+      { q: "Context switch is:", options: ["Useful computation","Pure overhead","I/O operation","Disk access"], answer: 1 }
+    ],
+    mnc: [
+      { company: "Microsoft", year: "2023", question: "How does Windows handle CPU scheduling?", answer: "Windows uses Multilevel Feedback Queue with 32 priority levels. Real-time threads (16-31) are always preferred. Interactive threads get priority boosts after I/O. Background threads use lower priorities." },
+      { company: "Infosys", year: "2022", question: "Calculate average waiting time for FCFS: P1(6ms), P2(4ms), P3(2ms)", answer: "P1 waits 0, P2 waits 6, P3 waits 10. Average = (0+6+10)/3 = 5.33ms. With SJF (P3,P2,P1): P3 waits 0, P2 waits 2, P1 waits 6. Average = 2.67ms." }
+    ],
+    mock: [{ type: "Technical", question: "What is the difference between a process and a thread?", tip: "Process: independent memory space, expensive creation, isolated crash. Thread: shared memory space, lightweight, faster context switch, crash can affect all threads. Use threads for I/O concurrency, processes for isolation." }],
+    coding: { problem: "Task Scheduler", desc: "Given tasks with cooldown n between same tasks, find minimum intervals to finish all tasks.", input: "tasks=['A','A','A','B','B','B'], n=2", output: "8", starter: "from collections import Counter\nimport heapq\ndef leastInterval(tasks, n):\n    freq = Counter(tasks)\n    heap = [-f for f in freq.values()]\n    heapq.heapify(heap)\n    # simulate scheduling with cooldown" }
+  },
+  {
+    moduleTitle: "Computer Networks – TCP/IP & HTTP",
+    level: "Level 2 – Intermediate",
+    branch: ["cse", "it"],
+    videos: makeVideoLinks("TCP IP HTTP Computer Networks"),
+    studyMaterial: {
+      summary: "TCP/IP is the foundational protocol suite of the internet. TCP provides reliable, ordered delivery. HTTP/HTTPS operates on top of TCP for web communication. Understanding these is essential for backend and system design roles.",
+      deepDiveTextbook: `TCP/IP & HTTP FUNDAMENTALS\n\nOSI vs TCP/IP Model:\nOSI: 7 layers (Physical, Data Link, Network, Transport, Session, Presentation, Application).\nTCP/IP: 4 layers (Network Access, Internet, Transport, Application).\n\nTCP (Transmission Control Protocol):\n- Connection-oriented: 3-way handshake (SYN → SYN-ACK → ACK).\n- Reliable: Acknowledgments + retransmission on timeout.\n- Ordered: Sequence numbers ensure in-order delivery.\n- Flow Control: Sliding window prevents receiver buffer overflow.\n- Congestion Control: Slow start, congestion avoidance (AIMD).\n\nUDP (User Datagram Protocol):\n- Connectionless, no reliability, lower latency.\n- Used for: DNS queries, video streaming, gaming, VoIP.\n\nHTTP/HTTPS:\n- HTTP is stateless. Each request is independent.\n- HTTP Methods: GET (retrieve), POST (create), PUT (replace), PATCH (partial update), DELETE.\n- Status Codes: 2xx (success), 3xx (redirect), 4xx (client error), 5xx (server error).\n- HTTPS adds TLS/SSL encryption: prevents eavesdropping and tampering.\n- HTTP/2: Multiplexing (multiple requests over single connection), header compression, server push.\n- HTTP/3: Uses QUIC (UDP-based), faster handshake, eliminates head-of-line blocking.`,
+      keyPoints: ["TCP: reliable, ordered via 3-way handshake + ACKs","UDP: fast, unreliable — good for streaming/gaming","HTTP is stateless; HTTPS adds TLS encryption","HTTP/2 multiplexing eliminates one-request-per-connection bottleneck"],
+      example: `# HTTP Request anatomy (Python requests library)\nimport requests\n\n# GET request\nresponse = requests.get('https://api.example.com/users', \n                        headers={'Authorization': 'Bearer token123'},\n                        params={'page': 1, 'limit': 10})\nprint(response.status_code)  # 200\nprint(response.json())       # parsed JSON body\n\n# POST request\nresponse = requests.post('https://api.example.com/users',\n                         json={'name': 'Alice', 'email': 'alice@example.com'})\nprint(response.status_code)  # 201 Created`,
+      comparisonTable: { headers: ["Feature","TCP","UDP"], rows: [["Connection","Connection-oriented","Connectionless"],["Reliability","Guaranteed ACK","Best-effort"],["Order","In-order delivery","No ordering"],["Use Case","Web, email, file transfer","Video, DNS, gaming"],["Overhead","High (headers, ACK)","Low"]] },
+      flowchartSteps: ["Client sends SYN (TCP handshake)","Server responds SYN-ACK","Client sends ACK — connection established","Client sends HTTP Request","Server processes and sends HTTP Response","Connection closed with FIN-ACK-FIN-ACK"],
+      concept3DSimulation: { title: "TCP/HTTP Request Lifecycle", description: "3D pipeline shows SYN/ACK handshake, data segments flowing, and HTTP response returning.", interactiveNodes: [{name:"TCP Handshaker",type:"Connection Manager",details:"Establishes reliable channel via 3-way handshake"},{name:"HTTP Encoder",type:"Application Layer",details:"Formats request with method, headers, and body"},{name:"TLS Engine",type:"Encryption Layer",details:"Encrypts payload for HTTPS connections"}] },
+      complexity: "TCP connection: O(1) packets | HTTP request: depends on payload size"
+    },
+    aiExplain: { steps: ["TCP establishes connection with 3-way handshake","HTTP request sent (GET/POST/etc)","Server processes and returns response","Connection closed or kept alive for reuse"], analogy: "TCP is like a phone call (establish connection first, then talk reliably). UDP is like sending postcards (just send, no confirmation of receipt)." },
+    debug: [{ title: "CORS error on API call", buggy: "fetch('http://api.example.com/data')  // blocked by browser", fixed: "Server must include header: Access-Control-Allow-Origin: https://yoursite.com", hint: "CORS is enforced by browsers for cross-origin requests. Server must explicitly allow origins in response headers." }],
+    quiz: [
+      { q: "TCP 3-way handshake sequence:", options: ["SYN→ACK→SYN-ACK","SYN→SYN-ACK→ACK","ACK→SYN→SYN-ACK","SYN-ACK→SYN→ACK"], answer: 1 },
+      { q: "HTTP status code for 'Not Found':", options: ["200","301","404","500"], answer: 2 },
+      { q: "UDP is preferred for:", options: ["File downloads","Emails","Video streaming","Database queries"], answer: 2 },
+      { q: "HTTPS provides:", options: ["Faster speeds","TLS encryption","No-handshake connection","UDP reliability"], answer: 1 }
+    ],
+    mnc: [
+      { company: "Amazon", year: "2023", question: "What happens when you type google.com in a browser?", answer: "1)DNS lookup (browser cache→OS cache→DNS resolver→root/TLD/authoritative). 2)TCP handshake to IP:443. 3)TLS negotiation. 4)HTTP GET request. 5)Server returns HTML. 6)Browser parses, fetches CSS/JS/images, renders page." },
+      { company: "Infosys", year: "2022", question: "Difference between HTTP/1.1 and HTTP/2?", answer: "HTTP/1.1: one request per connection, head-of-line blocking. HTTP/2: multiplexing (multiple parallel streams on one connection), binary framing, header compression (HPACK), server push. HTTP/2 significantly faster for modern web pages." }
+    ],
+    mock: [{ type: "Technical", question: "How does HTTPS protect against a man-in-the-middle attack?", tip: "TLS: server presents digital certificate (signed by trusted CA). Client verifies signature. Then Diffie-Hellman key exchange establishes encrypted session key. All data encrypted — MITM can't read or modify without detection." }],
+    coding: { problem: "Implement a simple HTTP server", desc: "Create a basic HTTP server in Python responding to GET requests.", input: "GET / HTTP/1.1", output: "HTTP/1.1 200 OK\\nContent-Type: text/plain\\n\\nHello, World!", starter: "import socket\nserver = socket.socket(socket.AF_INET, socket.SOCK_STREAM)\nserver.bind(('localhost', 8080))\nserver.listen(5)\n# Accept connections and return HTTP response" }
+  },
+  {
+    moduleTitle: "System Design – Scalable Architecture",
+    level: "Level 3 – Advanced",
+    branch: ["cse", "it"],
+    videos: makeVideoLinks("System Design scalable architecture microservices"),
+    studyMaterial: {
+      summary: "System design interviews test ability to design large-scale distributed systems. Core concepts: load balancing, caching, database sharding, CAP theorem, and microservices architecture.",
+      deepDiveTextbook: `SCALABLE SYSTEM DESIGN\n\nDesign Steps (RESHADED):\n1. Requirements: Functional (what it does) + Non-functional (scale, latency, availability).\n2. Estimation: DAU, QPS, storage needs.\n3. API Design: REST endpoints, request/response schema.\n4. Data Model: SQL vs NoSQL choice.\n5. High-Level Design: Major components (Load Balancer, API Gateway, Services, DB, Cache).\n6. Deep Dive: Specific bottleneck components.\n\nKey Components:\n- Load Balancer: Distributes traffic across servers. Round-robin, least connections, or IP-hash strategies.\n- CDN: Serves static assets from edge locations close to users. Reduces latency globally.\n- Cache (Redis): Store hot data in memory. LRU eviction. Cache-aside pattern.\n- Database Sharding: Horizontal partitioning by user_id % N. Avoids single DB bottleneck.\n- Message Queue (Kafka/RabbitMQ): Async communication between services. Decouples producers and consumers.\n\nCAP Theorem: A distributed system can guarantee only 2 of 3: Consistency, Availability, Partition Tolerance.\n\nMicroservices vs Monolith: Monolith easier to develop/debug. Microservices enable independent scaling, deployment, and tech stack per service.`,
+      keyPoints: ["Load balancer + CDN handle traffic distribution","Redis caching reduces DB load by 10-100x","CAP theorem: choose CP or AP during network partition","Message queues decouple services and handle traffic spikes"],
+      example: `# System Design: URL Shortener\n# Components:\n# 1. API: POST /shorten → returns short_code\n# 2. DB: urls table (short_code, long_url, clicks, created_at)\n# 3. Cache: Redis short_code → long_url (TTL 24h)\n# 4. Algorithm: base62 encoding of auto-increment ID\n\nimport string, random\nBASE62 = string.ascii_letters + string.digits\n\ndef encode(num):\n    chars = []\n    while num > 0:\n        chars.append(BASE62[num % 62])\n        num //= 62\n    return ''.join(reversed(chars)) or '0'`,
+      comparisonTable: { headers: ["Concern","Solution","Trade-off"], rows: [["High traffic","Load Balancer + Horizontal Scaling","Added complexity"],["Slow DB reads","Redis Cache","Cache invalidation problem"],["Large data","DB Sharding","Cross-shard queries harder"],["Service coupling","Message Queue","Eventual consistency"],["Global latency","CDN","Stale content risk"]] },
+      flowchartSteps: ["Clarify functional + non-functional requirements","Estimate QPS, storage, bandwidth","Design API endpoints","Choose SQL or NoSQL","Draw high-level architecture","Identify bottlenecks","Deep dive into critical components"],
+      concept3DSimulation: { title: "Distributed System Architecture", description: "3D cluster shows client → CDN → Load Balancer → API Servers → Cache → DB tiers.", interactiveNodes: [{name:"Load Balancer",type:"Traffic Distributor",details:"Routes requests using round-robin or least-connections"},{name:"Cache Layer",type:"Redis Cluster",details:"Returns hot data in <1ms, bypassing database"},{name:"Message Queue",type:"Kafka Broker",details:"Buffers async events between producer and consumer services"}] },
+      complexity: "Horizontal scaling: O(1) per node | Cache hit: O(1) | Shard lookup: O(1)"
+    },
+    aiExplain: { steps: ["Gather requirements and estimate scale","Design API and data model","Add caching layer for hot data","Use load balancer + horizontal scaling","Async queues for non-critical operations"], analogy: "Like designing a highway system for a city — you need multiple lanes (horizontal scaling), toll booths (load balancers), and rest stops (caches) to handle peak traffic" },
+    debug: [{ title: "Cache thundering herd", buggy: "Cache expires simultaneously for 10000 users → DB overwhelmed", fixed: "Add jitter: TTL = base_ttl + random(0, base_ttl*0.1). Or use cache warming before expiry.", hint: "Staggered TTLs prevent synchronized cache expiry causing database avalanche" }],
+    quiz: [
+      { q: "CAP theorem states a distributed system can guarantee:", options: ["All three C,A,P","Only 2 of 3","Only Consistency","Only Availability"], answer: 1 },
+      { q: "Redis is primarily used for:", options: ["Persistent storage","In-memory caching","Message queuing","Load balancing"], answer: 1 },
+      { q: "Database sharding is:", options: ["Vertical scaling","Horizontal partitioning","Replication","Indexing"], answer: 1 },
+      { q: "CDN reduces:", options: ["Database load","Latency for global users","Code complexity","Server count"], answer: 1 }
+    ],
+    mnc: [
+      { company: "Google", year: "2023", question: "Design YouTube — handle 500 hours of video uploaded per minute", answer: "Upload service → Message queue → Video processing workers (transcoding to multiple resolutions) → Blob storage (GCS). CDN serves videos. Metadata in distributed DB. Recommendation engine reads from event stream. Read-heavy: cache popular videos at edge." },
+      { company: "Amazon", year: "2022", question: "Design Amazon's shopping cart service", answer: "High availability (AP system). Use DynamoDB (key-value: userId→cartItems). Local session cache. Async sync to DB every N seconds. Handle concurrent updates with conditional writes. Cart abandoned → event queue → recommendation engine." }
+    ],
+    mock: [{ type: "System Design", question: "Design a rate limiter for an API that allows 100 requests per user per minute.", tip: "Algorithms: Token Bucket (smooth bursts), Fixed Window (simple but boundary spike), Sliding Window Log (accurate but memory heavy), Sliding Window Counter (efficient). Redis INCR + TTL for distributed rate limiting. Return 429 Too Many Requests when limit exceeded." }],
+    coding: { problem: "LRU Cache", desc: "Implement an LRU cache with O(1) get and put operations.", input: "capacity=2, operations: put(1,1),put(2,2),get(1),put(3,3),get(2)", output: "get(1)=1, get(2)=-1 (evicted)", starter: "from collections import OrderedDict\nclass LRUCache:\n    def __init__(self, capacity):\n        self.cap = capacity\n        self.cache = OrderedDict()\n    def get(self, key):\n        if key not in self.cache: return -1\n        self.cache.move_to_end(key)\n        return self.cache[key]\n    def put(self, key, value):\n        if key in self.cache: self.cache.move_to_end(key)\n        self.cache[key] = value\n        if len(self.cache) > self.cap:\n            self.cache.popitem(last=False)" }
+  }
 ];
