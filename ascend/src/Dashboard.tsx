@@ -546,13 +546,13 @@ export default function Dashboard() {
   );
 
   const tabs = [
-    { id: "home", label: "🚀 Home", icon: <LayoutDashboard size={18} /> },
-    { id: "journey", label: "🏆 My Journey", icon: <Trophy size={18} /> },
-    { id: "community", label: "👥 Community", icon: <Users size={18} /> },
-    { id: "resume", label: "📄 Resume & ATS", icon: <FileText size={18} /> },
-    { id: "portfolio", label: "✨ Portfolio Creator", icon: <Palette size={18} /> },
-    { id: "maahir-ai", label: "🧠 Maahir AI", icon: <Brain size={18} /> },
-    { id: "life-os", label: "📅 Life OS AI Planner", icon: <Target size={18} /> },
+    { id: "home", label: "Home", icon: <LayoutDashboard size={18} /> },
+    { id: "journey", label: "My Journey", icon: <Trophy size={18} /> },
+    { id: "community", label: "Community", icon: <Users size={18} /> },
+    { id: "resume", label: "Resume & ATS", icon: <FileText size={18} /> },
+    { id: "portfolio", label: "Portfolio Creator", icon: <Palette size={18} /> },
+    { id: "maahir-ai", label: "Maahir AI", icon: <Brain size={18} /> },
+    { id: "life-os", label: "Life OS AI Planner", icon: <Target size={18} /> },
   ] as const;
 
   if (branchLoading) {

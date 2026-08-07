@@ -681,7 +681,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
               <Zap size={15} /> {userXp} XP
             </div>
             <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-sm font-bold">
-              <Gem size={15} /> {userDiamonds} 💎
+              <Gem size={15} /> {userDiamonds}
             </div>
           </div>
         </div>
@@ -856,7 +856,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                         <p className="text-xs font-bold text-white mt-1 line-clamp-2">{node.title}</p>
                         <div className="flex items-center justify-center gap-2 mt-0.5">
                           <span className="text-[10px] text-amber-400 font-mono">+{node.xpReward} XP</span>
-                          <span className="text-[10px] text-cyan-400 font-mono">+{node.diamondReward} 💎</span>
+                          <span className="text-[10px] text-cyan-400 font-mono">+{node.diamondReward}</span>
                         </div>
                       </div>
                     </div>
@@ -931,7 +931,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                         : "border-transparent text-slate-400 hover:text-slate-200"
                     }`}
                   >
-                    <Code2 size={15} /> ⚡ Formulas & Debugging
+                    <Code2 size={15} /> Formulas & Debugging
                   </button>
                   <button
                     onClick={() => setModalTab("videos")}
@@ -941,7 +941,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                         : "border-transparent text-slate-400 hover:text-slate-200"
                     }`}
                   >
-                    <Video size={15} /> 📺 11 Indian Languages Videos
+                    <Video size={15} /> 11 Indian Languages Videos
                   </button>
                   <button
                     onClick={() => setModalTab("placement")}
@@ -951,7 +951,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                         : "border-transparent text-slate-400 hover:text-slate-200"
                     }`}
                   >
-                    <Lightbulb size={15} /> 💡 MNC Interview Secrets
+                    <Lightbulb size={15} /> MNC Interview Secrets
                   </button>
                   <button
                     onClick={() => setModalTab("ai")}
@@ -965,7 +965,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-fuchsia-400 opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-2 w-2 bg-fuchsia-500"></span>
                     </span>
-                    <Brain size={15} className="animate-pulse" /> 🤖 Ask AI & Expand Syllabus
+                    <Brain size={15} className="animate-pulse" /> Ask AI & Expand Syllabus
                   </button>
                 </div>
               )}
@@ -1025,7 +1025,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                       <div className="space-y-6">
                         {activeNode.theory?.formula && (
                           <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-300 font-mono text-sm">
-                            <span className="font-bold text-amber-400 block mb-1">⚡ Core Mathematical Formula:</span>
+                            <span className="font-bold text-amber-400 block mb-1">Core Mathematical Formula:</span>
                             {activeNode.theory.formula}
                           </div>
                         )}
@@ -1220,21 +1220,21 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                             onClick={() => handleAISubmit("Generate 1,000,000+ words expanded syllabus for this topic")}
                             className="px-3 py-2 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 text-purple-300 text-xs font-bold transition-all"
                           >
-                            🧠 Expand Syllabus Details
+                            Expand Syllabus Details
                           </button>
                           <button
                             disabled={aiThinking}
                             onClick={() => handleAISubmit("Generate top MNC coding interview questions for this lesson")}
                             className="px-3 py-2 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 text-cyan-300 text-xs font-bold transition-all"
                           >
-                            🏢 MNC Placement Secrets
+                            MNC Placement Secrets
                           </button>
                           <button
                             disabled={aiThinking}
                             onClick={() => handleAISubmit("Answering my study questions and core concepts")}
                             className="px-3 py-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-xs font-bold transition-all"
                           >
-                            📖 Explain Core Concepts
+                            Explain Core Concepts
                           </button>
                         </div>
 

@@ -44,7 +44,7 @@ export default function HomePanel({
             </span>
             {roleId && (
               <span className="text-xs font-bold text-cyan-300 bg-cyan-500/10 px-3.5 py-1 rounded-full border border-cyan-500/30">
-                🎯 Role: {roleId.replace(/^[a-z]+-/, "").toUpperCase()}
+                Role: {roleId.replace(/^[a-z]+-/, "").toUpperCase()}
               </span>
             )}
             <span className="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-3.5 py-1 rounded-full border border-emerald-500/30 flex items-center gap-1">
@@ -54,7 +54,7 @@ export default function HomePanel({
 
           <div className="space-y-2">
             <h1 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight leading-tight">
-              Welcome Back, <span className="bg-gradient-to-r from-purple-400 via-cyan-300 to-amber-300 bg-clip-text text-transparent">{userName}</span>! 🚀
+              Welcome Back, <span className="bg-gradient-to-r from-purple-400 via-cyan-300 to-amber-300 bg-clip-text text-transparent">{userName}</span>!
             </h1>
             <p className="text-base md:text-lg text-slate-300 max-w-2xl">
               Your comprehensive 5-phase placement roadmap is active. Master Aptitude, Department Core Theory, DSA, Projects, and AI Placement Mock Rounds.
@@ -102,7 +102,7 @@ export default function HomePanel({
             <Gem size={24} />
           </div>
           <div>
-            <div className="text-2xl font-bold text-white">{diamonds} 💎</div>
+            <div className="text-2xl font-bold text-white">{diamonds}</div>
             <div className="text-xs text-slate-400 font-medium">Placement Diamonds</div>
           </div>
         </div>
