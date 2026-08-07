@@ -8,14 +8,27 @@ export default function LifeOSPanel({ branchId, roleId }: { branchId?: string | 
   const branch = branchId || "CSE";
   const role = roleId || "Software Engineer";
 
-  // Habit Tracker State
-  const [habits, setHabits] = useState<Habit[]>([
+  // Habit Tracker State — persisted in localStorage with daily reset
+  const defaultHabits: Habit[] = [
     { id: "dsa", label: "Solve 1 DSA coding question", done: false, xpReward: 15 },
     { id: "quant", label: "Solve 5 Quantitative Aptitude sums", done: false, xpReward: 10 },
     { id: "mock", label: "Review 10 mock placement questions", done: false, xpReward: 10 },
     { id: "english", label: "Spend 10 mins practicing verbal mock interviews", done: false, xpReward: 10 },
     { id: "resume", label: "Revise keywords for target MNC requirements", done: false, xpReward: 10 },
-  ]);
+  ];
+  const [habits, setHabits] = useState<Habit[]>(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem("lifeos_habits") || "{}");
+      const today = new Date().toDateString();
+      if (saved.date === today && Array.isArray(saved.habits)) return saved.habits;
+    } catch {}
+    return defaultHabits;
+  });
+
+  // Auto-save habits to localStorage on change
+  useEffect(() => {
+    localStorage.setItem("lifeos_habits", JSON.stringify({ date: new Date().toDateString(), habits }));
+  }, [habits]);
 
   // Planner Inputs
   const [dailyHours, setDailyHours] = useState("4");

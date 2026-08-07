@@ -257,18 +257,28 @@ export default function Dashboard() {
     book: string;
   } | null>(null);
 
-  // Resume builder states
-  const [resumeName, setResumeName] = useState("");
-  const [resumeEmail, setResumeEmail] = useState("");
-  const [resumePhone, setResumePhone] = useState("");
-  const [resumeSummary, setResumeSummary] = useState("");
-  const [resumeExperience, setResumeExperience] = useState("");
-  const [resumeEducation, setResumeEducation] = useState("");
-  const [resumeSkills, setResumeSkills] = useState("");
-  const [resumeJobDesc, setResumeJobDesc] = useState("");
+  // Resume builder states — persisted in localStorage for real-time retention
+  const savedResume = (() => { try { return (JSON.parse(localStorage.getItem("resume_data") || "{}") || {}) as Record<string, string>; } catch { return {} as Record<string, string>; } })();
+  const [resumeName, setResumeName] = useState(savedResume.name || "");
+  const [resumeEmail, setResumeEmail] = useState(savedResume.email || "");
+  const [resumePhone, setResumePhone] = useState(savedResume.phone || "");
+  const [resumeSummary, setResumeSummary] = useState(savedResume.summary || "");
+  const [resumeExperience, setResumeExperience] = useState(savedResume.experience || "");
+  const [resumeEducation, setResumeEducation] = useState(savedResume.education || "");
+  const [resumeSkills, setResumeSkills] = useState(savedResume.skills || "");
+  const [resumeJobDesc, setResumeJobDesc] = useState(savedResume.jobDesc || "");
   const [resumeAtsScore, setResumeAtsScore] = useState<number | null>(null);
   const [resumeAtsFeedback, setResumeAtsFeedback] = useState<string[]>([]);
   const [resumeScoring, setResumeScoring] = useState(false);
+
+  // Auto-save resume fields to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem("resume_data", JSON.stringify({
+      name: resumeName, email: resumeEmail, phone: resumePhone,
+      summary: resumeSummary, experience: resumeExperience,
+      education: resumeEducation, skills: resumeSkills, jobDesc: resumeJobDesc,
+    }));
+  }, [resumeName, resumeEmail, resumePhone, resumeSummary, resumeExperience, resumeEducation, resumeSkills, resumeJobDesc]);
 
   // Selected phase jump target
   const [targetPhase, setTargetPhase] = useState<number | undefined>(undefined);
@@ -374,35 +384,87 @@ export default function Dashboard() {
     }, 1500);
   };
 
-  // ATS check logic
+  // Real ATS keyword extraction and scoring engine
   const handleAtsCheck = () => {
     setResumeScoring(true);
-    setTimeout(() => {
-      setResumeScoring(false);
-      let keywords = ["React", "Python", "SQL", "Database", "Manager", "Agile", "Optimized", "Designed", "Architecture"];
-      let score = 55;
-      let feedback = [];
+    // Run analysis synchronously — no fake delay
+    requestAnimationFrame(() => {
+      const resumeText = [resumeName, resumeSummary, resumeExperience, resumeEducation, resumeSkills].join(" ").toLowerCase();
+      const feedback: string[] = [];
+      let score = 0;
+      let maxPoints = 0;
 
-      keywords.forEach(kw => {
-        const regex = new RegExp(kw, "gi");
-        if (regex.test(resumeSummary) || regex.test(resumeExperience) || regex.test(resumeSkills)) {
-          score += 5;
+      // ── 1. Extract real keywords from the pasted Job Description ──
+      const jdWords = resumeJobDesc
+        .toLowerCase()
+        .replace(/[^a-z0-9#+.\s]/gi, " ")
+        .split(/\s+/)
+        .filter((w: string) => w.length > 2);
+      const stopWords = new Set(["the","and","for","are","with","you","will","our","from","that","this","have","your","about","more","all","can","been","has","not","but","they","its","who","what","also","may","any"]);
+      const jdKeywords: string[] = Array.from(new Set(jdWords.filter((w: string) => !stopWords.has(w))));
+
+      if (jdKeywords.length > 0) {
+        // Score each JD keyword against resume text
+        const matched: string[] = [];
+        const missed: string[] = [];
+        jdKeywords.forEach((kw: string) => {
+          if (resumeText.includes(kw)) matched.push(kw);
+          else missed.push(kw);
+        });
+        const matchRatio = matched.length / jdKeywords.length;
+        score += Math.round(matchRatio * 40); // up to 40 points from JD matching
+        maxPoints += 40;
+        if (missed.length > 0 && missed.length <= 10) {
+          feedback.push(`⚠️ Missing JD keywords: ${missed.slice(0, 8).join(", ")}. Add these to your skills or summary.`);
+        } else if (missed.length > 10) {
+          feedback.push(`⚠️ ${missed.length} JD keywords not found in your resume. Focus on: ${missed.slice(0, 6).join(", ")}...`);
         }
-      });
+        if (matchRatio >= 0.7) feedback.push("✅ Strong keyword alignment with the job description!");
+      } else {
+        // No JD pasted — use universal tech keywords
+        const universalKw = ["react","python","sql","java","javascript","typescript","docker","aws","git","agile","api","node","design","test","deploy","database","linux","cloud","architecture","optimization"];
+        let hits = 0;
+        universalKw.forEach((kw: string) => { if (resumeText.includes(kw)) hits++; });
+        score += Math.round((hits / universalKw.length) * 40);
+        maxPoints += 40;
+        feedback.push("💡 Paste a target Job Description for precise ATS keyword matching.");
+      }
 
-      score = Math.min(98, score);
+      // ── 2. Content quality checks ──
+      maxPoints += 15;
+      if (resumeSummary.length >= 100) { score += 15; feedback.push("✅ Professional summary is detailed and compelling."); }
+      else if (resumeSummary.length >= 50) { score += 8; feedback.push("⚠️ Summary is adequate. Expand to 100+ characters with industry keywords."); }
+      else { feedback.push("❌ Professional Summary is too short. Write 2-3 sentences highlighting your value proposition."); }
 
-      if (resumeSummary.length < 50) feedback.push("Write a longer Professional Summary. Highlight target industry keywords.");
-      if (!/\d+%/.test(resumeExperience)) feedback.push("Quantify your achievements under Experience (e.g. 'Improved efficiency by 15%').");
-      if (resumeSkills.split(",").length < 6) feedback.push("Add more core technical skills. Aim for 8-12 solid skills.");
-      if (resumeJobDesc && !/React|Python|SQL/gi.test(resumeSkills)) feedback.push("Align skills closely with the Job Description requirements.");
+      maxPoints += 15;
+      if (/\d+%|\d+x|\$\d|\d+ (user|client|project|team)/i.test(resumeExperience)) { score += 15; feedback.push("✅ Quantified achievements detected — great for ATS."); }
+      else { feedback.push("⚠️ Quantify achievements: use metrics like '30% faster', '50+ users', '$10K saved'."); }
 
-      if (feedback.length === 0) feedback.push("Excellent resume layout! Ready for MNC application.");
+      maxPoints += 10;
+      const skillCount = resumeSkills.split(/[,;|]/).filter((s: string) => s.trim()).length;
+      if (skillCount >= 8) { score += 10; feedback.push(`✅ ${skillCount} skills listed — solid breadth.`); }
+      else if (skillCount >= 4) { score += 5; feedback.push(`⚠️ ${skillCount} skills found. Aim for 8-12 relevant technical skills.`); }
+      else { feedback.push("❌ Too few skills. List 8-12 core technologies separated by commas."); }
 
-      setResumeAtsScore(score);
+      maxPoints += 10;
+      const actionVerbs = ["led","built","designed","implemented","optimized","deployed","managed","architected","created","developed","scaled","automated","reduced","improved","mentored"];
+      const verbHits = actionVerbs.filter((v: string) => resumeText.includes(v)).length;
+      if (verbHits >= 4) { score += 10; feedback.push("✅ Strong action verbs used throughout."); }
+      else if (verbHits >= 2) { score += 5; feedback.push("⚠️ Use more power verbs: Led, Built, Architected, Optimized, Deployed."); }
+      else { feedback.push("❌ Add action verbs to describe your experience (e.g., Designed, Implemented, Scaled)."); }
+
+      maxPoints += 10;
+      if (resumeName.trim() && resumeEmail.trim() && resumePhone.trim()) { score += 10; }
+      else { feedback.push("⚠️ Fill in all contact details (Name, Email, Phone) for a complete resume."); }
+
+      // Calculate final percentage
+      const finalScore = maxPoints > 0 ? Math.round((score / maxPoints) * 100) : 0;
+
+      setResumeAtsScore(finalScore);
       setResumeAtsFeedback(feedback);
+      setResumeScoring(false);
       updateXP(20);
-    }, 1800);
+    });
   };
 
   // Resume Download Helpers
