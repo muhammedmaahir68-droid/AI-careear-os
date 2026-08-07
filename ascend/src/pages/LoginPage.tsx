@@ -55,13 +55,17 @@ export default function LoginPage() {
       >
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 mb-4">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center">
-              <Zap size={20} className="text-white fill-white" />
+          <div className="inline-flex items-center gap-3 mb-4">
+            {/* CARVEX vertex icon mark */}
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{background: "linear-gradient(135deg, #7C3AED 0%, #00E5FF 100%)"}}>
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <polyline points="2,18 11,4 20,18" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <circle cx="11" cy="4" r="2" fill="#00E5FF"/>
+              </svg>
             </div>
-            <span className="text-2xl font-display">AI Career OS</span>
+            <span className="text-2xl font-bold tracking-widest text-white" style={{letterSpacing:"0.2em"}}>CARVEX</span>
           </div>
-          <p className="text-muted-foreground text-sm">Your journey from Zero to Placed starts here.</p>
+          <p className="text-muted-foreground text-sm">Reach your career vertex. Start your journey.</p>
         </div>
 
         <div className="p-8 rounded-3xl border border-border bg-black/40 backdrop-blur-xl">

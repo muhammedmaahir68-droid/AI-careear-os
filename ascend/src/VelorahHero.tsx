@@ -25,8 +25,15 @@ export default function VelorahHero() {
 
       {/* Navigation */}
       <nav className="relative z-10 flex flex-row justify-between items-center px-8 py-6 max-w-7xl mx-auto">
-        <div className="text-3xl tracking-tight font-display text-foreground">
-          
+        {/* CARVEX Brand */}
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{background:"linear-gradient(135deg,#7C3AED 0%,#00E5FF 100%)"}}>
+            <svg width="18" height="18" viewBox="0 0 22 22" fill="none">
+              <polyline points="2,18 11,4 20,18" stroke="white" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"/>
+              <circle cx="11" cy="4" r="2.2" fill="#00E5FF"/>
+            </svg>
+          </div>
+          <span className="text-xl font-bold tracking-widest text-white" style={{letterSpacing:"0.2em"}}>CARVEX</span>
         </div>
         <div className="hidden md:flex items-center gap-8">
         </div>

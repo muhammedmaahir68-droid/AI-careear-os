@@ -568,11 +568,18 @@ export default function Dashboard() {
       {/* Top Header */}
       <header className="sticky top-0 z-30 bg-background/95 backdrop-blur-md border-b border-white/10 px-6 py-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <button onClick={() => navigate("/")} className="p-2 rounded-full hover:bg-white/10 transition-colors">
               <ArrowLeft size={18} />
             </button>
-            <span className="text-lg font-semibold tracking-tight">AI Career OS</span>
+            {/* CARVEX icon mark */}
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{background:"linear-gradient(135deg,#7C3AED 0%,#00E5FF 100%)"}}>
+              <svg width="17" height="17" viewBox="0 0 22 22" fill="none">
+                <polyline points="2,18 11,4 20,18" stroke="white" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"/>
+                <circle cx="11" cy="4" r="2.2" fill="#00E5FF"/>
+              </svg>
+            </div>
+            <span className="text-lg font-bold tracking-widest text-white" style={{letterSpacing:"0.18em"}}>CARVEX</span>
           </div>
 
           {/* Stats */}
