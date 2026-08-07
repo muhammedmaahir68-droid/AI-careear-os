@@ -228,33 +228,12 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
               REACH YOUR CAREER VERTEX
             </motion.p>
 
-            {/* Tap Anywhere Prompt */}
-            {!ignited ? (
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: [0.4, 1, 0.4] }}
-                transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
-                className="mt-6 text-xs sm:text-sm font-mono tracking-[0.25em] text-cyan-300 uppercase pointer-events-none"
-              >
-                🔊 TAP ANYWHERE TO IGNITE
-              </motion.p>
-            ) : (
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="mt-4 text-xs font-mono tracking-widest text-emerald-400 font-bold pointer-events-none"
-              >
-                ✓ AUDIO ENGINE ACTIVE
-              </motion.p>
-            )}
+
           </div>
 
           {/* Bottom Controls */}
-          <div className="absolute bottom-6 flex items-center justify-between w-full max-w-4xl px-6 text-xs font-mono text-slate-400 z-20">
-            <span className="flex items-center gap-2">
-              <span className={`w-2 h-2 rounded-full ${ignited ? "bg-emerald-400" : "bg-amber-400"} animate-pulse`} />
-              AUDIO: <strong className="text-white">{ignited ? "PLAYING 🔊" : "TOUCH SCREEN 👆"}</strong>
-            </span>
+          <div className="absolute bottom-6 flex items-center justify-end w-full max-w-4xl px-6 text-xs font-mono text-slate-400 z-20">
+            <span />
             <button
               type="button"
               onClick={(e) => {
