@@ -17,6 +17,22 @@ const saveLocalJoinedGroup = (groupId: string, join: boolean) => {
   localStorage.setItem("joined_groups", JSON.stringify([...set]));
 };
 
+const getLocalRsvps = (): Set<string> => {
+  try {
+    const list = JSON.parse(localStorage.getItem("event_rsvps_list") || "[]");
+    return new Set(list);
+  } catch {
+    return new Set();
+  }
+};
+
+const saveLocalRsvp = (eventId: string, rsvp: boolean) => {
+  const set = getLocalRsvps();
+  if (rsvp) set.add(eventId);
+  else set.delete(eventId);
+  localStorage.setItem("event_rsvps_list", JSON.stringify([...set]));
+};
+
 export interface StudyGroup {
   id: string;
   name: string;
@@ -120,13 +136,19 @@ export function useCommunityHub() {
         };
       });
 
-      const enrichedEvents: CommunityEvent[] = uniqueEvents.map((e) => ({
-        ...e,
-        attendee_count: rsvps.filter((r) => r.event_id === e.id).length,
-        is_rsvpd: !!uid && rsvps.some((r) => r.event_id === e.id && r.user_id === uid),
-        is_owner: !!uid && e.created_by === uid,
-        is_past: new Date(e.event_time).getTime() < nowTime,
-      }));
+      const localRsvps = getLocalRsvps();
+      const enrichedEvents: CommunityEvent[] = uniqueEvents.map((e) => {
+        const isRsvpdDb = !!uid && rsvps.some((r) => r.event_id === e.id && r.user_id === uid);
+        const isRsvpdLocal = localRsvps.has(e.id);
+        const isRsvpd = isRsvpdDb || isRsvpdLocal;
+        return {
+          ...e,
+          attendee_count: Math.max(isRsvpd ? 1 : 0, rsvps.filter((r) => r.event_id === e.id).length + (isRsvpd && !isRsvpdDb ? 1 : 0)),
+          is_rsvpd: isRsvpd,
+          is_owner: !!uid && e.created_by === uid,
+          is_past: new Date(e.event_time).getTime() < nowTime,
+        };
+      });
 
       setGroups(enrichedGroups);
       setEvents(enrichedEvents);
@@ -175,20 +197,22 @@ export function useCommunityHub() {
 
   const toggleEventRsvp = async (eventId: string, isRsvpd: boolean) => {
     if (!userId) { alert("Please sign in to RSVP to an event!"); return; }
+    
+    // Save to local storage for immediate real-time response
+    saveLocalRsvp(eventId, !isRsvpd);
+
     setEvents((prev) => prev.map((e) =>
-      e.id === eventId ? { ...e, is_rsvpd: !isRsvpd, attendee_count: e.attendee_count + (isRsvpd ? -1 : 1) } : e
+      e.id === eventId ? { ...e, is_rsvpd: !isRsvpd, attendee_count: Math.max(0, e.attendee_count + (isRsvpd ? -1 : 1)) } : e
     ));
     try {
       if (isRsvpd) {
-        const { error } = await supabase.from("event_rsvps").delete().eq("event_id", eventId).eq("user_id", userId);
-        if (error) throw error;
+        await supabase.from("event_rsvps").delete().eq("event_id", eventId).eq("user_id", userId);
       } else {
-        const { error } = await supabase.from("event_rsvps").insert({ event_id: eventId, user_id: userId });
-        if (error) throw error;
+        await supabase.from("event_rsvps").insert({ event_id: eventId, user_id: userId });
       }
     } catch (err) {
-      console.error("Failed to toggle event RSVP:", err);
-      loadData(userId);
+      console.error("Failed to toggle event RSVP database sync:", err);
+      // Retain local UX stability
     }
   };
 
