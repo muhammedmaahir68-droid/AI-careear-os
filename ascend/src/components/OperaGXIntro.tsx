@@ -6,26 +6,27 @@ interface OperaGXIntroProps {
   onComplete: () => void;
 }
 
+// Convert Base64 data URI to ArrayBuffer for Web Audio API decodeAudioData
+function base64ToArrayBuffer(base64: string): ArrayBuffer {
+  const base64Clean = base64.replace(/^data:audio\/\w+;base64,/, "");
+  const binaryString = atob(base64Clean);
+  const len = binaryString.length;
+  const bytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+  return bytes.buffer;
+}
+
 export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
   const [stage, setStage] = useState<"ignite" | "shockwave" | "exit">("ignite");
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
+  const decodedBufferRef = useRef<AudioBuffer | null>(null);
 
-  // Play the user's exact Opera GX MPEG audio stream
-  const playOperaGXAudioTrack = () => {
-    // 1. Play HTML5 Audio element
-    if (audioRef.current) {
-      audioRef.current.volume = 1.0;
-      audioRef.current.currentTime = 0;
-      const p = audioRef.current.play();
-      if (p !== undefined) {
-        p.catch(() => {
-          // Fallback if browser requires gesture
-        });
-      }
-    }
-
-    // 2. Play via Web Audio Context for hardware acceleration
+  // Play decoded MP3 audio buffer using Web Audio API + HTML5 fallback
+  const playSoundNow = () => {
+    // 1. Web Audio API Buffer Playback (High Volume + Hardware Accelerated)
     try {
       const AudioCtxClass = window.AudioContext || (window as any).webkitAudioContext;
       if (AudioCtxClass) {
@@ -36,32 +37,75 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
         if (ctx.state === "suspended") {
           ctx.resume();
         }
+
+        if (decodedBufferRef.current) {
+          const source = ctx.createBufferSource();
+          source.buffer = decodedBufferRef.current;
+          const gainNode = ctx.createGain();
+          gainNode.gain.setValueAtTime(1.8, ctx.currentTime); // Boosted volume
+          source.connect(gainNode);
+          gainNode.connect(ctx.destination);
+          source.start(0);
+        }
       }
-    } catch {}
+    } catch (e) {
+      console.warn("WebAudio play error:", e);
+    }
+
+    // 2. HTML5 Audio Element Playback
+    if (audioRef.current) {
+      audioRef.current.volume = 1.0;
+      audioRef.current.currentTime = 0;
+      audioRef.current.play().catch(() => {});
+    }
   };
 
   useEffect(() => {
-    // Attempt automatic playback immediately on mount
-    playOperaGXAudioTrack();
+    // Decode user's MP3 file into Web Audio API AudioBuffer on mount
+    try {
+      const AudioCtxClass = window.AudioContext || (window as any).webkitAudioContext;
+      if (AudioCtxClass) {
+        const ctx = new AudioCtxClass();
+        audioCtxRef.current = ctx;
+        const arrayBuf = base64ToArrayBuffer(OPERA_GX_SOUND_BASE64);
+        
+        ctx.decodeAudioData(arrayBuf, (decoded) => {
+          decodedBufferRef.current = decoded;
+          // Attempt immediate playback once decoded
+          playSoundNow();
+        }, (err) => {
+          console.warn("Decode audio error:", err);
+          playSoundNow();
+        });
+      }
+    } catch {
+      playSoundNow();
+    }
 
-    // Global listener so if mobile browser blocks initial un-muted play, the first screen touch/tap instantly plays the exact audio
-    const handleGlobalInteraction = () => {
-      playOperaGXAudioTrack();
+    // Immediate HTML5 audio attempt
+    playSoundNow();
+
+    // Attach silent touch/pointer/click listener to wake up audio on first user touch on phone/laptop
+    const wakeAudioOnGesture = () => {
+      if (audioCtxRef.current && audioCtxRef.current.state === "suspended") {
+        audioCtxRef.current.resume();
+      }
+      playSoundNow();
     };
 
-    window.addEventListener("touchstart", handleGlobalInteraction, { passive: true });
-    window.addEventListener("pointerdown", handleGlobalInteraction, { passive: true });
-    window.addEventListener("click", handleGlobalInteraction, { passive: true });
+    window.addEventListener("touchstart", wakeAudioOnGesture, { passive: true });
+    window.addEventListener("pointerdown", wakeAudioOnGesture, { passive: true });
+    window.addEventListener("click", wakeAudioOnGesture, { passive: true });
 
-    // Intro presentation sequence
+    // Intro presentation timing
     const t1 = setTimeout(() => setStage("shockwave"), 700);
     const t2 = setTimeout(() => setStage("exit"), 2300);
     const t3 = setTimeout(() => onComplete(), 2800);
 
     return () => {
-      window.removeEventListener("touchstart", handleGlobalInteraction);
-      window.removeEventListener("pointerdown", handleGlobalInteraction);
-      window.removeEventListener("click", handleGlobalInteraction);
+      window.removeEventListener("touchstart", wakeAudioOnGesture);
+      window.removeEventListener("pointerdown", wakeAudioOnGesture);
+      window.removeEventListener("click", wakeAudioOnGesture);
       clearTimeout(t1);
       clearTimeout(t2);
       clearTimeout(t3);
@@ -77,12 +121,14 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
     <AnimatePresence>
       {stage !== "exit" && (
         <motion.div
+          onClick={playSoundNow}
+          onTouchStart={playSoundNow}
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, scale: 1.25, filter: "blur(20px)" }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
           className="fixed inset-0 z-[99999] bg-[#02040a] text-white flex flex-col items-center justify-center overflow-hidden select-none cursor-pointer"
         >
-          {/* HTML5 Audio Element streaming the exact user's Opera GX audio file */}
+          {/* HTML5 Audio Element with base64 MP3 and file fallback */}
           <audio
             ref={audioRef}
             src={OPERA_GX_SOUND_BASE64}
@@ -226,7 +272,10 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
               STATUS: <strong className="text-white">ONLINE</strong>
             </span>
             <button
-              onClick={() => onComplete()}
+              onClick={(e) => {
+                e.stopPropagation();
+                onComplete();
+              }}
               className="px-4 py-2 rounded-full bg-white/10 text-white font-bold text-xs hover:bg-white/20 transition-all cursor-pointer"
             >
               SKIP ➔
