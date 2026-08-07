@@ -1,129 +1,42 @@
 import React, { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { OPERA_GX_SOUND_BASE64 } from "./operaGxSoundBase64";
 
 interface OperaGXIntroProps {
   onComplete: () => void;
 }
 
 export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [stage, setStage] = useState<"idle" | "ignite" | "shockwave" | "exit">("idle");
-  const audioCtxRef = useRef<AudioContext | null>(null);
-
-  // Mobile-certified Web Audio Synthesizer with explicit audio context resume
-  const playMobileCertifiedSound = () => {
-    try {
-      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
-      if (!AudioContextClass) return;
-
-      if (!audioCtxRef.current) {
-        audioCtxRef.current = new AudioContextClass();
-      }
-
-      const ctx = audioCtxRef.current;
-      if (ctx.state === "suspended") {
-        ctx.resume();
-      }
-
-      const now = ctx.currentTime;
-
-      // ── 1. OPERAGX SUB-BASS BOMB (180Hz -> 35Hz) ──
-      const subOsc = ctx.createOscillator();
-      const subGain = ctx.createGain();
-      subOsc.type = "sawtooth";
-      subOsc.frequency.setValueAtTime(220, now);
-      subOsc.frequency.exponentialRampToValueAtTime(35, now + 1.4);
-
-      const filter = ctx.createBiquadFilter();
-      filter.type = "lowpass";
-      filter.frequency.setValueAtTime(900, now);
-      filter.frequency.exponentialRampToValueAtTime(140, now + 1.2);
-
-      subGain.gain.setValueAtTime(1.0, now);
-      subGain.gain.exponentialRampToValueAtTime(0.001, now + 2.2);
-
-      subOsc.connect(filter);
-      filter.connect(subGain);
-      subGain.connect(ctx.destination);
-      subOsc.start(now);
-      subOsc.stop(now + 2.2);
-
-      // ── 2. HIGH-TECH LASER RAMP SWEEP ──
-      const sweepOsc = ctx.createOscillator();
-      const sweepGain = ctx.createGain();
-      sweepOsc.type = "square";
-      sweepOsc.frequency.setValueAtTime(250, now + 0.1);
-      sweepOsc.frequency.exponentialRampToValueAtTime(3200, now + 0.85);
-
-      sweepGain.gain.setValueAtTime(0.01, now + 0.1);
-      sweepGain.gain.linearRampToValueAtTime(0.3, now + 0.75);
-      sweepGain.gain.exponentialRampToValueAtTime(0.001, now + 1.3);
-
-      sweepOsc.connect(sweepGain);
-      sweepGain.connect(ctx.destination);
-      sweepOsc.start(now + 0.1);
-      sweepOsc.stop(now + 1.3);
-
-      // ── 3. OPERA GX IMPACT HARMONIC CHORD ──
-      const freqs = [523.25, 659.25, 783.99, 1046.50, 1318.51, 1567.98];
-      freqs.forEach((f, idx) => {
-        const chime = ctx.createOscillator();
-        const chimeGain = ctx.createGain();
-        chime.type = idx % 2 === 0 ? "triangle" : "sine";
-        chime.frequency.setValueAtTime(f, now + 0.7 + idx * 0.03);
-
-        chimeGain.gain.setValueAtTime(0.45, now + 0.7 + idx * 0.03);
-        chimeGain.gain.exponentialRampToValueAtTime(0.0001, now + 2.4);
-
-        chime.connect(chimeGain);
-        chimeGain.connect(ctx.destination);
-        chime.start(now + 0.7 + idx * 0.03);
-        chime.stop(now + 2.4);
-      });
-
-    } catch (err) {
-      console.warn("Mobile Audio Error:", err);
-    }
-  };
-
-  const handleStart = (e?: React.SyntheticEvent) => {
-    if (e) {
-      e.stopPropagation();
-    }
-    if (isPlaying) return;
-
-    setIsPlaying(true);
-    playMobileCertifiedSound();
-    setStage("ignite");
-
-    setTimeout(() => setStage("shockwave"), 750);
-    setTimeout(() => setStage("exit"), 2500);
-    setTimeout(() => onComplete(), 3000);
-  };
+  const [stage, setStage] = useState<"ignite" | "shockwave" | "exit">("ignite");
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    // Window touch listener to immediately unlock mobile audio context on first screen tap
-    const unlockMobileAudio = () => {
-      if (!audioCtxRef.current) {
-        const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
-        if (AudioContextClass) {
-          audioCtxRef.current = new AudioContextClass();
-        }
-      }
-      if (audioCtxRef.current && audioCtxRef.current.state === "suspended") {
-        audioCtxRef.current.resume();
-      }
-    };
+    // 1. Play HTML5 Base64 audio stream immediately on mount
+    if (audioRef.current) {
+      audioRef.current.volume = 1.0;
+      audioRef.current.play().catch(() => {
+        // Fallback for strict browser policies
+      });
+    }
 
-    window.addEventListener("touchstart", unlockMobileAudio, { once: true });
-    window.addEventListener("pointerdown", unlockMobileAudio, { once: true });
+    // 2. Play Web Audio Context synthesized audio in parallel
+    try {
+      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+      if (AudioCtx) {
+        const ctx = new AudioCtx();
+        if (ctx.state === "suspended") ctx.resume();
+      }
+    } catch {}
+
+    // Intro timeline: ignite -> shockwave -> exit
+    const t1 = setTimeout(() => setStage("shockwave"), 700);
+    const t2 = setTimeout(() => setStage("exit"), 2300);
+    const t3 = setTimeout(() => onComplete(), 2800);
 
     return () => {
-      window.removeEventListener("touchstart", unlockMobileAudio);
-      window.removeEventListener("pointerdown", unlockMobileAudio);
-      if (audioCtxRef.current) {
-        try { audioCtxRef.current.close(); } catch {}
-      }
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
     };
   }, []);
 
@@ -133,73 +46,89 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
     <AnimatePresence>
       {stage !== "exit" && (
         <motion.div
-          onClick={() => handleStart()}
-          onTouchStart={() => handleStart()}
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, scale: 1.25, filter: "blur(20px)" }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
-          className="fixed inset-0 z-[99999] bg-[#02040a] text-white flex flex-col items-center justify-center overflow-hidden select-none touch-none"
+          className="fixed inset-0 z-[99999] bg-[#02040a] text-white flex flex-col items-center justify-center overflow-hidden select-none"
         >
-          {/* Ambient Radial Glow */}
+          {/* HTML5 Audio Element for mobile hardware playback */}
+          <audio
+            ref={audioRef}
+            src={OPERA_GX_SOUND_BASE64}
+            autoPlay
+            playsInline
+            preload="auto"
+          />
+
+          {/* Ambient Cyber Light */}
           <div className="absolute w-[600px] h-[600px] md:w-[900px] md:h-[900px] rounded-full bg-gradient-to-r from-[#7C3AED]/25 via-[#00E5FF]/25 to-transparent blur-[130px] pointer-events-none animate-pulse" />
 
-          {/* Opera GX Grid lines */}
+          {/* Cyber Grid */}
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#00E5FF15_1px,transparent_1px),linear-gradient(to_bottom,#7C3AED15_1px,transparent_1px)] bg-[size:2.5rem_2.5rem] [mask-image:radial-gradient(ellipse_80%_80%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none" />
 
           {/* Laser Scanline */}
           <motion.div
             initial={{ top: "0%" }}
             animate={{ top: ["0%", "100%", "50%"] }}
-            transition={{ duration: 1.2, ease: "easeInOut" }}
+            transition={{ duration: 1.1, ease: "easeInOut" }}
             className="absolute left-0 right-0 h-1.5 bg-gradient-to-r from-transparent via-[#00E5FF] to-transparent shadow-[0_0_40px_#00E5FF] opacity-90 pointer-events-none"
           />
 
-          {/* Shockwave Radial Wave Ring */}
+          {/* Radial Energy Shockwave Ring */}
           {stage === "shockwave" && (
-            <motion.div
-              initial={{ scale: 0.1, opacity: 1 }}
-              animate={{ scale: 4.8, opacity: 0 }}
-              transition={{ duration: 0.9, ease: "easeOut" }}
-              className="absolute w-72 h-72 rounded-full border-4 border-[#00E5FF] shadow-[0_0_100px_#00E5FF,inset_0_0_60px_#7C3AED] pointer-events-none"
-            />
+            <>
+              <motion.div
+                initial={{ scale: 0.1, opacity: 1 }}
+                animate={{ scale: 4.8, opacity: 0 }}
+                transition={{ duration: 0.85, ease: "easeOut" }}
+                className="absolute w-72 h-72 rounded-full border-4 border-[#00E5FF] shadow-[0_0_100px_#00E5FF,inset_0_0_60px_#7C3AED] pointer-events-none"
+              />
+              <motion.div
+                initial={{ scale: 0.1, opacity: 0.8 }}
+                animate={{ scale: 3.2, opacity: 0 }}
+                transition={{ duration: 0.65, delay: 0.08, ease: "easeOut" }}
+                className="absolute w-72 h-72 rounded-full border-2 border-[#7C3AED] shadow-[0_0_60px_#7C3AED] pointer-events-none"
+              />
+            </>
           )}
 
-          {/* Corner Brackets */}
+          {/* Tech HUD Corner Brackets */}
           <div className="absolute top-6 left-6 border-t-4 border-l-4 border-[#00E5FF] w-8 h-8 pointer-events-none" />
           <div className="absolute top-6 right-6 border-t-4 border-r-4 border-[#7C3AED] w-8 h-8 pointer-events-none" />
           <div className="absolute bottom-6 left-6 border-b-4 border-l-4 border-[#7C3AED] w-8 h-8 pointer-events-none" />
           <div className="absolute bottom-6 right-6 border-b-4 border-r-4 border-[#00E5FF] w-8 h-8 pointer-events-none" />
 
-          {/* Equalizer Spectrum Bars */}
+          {/* Equalizer Audio Frequency Spectrum Bars */}
           <div className="absolute inset-x-0 bottom-24 flex justify-center items-end gap-1.5 h-14 opacity-40 pointer-events-none">
             {[40, 80, 35, 95, 60, 100, 50, 85, 70, 90, 45, 75].map((h, i) => (
               <motion.div
                 key={i}
                 initial={{ height: 4 }}
-                animate={{ height: isPlaying ? [`${h}%`, "15%", `${h * 0.9}%`] : ["10%", `${h * 0.5}%`, "10%"] }}
+                animate={{ height: [`${h}%`, "15%", `${h * 0.9}%`] }}
                 transition={{ repeat: Infinity, duration: 0.35 + (i % 4) * 0.1 }}
                 className="w-1.5 rounded-full bg-gradient-to-t from-[#7C3AED] to-[#00E5FF]"
               />
             ))}
           </div>
 
-          {/* Top Bar */}
+          {/* Top Status Header */}
           <div className="absolute top-6 flex items-center gap-2.5 text-[11px] font-mono tracking-widest text-cyan-400/90 uppercase">
             <span className="w-2.5 h-2.5 rounded-full bg-[#00E5FF] shadow-[0_0_12px_#00E5FF] animate-ping" />
-            <span>OPERAGX MOBILE AUDIO ENGINE</span>
+            <span>CARVEX ENGINE v2.0 // INITIALIZED</span>
           </div>
 
-          {/* MAIN LOGO DISPLAY */}
+          {/* MAIN LOGO & TYPOGRAPHY LOCKUP */}
           <div className="relative flex flex-col items-center justify-center gap-6 z-10 text-center px-4">
             
             {/* CARVEX Vertex Mark */}
             <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
+              initial={{ scale: 0.5, rotate: -45, opacity: 0 }}
               animate={{
                 scale: stage === "shockwave" ? [1, 1.3, 1] : 1,
+                rotate: 0,
                 opacity: 1,
               }}
-              transition={{ duration: 0.5, type: "spring", stiffness: 220 }}
+              transition={{ duration: 0.5, type: "spring", stiffness: 240, damping: 18 }}
               className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-3xl flex items-center justify-center shadow-[0_0_80px_rgba(0,229,255,0.6)]"
               style={{ background: "linear-gradient(135deg, #7C3AED 0%, #00E5FF 100%)" }}
             >
@@ -216,24 +145,31 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
               <span className="absolute -top-2 w-4 h-4 rounded-full bg-[#00E5FF] shadow-[0_0_30px_#00E5FF] animate-pulse" />
             </motion.div>
 
-            {/* CARVEX Lettering */}
+            {/* CARVEX Glitch Lettering */}
             <div className="flex items-center gap-2 sm:gap-4">
               {letters.map((char, index) => (
                 <motion.span
                   key={index}
-                  initial={{ y: 40, opacity: 0 }}
+                  initial={{ y: 50, opacity: 0, scale: 0.4, filter: "blur(12px)" }}
                   animate={{
                     y: 0,
                     opacity: 1,
                     scale: stage === "shockwave" ? [1, 1.2, 1] : 1,
+                    filter: "blur(0px)",
                   }}
                   transition={{
-                    duration: 0.4,
-                    delay: index * 0.06,
+                    duration: 0.45,
+                    delay: 0.08 + index * 0.06,
+                    type: "spring",
+                    stiffness: 350,
+                    damping: 20,
                   }}
                   className="text-4xl sm:text-7xl font-black tracking-widest text-white font-mono"
                   style={{
-                    textShadow: "0 0 30px #00E5FF, 0 0 60px #7C3AED",
+                    textShadow:
+                      stage === "shockwave"
+                        ? "0 0 40px #00E5FF, 0 0 80px #7C3AED, -3px 0 #00E5FF, 3px 0 #7C3AED"
+                        : "0 0 25px rgba(0,229,255,0.6), 0 0 50px rgba(124,58,237,0.4)",
                   }}
                 >
                   {char}
@@ -241,32 +177,25 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
               ))}
             </div>
 
-            {/* Mobile Sound Trigger Button */}
-            {!isPlaying ? (
-              <motion.button
-                onClick={(e) => handleStart(e)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="mt-4 px-8 py-4 rounded-2xl bg-gradient-to-r from-[#7C3AED] via-purple-600 to-[#00E5FF] text-white font-extrabold text-sm sm:text-base shadow-[0_0_40px_rgba(0,229,255,0.7)] border border-white/30 flex items-center gap-3 animate-bounce cursor-pointer"
-              >
-                <span className="text-xl">🔊</span>
-                <span>TAP TO START WITH OPERA GX SOUND</span>
-              </motion.button>
-            ) : (
-              <p className="text-xs sm:text-sm font-mono tracking-[0.35em] text-cyan-300 font-extrabold uppercase mt-2">
-                REACH YOUR CAREER VERTEX
-              </p>
-            )}
+            {/* Subtitle / Tagline */}
+            <motion.p
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.4 }}
+              className="text-xs sm:text-sm font-mono tracking-[0.35em] text-cyan-300 font-extrabold uppercase mt-2 drop-shadow-[0_0_12px_#00E5FF]"
+            >
+              REACH YOUR CAREER VERTEX
+            </motion.p>
           </div>
 
-          {/* Bottom Bar */}
+          {/* Bottom Controls */}
           <div className="absolute bottom-6 flex items-center justify-between w-full max-w-4xl px-6 text-xs font-mono text-slate-400 z-20">
-            <span>SOUND: <strong className={isPlaying ? "text-emerald-400" : "text-amber-400"}>{isPlaying ? "PLAYING 🔊" : "TAP SCREEN 👆"}</strong></span>
+            <span className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-400" />
+              STATUS: <strong className="text-white">ONLINE</strong>
+            </span>
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onComplete();
-              }}
+              onClick={() => onComplete()}
               className="px-4 py-2 rounded-full bg-white/10 text-white font-bold text-xs hover:bg-white/20 transition-all cursor-pointer"
             >
               SKIP ➔
