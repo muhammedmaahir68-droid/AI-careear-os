@@ -92,7 +92,7 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, scale: 1.25, filter: "blur(20px)" }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
-          className="fixed inset-0 z-[99999] bg-[#02040a] text-white flex flex-col items-center justify-center overflow-hidden select-none cursor-pointer touch-none"
+          className="fixed inset-0 z-[99999] bg-[#02040a] text-white flex flex-col items-center justify-center overflow-hidden select-none cursor-pointer"
         >
           {/* HTML5 Audio element streaming exact user Opera GX track */}
           <audio
@@ -228,29 +228,24 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
               REACH YOUR CAREER VERTEX
             </motion.p>
 
-            {/* Mobile Native Button Trigger */}
+            {/* Tap Anywhere Prompt */}
             {!ignited ? (
-              <motion.button
-                type="button"
-                onClick={(e) => igniteEngine(e)}
-                onTouchStart={(e) => igniteEngine(e)}
-                onTouchEnd={(e) => igniteEngine(e)}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: [0.95, 1.05, 0.95] }}
-                transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}
-                className="mt-6 px-8 py-4 rounded-2xl bg-gradient-to-r from-[#7C3AED] via-purple-600 to-[#00E5FF] text-white font-extrabold text-xs sm:text-sm shadow-[0_0_40px_rgba(0,229,255,0.8)] border border-white/30 flex items-center gap-3 cursor-pointer z-30"
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: [0.4, 1, 0.4] }}
+                transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
+                className="mt-6 text-xs sm:text-sm font-mono tracking-[0.25em] text-cyan-300 uppercase pointer-events-none"
               >
-                <span className="text-base animate-bounce">🔊</span>
-                <span>TAP HERE OR TOUCH SCREEN TO IGNITE</span>
-              </motion.button>
+                🔊 TAP ANYWHERE TO IGNITE
+              </motion.p>
             ) : (
-              <motion.div
+              <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="mt-4 text-xs font-mono tracking-widest text-emerald-400 font-bold"
+                className="mt-4 text-xs font-mono tracking-widest text-emerald-400 font-bold pointer-events-none"
               >
-                ✓ OPERA GX AUDIO ENGINE ACTIVE
-              </motion.div>
+                ✓ AUDIO ENGINE ACTIVE
+              </motion.p>
             )}
           </div>
 
