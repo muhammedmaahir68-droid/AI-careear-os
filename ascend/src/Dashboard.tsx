@@ -223,7 +223,7 @@ export default function Dashboard() {
   const [leaderboard, setLeaderboard] = useState<{ display_name: string; total_xp: number; user_id: string }[]>([]);
 
   // Branch and Role selection
-  const { branchId, roleId, loading: branchLoading, selectRole } = useBranchRole(profile?.id ?? null);
+  const { branchId, roleId, loading: branchLoading, selectRole, clearRole } = useBranchRole(profile?.id ?? null);
   const { syllabus: branchSyllabus, hrQuestions: branchHrQuestions, mockQuestions: branchMockQuestions, loading: contentLoading } = useRoleContent(branchId, roleId);
 
   // Community Hub – real Supabase data
@@ -569,7 +569,7 @@ export default function Dashboard() {
       <header className="sticky top-0 z-30 bg-background/95 backdrop-blur-md border-b border-white/10 px-6 py-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <button onClick={() => navigate("/")} className="p-2 rounded-full hover:bg-white/10 transition-colors">
+            <button onClick={clearRole} className="p-2 rounded-full hover:bg-white/10 transition-colors">
               <ArrowLeft size={18} />
             </button>
             {/* CARVEX icon mark */}

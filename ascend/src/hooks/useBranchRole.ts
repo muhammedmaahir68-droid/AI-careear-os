@@ -69,7 +69,13 @@ export function useBranchRole(userId: string | null) {
     });
   }, [userId]);
 
-  return { branchId, roleId, loading, selectRole };
+  const clearRole = useCallback(async () => {
+    setBranchId(null); setRoleId(null);
+    if (!userId) return;
+    await supabase.from("user_role_selection").delete().eq("user_id", userId);
+  }, [userId]);
+
+  return { branchId, roleId, loading, selectRole, clearRole };
 }
 
 export function useRoleContent(branchId: string | null, roleId: string | null) {
