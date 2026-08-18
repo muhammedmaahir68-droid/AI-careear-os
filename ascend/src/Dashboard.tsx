@@ -599,19 +599,19 @@ export default function Dashboard() {
             </div>
             <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 shadow-sm" title="Duolingo Placement Diamonds">
               <span className="text-sm">💎</span>
-              <span className="text-sm font-bold text-cyan-300">{Math.floor((xp ?? 0) * 0.4) + 50} 💎</span>
+              <span className="text-sm font-bold text-foreground">{Math.floor((xp ?? 0) * 0.4) + 50} 💎</span>
             </div>
             <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20">
-              <Flame className="text-orange-400" size={16} />
-              <span className="text-sm font-bold text-orange-300">{streak} Day Streak</span>
+              <Flame className="text-foreground" size={16} />
+              <span className="text-sm font-bold text-foreground">{streak} Day Streak</span>
             </div>
             <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-yellow-500/10 border border-yellow-500/20">
-              <Star className="text-yellow-400" size={16} />
-              <span className="text-sm font-bold text-yellow-300">{xp} XP</span>
+              <Star className="text-foreground" size={16} />
+              <span className="text-sm font-bold text-foreground">{xp} XP</span>
             </div>
             <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20">
-              <Trophy className="text-purple-400" size={16} />
-              <span className="text-sm font-bold text-purple-300">Level {level}</span>
+              <Trophy className="text-foreground" size={16} />
+              <span className="text-sm font-bold text-foreground">Level {level}</span>
             </div>
             <button
               onClick={() => setShowCertification(true)}
@@ -701,12 +701,12 @@ export default function Dashboard() {
                 {/* Leaderboard */}
                 <div className="p-6 rounded-3xl border border-border bg-white/5">
                   <div className="flex items-center gap-3 mb-6">
-                    <Medal className="text-yellow-400" size={24} />
+                    <Medal className="text-foreground" size={24} />
                     <h3 className="text-xl font-display">Weekly Leaderboard</h3>
                   </div>
                   {leaderboard.length > 0 ? (
                     leaderboard.map((user, i) => (
-                      <div key={user.user_id} className={`flex items-center justify-between py-3 border-b border-border last:border-0 ${user.user_id === profile?.id ? "text-blue-400 font-semibold" : ""}`}>
+                      <div key={user.user_id} className={`flex items-center justify-between py-3 border-b border-border last:border-0 ${user.user_id === profile?.id ? "text-foreground font-semibold" : ""}`}>
                         <div className="flex items-center gap-3">
                           <span className="w-6 text-center text-sm font-mono text-muted-foreground">#{i + 1}</span>
                           <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center text-xs font-bold shrink-0 text-foreground">
@@ -724,7 +724,7 @@ export default function Dashboard() {
                         <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center text-xs font-bold shrink-0 text-foreground">
                           {avatarInitial}
                         </div>
-                        <span className="text-sm font-semibold text-blue-400">You (First place)</span>
+                        <span className="text-sm font-semibold text-foreground">You (First place)</span>
                       </div>
                       <span className="text-sm font-mono">{xp} XP</span>
                     </div>
@@ -735,12 +735,12 @@ export default function Dashboard() {
                 <div className="p-6 rounded-3xl border border-border bg-white/5">
                   <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-3">
-                      <Users className="text-purple-400" size={24} />
+                      <Users className="text-foreground" size={24} />
                       <h3 className="text-xl font-display">Active Study Groups</h3>
                     </div>
                     <button
                       onClick={() => setShowCreateGroup(!showCreateGroup)}
-                      className="text-xs px-3 py-1.5 rounded-full bg-purple-500/20 text-purple-300 hover:bg-purple-500/30 transition-colors flex items-center gap-1"
+                      className="text-xs px-3 py-1.5 rounded-full bg-purple-500/20 text-foreground hover:bg-purple-500/30 transition-colors flex items-center gap-1"
                     >
                       {showCreateGroup ? "✕ Cancel" : "+ Create Group"}
                     </button>
@@ -803,7 +803,7 @@ export default function Dashboard() {
                               onClick={() => toggleGroupMembership(g.id, g.is_member)}
                               className={`text-xs px-3 py-1 rounded-full transition-colors ${
                                 g.is_member
-                                  ? "bg-blue-500/30 text-blue-300 hover:bg-red-500/30 hover:text-red-300"
+                                  ? "bg-blue-500/30 text-foreground hover:bg-red-500/30 hover:text-red-300"
                                   : "bg-white/10 hover:bg-white/20"
                               }`}
                             >
@@ -811,7 +811,7 @@ export default function Dashboard() {
                             </button>
                           )}
                           {g.is_owner && (
-                            <span className="text-xs px-2 py-1 rounded-full bg-purple-500/20 text-purple-300">Owner</span>
+                            <span className="text-xs px-2 py-1 rounded-full bg-purple-500/20 text-foreground">Owner</span>
                           )}
                         </div>
                       </div>
@@ -823,12 +823,12 @@ export default function Dashboard() {
                 <div className="p-6 rounded-3xl border border-border bg-white/5">
                   <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-3">
-                      <BookOpen className="text-green-400" size={24} />
+                      <BookOpen className="text-foreground" size={24} />
                       <h3 className="text-xl font-display">Upcoming Events</h3>
                     </div>
                     <button
                       onClick={() => setShowCreateEvent(!showCreateEvent)}
-                      className="text-xs px-3 py-1.5 rounded-full bg-green-500/20 text-green-300 hover:bg-green-500/30 transition-colors flex items-center gap-1"
+                      className="text-xs px-3 py-1.5 rounded-full bg-green-500/20 text-foreground hover:bg-green-500/30 transition-colors flex items-center gap-1"
                     >
                       {showCreateEvent ? "✕ Cancel" : "+ Add Event"}
                     </button>
@@ -888,7 +888,7 @@ export default function Dashboard() {
                           <div className="text-sm font-medium">{e.title}</div>
                           <div className="flex items-center gap-1.5 shrink-0 ml-2">
                             {e.is_past && <span className="text-xs px-2 py-0.5 rounded-full bg-gray-500/20 text-muted-foreground">Ended</span>}
-                            <span className="text-xs px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300">{e.type}</span>
+                            <span className="text-xs px-2 py-0.5 rounded-full bg-blue-500/20 text-foreground">{e.type}</span>
                           </div>
                         </div>
                         <div className="text-xs text-muted-foreground mb-2">{formatEventTime(e.event_time)} · {e.attendee_count} attending · {e.speaker}</div>
@@ -898,7 +898,7 @@ export default function Dashboard() {
                               onClick={() => toggleEventRsvp(e.id, e.is_rsvpd)}
                               className={`text-xs px-3 py-1 rounded-full transition-colors ${
                                 e.is_rsvpd
-                                  ? "bg-green-500/30 text-green-300 hover:bg-red-500/30 hover:text-red-300"
+                                  ? "bg-green-500/30 text-foreground hover:bg-red-500/30 hover:text-red-300"
                                   : "bg-white/10 hover:bg-white/20"
                               }`}
                             >
@@ -907,7 +907,7 @@ export default function Dashboard() {
                           )}
                           {e.is_owner && (
                             <>
-                              <span className="text-xs px-2 py-1 rounded-full bg-green-500/20 text-green-300">Your Event</span>
+                              <span className="text-xs px-2 py-1 rounded-full bg-green-500/20 text-foreground">Your Event</span>
                               <button
                                 onClick={() => { if (confirm(`Delete event "${e.title}"?`)) deleteEvent(e.id); }}
                                 className="text-xs px-2 py-1 rounded-full bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors"
@@ -929,12 +929,12 @@ export default function Dashboard() {
           {/* ── RESUME BUILDER & ATS ANALYZER (STANDALONE) ── */}
           {activeTab === "resume" && (
             <motion.div key="resume" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-              <h2 className="text-3xl font-display mb-2 flex items-center gap-3"><FileText className="text-emerald-400" size={28} /> Resume Builder & ATS Analyzer</h2>
-              <p className="text-muted-foreground mb-6">Build your ATS-optimized resume, analyze keyword scores, and download in multiple formats. <span className="text-emerald-400 font-bold">No level progression required.</span></p>
+              <h2 className="text-3xl font-display mb-2 flex items-center gap-3"><FileText className="text-foreground" size={28} /> Resume Builder & ATS Analyzer</h2>
+              <p className="text-muted-foreground mb-6">Build your ATS-optimized resume, analyze keyword scores, and download in multiple formats. <span className="text-foreground font-bold">No level progression required.</span></p>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Left: Resume Editor */}
                 <div className="p-6 rounded-3xl border border-border bg-white/5 space-y-4">
-                  <h3 className="text-lg font-display flex items-center gap-2"><Briefcase size={20} className="text-purple-400" /> Personal Details</h3>
+                  <h3 className="text-lg font-display flex items-center gap-2"><Briefcase size={20} className="text-foreground" /> Personal Details</h3>
                   <input value={resumeName} onChange={e => setResumeName(e.target.value)} placeholder="Full Name" className="w-full bg-card border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-400" />
                   <div className="grid grid-cols-2 gap-3">
                     <input value={resumeEmail} onChange={e => setResumeEmail(e.target.value)} placeholder="Email" className="bg-card border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-400" />
@@ -972,7 +972,7 @@ export default function Dashboard() {
                       <h4 className="text-sm font-bold text-amber-400 flex items-center gap-2"><AlertCircle size={16} /> ATS Feedback</h4>
                       {resumeAtsFeedback.map((fb, i) => (
                         <div key={i} className="p-3 rounded-xl bg-card border border-border text-xs text-slate-300 flex items-start gap-2">
-                          <CheckCircle2 size={14} className="text-emerald-400 shrink-0 mt-0.5" />
+                          <CheckCircle2 size={14} className="text-foreground shrink-0 mt-0.5" />
                           <span>{fb}</span>
                         </div>
                       ))}
@@ -981,11 +981,11 @@ export default function Dashboard() {
 
                   {/* Download Buttons */}
                   <div className="p-5 rounded-3xl border border-border bg-white/5 space-y-3">
-                    <h4 className="text-sm font-bold text-purple-400">Download Resume</h4>
+                    <h4 className="text-sm font-bold text-foreground">Download Resume</h4>
                     <div className="flex flex-wrap gap-3">
                       <button onClick={() => downloadResume("pdf")} className="px-4 py-2.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-300 text-xs font-bold transition-all flex items-center gap-1.5"><Download size={14} /> PDF</button>
-                      <button onClick={() => downloadResume("doc")} className="px-4 py-2.5 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 text-blue-300 text-xs font-bold transition-all flex items-center gap-1.5"><Download size={14} /> DOC</button>
-                      <button onClick={() => downloadResume("json")} className="px-4 py-2.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-xs font-bold transition-all flex items-center gap-1.5"><Download size={14} /> JSON</button>
+                      <button onClick={() => downloadResume("doc")} className="px-4 py-2.5 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 text-foreground text-xs font-bold transition-all flex items-center gap-1.5"><Download size={14} /> DOC</button>
+                      <button onClick={() => downloadResume("json")} className="px-4 py-2.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-foreground text-xs font-bold transition-all flex items-center gap-1.5"><Download size={14} /> JSON</button>
                     </div>
                   </div>
                 </div>
@@ -1014,8 +1014,8 @@ export default function Dashboard() {
           {/* ── LIFE OS AI PLANNER (STANDALONE) ── */}
           {activeTab === "life-os" && (
             <motion.div key="life-os" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-              <h2 className="text-3xl font-display mb-2 flex items-center gap-3"><Target className="text-cyan-400" size={28} /> Life OS AI Study Planner</h2>
-              <p className="text-muted-foreground mb-6">Real-time study schedule generator, habits tracker, and placement timeline planning. <span className="text-cyan-400 font-bold">No level progression required.</span></p>
+              <h2 className="text-3xl font-display mb-2 flex items-center gap-3"><Target className="text-foreground" size={28} /> Life OS AI Study Planner</h2>
+              <p className="text-muted-foreground mb-6">Real-time study schedule generator, habits tracker, and placement timeline planning. <span className="text-foreground font-bold">No level progression required.</span></p>
               <LifeOSPanel branchId={branchId} roleId={roleId} />
             </motion.div>
           )}
@@ -1054,7 +1054,7 @@ function AIMentorChat({ messages, chatInput, setChatInput, onSend }: {
             <p className="text-xs text-muted-foreground">Online 24/7</p>
           </div>
         </div>
-        <span className="text-xs px-2.5 py-1 rounded-full bg-green-500/20 text-green-400">Active</span>
+        <span className="text-xs px-2.5 py-1 rounded-full bg-green-500/20 text-foreground">Active</span>
       </div>
 
       <div className="flex-1 flex flex-col gap-3 overflow-y-auto custom-scrollbar mb-4 pr-1">

@@ -39,15 +39,15 @@ export default function HomePanel({
 
         <div className="relative z-10 space-y-6">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-extrabold uppercase tracking-wider text-purple-400 bg-purple-500/10 px-3.5 py-1 rounded-full border border-purple-500/30">
+            <span className="text-xs font-extrabold uppercase tracking-wider text-foreground bg-purple-500/10 px-3.5 py-1 rounded-full border border-purple-500/30">
               {branchId?.toUpperCase() || "CSE"} Track
             </span>
             {roleId && (
-              <span className="text-xs font-bold text-cyan-300 bg-cyan-500/10 px-3.5 py-1 rounded-full border border-cyan-500/30">
+              <span className="text-xs font-bold text-foreground bg-cyan-500/10 px-3.5 py-1 rounded-full border border-cyan-500/30">
                 Role: {roleId.replace(/^[a-z]+-/, "").toUpperCase()}
               </span>
             )}
-            <span className="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-3.5 py-1 rounded-full border border-emerald-500/30 flex items-center gap-1">
+            <span className="text-xs font-bold text-foreground bg-emerald-500/10 px-3.5 py-1 rounded-full border border-emerald-500/30 flex items-center gap-1">
                5-Phase Placement Curriculum
             </span>
           </div>
@@ -87,8 +87,8 @@ export default function HomePanel({
 
       {/* ── STATS & PROGRESS CARDS ── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="p-5 rounded-2xl bg-card border border-slate-800 flex items-center gap-4 shadow-lg">
-          <div className="w-12 h-12 rounded-xl bg-orange-500/10 border border-orange-500/30 flex items-center justify-center text-orange-400">
+        <div className="p-5 rounded-2xl bg-card border border-border flex items-center gap-4 shadow-lg">
+          <div className="w-12 h-12 rounded-xl bg-orange-500/10 border border-orange-500/30 flex items-center justify-center text-foreground">
             <Flame size={24} />
           </div>
           <div>
@@ -97,8 +97,8 @@ export default function HomePanel({
           </div>
         </div>
 
-        <div className="p-5 rounded-2xl bg-card border border-slate-800 flex items-center gap-4 shadow-lg">
-          <div className="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+        <div className="p-5 rounded-2xl bg-card border border-border flex items-center gap-4 shadow-lg">
+          <div className="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-foreground">
             <Gem size={24} />
           </div>
           <div>
@@ -107,8 +107,8 @@ export default function HomePanel({
           </div>
         </div>
 
-        <div className="p-5 rounded-2xl bg-card border border-slate-800 flex items-center gap-4 shadow-lg">
-          <div className="w-12 h-12 rounded-xl bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center text-yellow-400">
+        <div className="p-5 rounded-2xl bg-card border border-border flex items-center gap-4 shadow-lg">
+          <div className="w-12 h-12 rounded-xl bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center text-foreground">
             <Zap size={24} />
           </div>
           <div>
@@ -117,8 +117,8 @@ export default function HomePanel({
           </div>
         </div>
 
-        <div className="p-5 rounded-2xl bg-card border border-slate-800 flex items-center gap-4 shadow-lg">
-          <div className="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400">
+        <div className="p-5 rounded-2xl bg-card border border-border flex items-center gap-4 shadow-lg">
+          <div className="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-foreground">
             <Trophy size={24} />
           </div>
           <div>
@@ -129,18 +129,18 @@ export default function HomePanel({
       </div>
 
       {/* ── PLACEMENT READINESS METRIC ── */}
-      <div className="p-6 rounded-3xl bg-card border border-slate-800 shadow-xl space-y-4">
+      <div className="p-6 rounded-3xl bg-card border border-border shadow-xl space-y-4">
         <div className="flex justify-between items-center">
           <div>
             <h3 className="text-xl font-bold text-foreground flex items-center gap-2">
-              Placement Readiness Score <Shield size={20} className="text-cyan-400" />
+              Placement Readiness Score <Shield size={20} className="text-foreground" />
             </h3>
             <p className="text-xs text-muted-foreground mt-0.5">Calculated across Aptitude, Coding, CS Theory & AI Mock Performance</p>
           </div>
-          <div className="text-3xl font-extrabold text-cyan-400 font-mono">{placementScore}%</div>
+          <div className="text-3xl font-extrabold text-foreground font-mono">{placementScore}%</div>
         </div>
 
-        <div className="w-full h-3 bg-slate-950 rounded-full overflow-hidden p-0.5 border border-slate-800">
+        <div className="w-full h-3 bg-slate-950 rounded-full overflow-hidden p-0.5 border border-border">
           <motion.div
             className="h-full bg-gradient-to-r from-purple-500 via-cyan-400 to-emerald-400 rounded-full"
             initial={{ width: 0 }}
@@ -154,46 +154,46 @@ export default function HomePanel({
       <div className="space-y-4">
         <div className="flex justify-between items-center">
           <h4 className="text-sm font-extrabold uppercase tracking-wider text-muted-foreground">5-Phase Master Curriculum Roadmap</h4>
-          <span className="text-xs text-purple-400 font-bold">100% Department & Role Customized</span>
+          <span className="text-xs text-foreground font-bold">100% Department & Role Customized</span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {/* Phase 1 */}
           <div
             onClick={() => onStartJourney(1)}
-            className="p-5 rounded-2xl bg-card border border-slate-800 hover:border-purple-500/50 hover:bg-slate-900 transition-all cursor-pointer space-y-3 group"
+            className="p-5 rounded-2xl bg-card border border-border hover:border-purple-500/50 hover:bg-slate-900 transition-all cursor-pointer space-y-3 group"
           >
-            <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 group-hover:scale-110 transition-transform">
+            <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-foreground group-hover:scale-110 transition-transform">
               <BookOpen size={20} />
             </div>
             <div>
-              <span className="text-[10px] font-extrabold uppercase text-purple-400 tracking-wider">Phase 1</span>
+              <span className="text-[10px] font-extrabold uppercase text-foreground tracking-wider">Phase 1</span>
               <h5 className="text-sm font-bold text-foreground">Aptitude Foundation</h5>
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed">Quantitative Aptitude, Logical Reasoning & Verbal Ability for TCS, Wipro, Infosys.</p>
-            <span className="text-xs font-bold text-purple-400 flex items-center gap-1 pt-1">Jump to Phase 1 <ArrowRight size={14} /></span>
+            <span className="text-xs font-bold text-foreground flex items-center gap-1 pt-1">Jump to Phase 1 <ArrowRight size={14} /></span>
           </div>
 
           {/* Phase 2 */}
           <div
             onClick={() => onStartJourney(2)}
-            className="p-5 rounded-2xl bg-card border border-slate-800 hover:border-cyan-500/50 hover:bg-slate-900 transition-all cursor-pointer space-y-3 group"
+            className="p-5 rounded-2xl bg-card border border-border hover:border-cyan-500/50 hover:bg-slate-900 transition-all cursor-pointer space-y-3 group"
           >
-            <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 group-hover:scale-110 transition-transform">
+            <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-foreground group-hover:scale-110 transition-transform">
               <Code2 size={20} />
             </div>
             <div>
-              <span className="text-[10px] font-extrabold uppercase text-cyan-400 tracking-wider">Phase 2</span>
+              <span className="text-[10px] font-extrabold uppercase text-foreground tracking-wider">Phase 2</span>
               <h5 className="text-sm font-bold text-foreground">Technical Foundation</h5>
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed">Department Core Subjects, Programming Languages (C++, Java, Python) & Coding Logic.</p>
-            <span className="text-xs font-bold text-cyan-400 flex items-center gap-1 pt-1">Jump to Phase 2 <ArrowRight size={14} /></span>
+            <span className="text-xs font-bold text-foreground flex items-center gap-1 pt-1">Jump to Phase 2 <ArrowRight size={14} /></span>
           </div>
 
           {/* Phase 3 */}
           <div
             onClick={() => onStartJourney(3)}
-            className="p-5 rounded-2xl bg-card border border-slate-800 hover:border-amber-500/50 hover:bg-slate-900 transition-all cursor-pointer space-y-3 group"
+            className="p-5 rounded-2xl bg-card border border-border hover:border-amber-500/50 hover:bg-slate-900 transition-all cursor-pointer space-y-3 group"
           >
             <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 group-hover:scale-110 transition-transform">
               <BrainCircuit size={20} />
@@ -209,23 +209,23 @@ export default function HomePanel({
           {/* Phase 4 */}
           <div
             onClick={() => onStartJourney(4)}
-            className="p-5 rounded-2xl bg-card border border-slate-800 hover:border-emerald-500/50 hover:bg-slate-900 transition-all cursor-pointer space-y-3 group"
+            className="p-5 rounded-2xl bg-card border border-border hover:border-emerald-500/50 hover:bg-slate-900 transition-all cursor-pointer space-y-3 group"
           >
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-foreground group-hover:scale-110 transition-transform">
               <Building2 size={20} />
             </div>
             <div>
-              <span className="text-[10px] font-extrabold uppercase text-emerald-400 tracking-wider">Phase 4</span>
+              <span className="text-[10px] font-extrabold uppercase text-foreground tracking-wider">Phase 4</span>
               <h5 className="text-sm font-bold text-foreground">Placement Readiness</h5>
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed">ATS Resume & Portfolio, Capstone Industry Projects, Company-wise Prep (Amazon/TCS).</p>
-            <span className="text-xs font-bold text-emerald-400 flex items-center gap-1 pt-1">Jump to Phase 4 <ArrowRight size={14} /></span>
+            <span className="text-xs font-bold text-foreground flex items-center gap-1 pt-1">Jump to Phase 4 <ArrowRight size={14} /></span>
           </div>
 
           {/* Phase 5 */}
           <div
             onClick={() => onStartJourney(5)}
-            className="p-5 rounded-2xl bg-card border border-slate-800 hover:border-rose-500/50 hover:bg-slate-900 transition-all cursor-pointer space-y-3 group"
+            className="p-5 rounded-2xl bg-card border border-border hover:border-rose-500/50 hover:bg-slate-900 transition-all cursor-pointer space-y-3 group"
           >
             <div className="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-400 group-hover:scale-110 transition-transform">
               <Trophy size={20} />
