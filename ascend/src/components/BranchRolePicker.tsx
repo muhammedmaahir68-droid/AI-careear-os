@@ -16,7 +16,7 @@ const ICON_MAP: Record<string, React.ReactNode> = {
 const BRANCH_COLORS: Record<string, string> = {
   cse:   "from-blue-600/20 to-blue-500/5 border-blue-500/30 text-blue-400",
   it:    "from-indigo-600/20 to-indigo-500/5 border-indigo-500/30 text-indigo-400",
-  aiml:  "from-rose-600/20 to-purple-500/5 border-rose-500/30 text-rose-400",
+  aiml:  "from-purple-600/20 to-purple-500/5 border-purple-500/30 text-purple-400",
   aids:  "from-violet-600/20 to-violet-500/5 border-violet-500/30 text-violet-400",
   ece:   "from-green-600/20 to-green-500/5 border-green-500/30 text-green-400",
   eee:   "from-yellow-600/20 to-yellow-500/5 border-yellow-500/30 text-yellow-400",

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
-  BookOpen, Code2, Heart, CheckCircle2, ChevronRight,
+  BookOpen, Code2, Sparkles, CheckCircle2, ChevronRight,
   ChevronLeft, Award, HelpCircle, Lightbulb, Play, ArrowRight, Zap, Target
 } from "lucide-react";
 import { LESSON_BANK, getLessonSyllabus, type LevelSyllabusLesson, type TopicLesson } from "../data/lessonBank";
@@ -170,15 +170,15 @@ export function LessonWalkthrough({
               exit={{ opacity: 0, x: 10 }}
               className="space-y-4"
             >
-              <div className="flex items-center gap-2 text-rose-400 font-semibold text-sm">
+              <div className="flex items-center gap-2 text-purple-400 font-semibold text-sm">
                 <Code2 size={18} />
                 <span>Key Formula / Syntax Breakdown</span>
               </div>
               <h3 className="text-xl font-bold text-white">Mathematical Model & Code Representation</h3>
-              <div className="p-5 rounded-2xl bg-black/70 border border-rose-500/30 font-mono text-sm text-rose-200 overflow-x-auto leading-relaxed shadow-inner">
+              <div className="p-5 rounded-2xl bg-black/70 border border-purple-500/30 font-mono text-sm text-purple-200 overflow-x-auto leading-relaxed shadow-inner">
                 <pre>{currentTopic.keyFormulasOrSyntax}</pre>
               </div>
-              <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-xs text-rose-300">
+              <div className="p-4 rounded-xl bg-purple-500/10 border border-purple-500/20 text-xs text-purple-300">
                 💡 <strong>Remember:</strong> Memorize this syntax and time-complexity bound for rapid execution in online assessment coding environments.
               </div>
             </motion.div>
@@ -226,7 +226,7 @@ export function LessonWalkthrough({
               <h3 className="text-xl font-bold text-white">MNC Placement Interview Strategy</h3>
               <div className="p-6 rounded-2xl bg-gradient-to-r from-amber-500/10 to-yellow-500/10 border border-amber-500/30 text-amber-100 text-sm leading-relaxed space-y-3">
                 <div className="flex items-center gap-2 text-amber-400 font-bold text-base">
-                  <Heart size={20} />
+                  <Sparkles size={20} />
                   <span>High-Yield Interview Tip</span>
                 </div>
                 <p>{currentTopic.placementTip}</p>

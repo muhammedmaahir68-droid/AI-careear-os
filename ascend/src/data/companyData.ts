@@ -38,7 +38,7 @@ const CSE_COMPANIES: CompanyTrack[] = [
     ]
   },
   {
-    name: "Microsoft", logo: "🪟", color: "from-blue-500 to-orange-400", difficulty: "Hard",
+    name: "Microsoft", logo: "🪟", color: "from-blue-500 to-cyan-400", difficulty: "Hard",
     roles: ["SDE", "Program Manager", "Cloud Solutions Architect"],
     avgPackage: "₹22-38 LPA", rounds: ["Online Coding Round", "3-4 Technical Interviews", "Hiring Manager Round"],
     codingQuestion: { title: "Binary Tree Level Order Traversal", desc: "Return level order traversal of a binary tree (BFS).", difficulty: "Medium", starter: `from collections import deque\ndef levelOrder(root):\n    # BFS using queue\n    pass` },
@@ -49,7 +49,7 @@ const CSE_COMPANIES: CompanyTrack[] = [
     ]
   },
   {
-    name: "Zoho", logo: "🟢", color: "from-green-500 to-amber-600", difficulty: "Medium",
+    name: "Zoho", logo: "🟢", color: "from-green-500 to-emerald-600", difficulty: "Medium",
     roles: ["Member Technical Staff", "Project Trainee"],
     avgPackage: "₹6-12 LPA", rounds: ["Written C/C++ Round", "Advanced Programming Round", "Technical + HR"],
     codingQuestion: { title: "Matrix Rotation 90 Degrees", desc: "Rotate an N×N matrix 90 degrees clockwise in-place.", difficulty: "Medium", starter: `def rotate_matrix(matrix):\n    n = len(matrix)\n    # Transpose then reverse each row\n    pass` },
@@ -82,7 +82,7 @@ const CSE_COMPANIES: CompanyTrack[] = [
     ]
   },
   {
-    name: "Wipro", logo: "🌸", color: "from-rose-500 to-pink-500", difficulty: "Easy",
+    name: "Wipro", logo: "🌸", color: "from-purple-500 to-pink-500", difficulty: "Easy",
     roles: ["Project Engineer", "Elite NLTH"],
     avgPackage: "₹3.5-6.5 LPA", rounds: ["Online Test (Aptitude + Coding)", "Technical", "HR"],
     codingQuestion: { title: "Fibonacci Series", desc: "Print the first N Fibonacci numbers.", difficulty: "Easy", starter: `def fibonacci(n):\n    # Generate first n fibonacci numbers\n    pass` },
@@ -119,7 +119,7 @@ const IT_COMPANIES: CompanyTrack[] = [
     ]
   },
   {
-    name: "Infosys", logo: "🔵", color: "from-blue-600 to-orange-500", difficulty: "Medium",
+    name: "Infosys", logo: "🔵", color: "from-blue-600 to-cyan-500", difficulty: "Medium",
     roles: ["System Engineer", "Power Programmer", "Test Engineer"],
     avgPackage: "₹4-9.5 LPA", rounds: ["Online Test (Aptitude + Coding)", "Technical", "HR"],
     codingQuestion: { title: "Check for Palindrome", desc: "Write a function to check if a string is a palindrome, ignoring case and non-alphanumeric characters.", difficulty: "Easy", starter: `def is_palindrome(s: str) -> bool:\n    # clean, compare with reverse\n    pass` },
@@ -178,7 +178,7 @@ const ECE_COMPANIES: CompanyTrack[] = [
     ]
   },
   {
-    name: "Intel", logo: "💠", color: "from-blue-500 to-orange-500", difficulty: "Hard",
+    name: "Intel", logo: "💠", color: "from-blue-500 to-cyan-500", difficulty: "Hard",
     roles: ["Validation Engineer", "Silicon Design", "Firmware Engineer"],
     avgPackage: "₹14-24 LPA", rounds: ["Online Test", "3x Technical Deep Dive", "HR"],
     codingQuestion: { title: "Detect Endianness", desc: "Write a C function to detect if the system is Little-Endian or Big-Endian.", difficulty: "Easy", starter: `int is_little_endian() {\n    unsigned int x = 1;\n    // Check first byte\n    return 0;\n}` },
@@ -204,7 +204,7 @@ const ECE_COMPANIES: CompanyTrack[] = [
 // ─── EEE ─────────────────────────────────────────────────────────────────────
 const EEE_COMPANIES: CompanyTrack[] = [
   {
-    name: "Siemens", logo: "⚙️", color: "from-teal-500 to-orange-600", difficulty: "Medium",
+    name: "Siemens", logo: "⚙️", color: "from-teal-500 to-cyan-600", difficulty: "Medium",
     roles: ["Power Systems Engineer", "Automation Engineer", "PLC Programmer"],
     avgPackage: "₹8-18 LPA", rounds: ["Aptitude + Technical MCQ", "Technical Interview", "HR"],
     codingQuestion: { title: "RLC Circuit Impedance Calculator", desc: "Calculate total impedance of series RLC circuit at given frequency.", difficulty: "Medium", starter: `import math\ndef rlc_impedance(R, L, C, freq):\n    # Z = sqrt(R^2 + (XL - XC)^2)\n    pass` },
@@ -300,7 +300,7 @@ const MECH_COMPANIES: CompanyTrack[] = [
 // ─── AIML / AIDS ─────────────────────────────────────────────────────────────
 const AIML_COMPANIES: CompanyTrack[] = [
   {
-    name: "Fractal Analytics", logo: "📊", color: "from-rose-600 to-pink-500", difficulty: "Medium",
+    name: "Fractal Analytics", logo: "📊", color: "from-purple-600 to-pink-500", difficulty: "Medium",
     roles: ["Data Scientist", "ML Engineer", "Analytics Consultant"],
     avgPackage: "₹12-22 LPA", rounds: ["Aptitude + Case Study", "Technical (ML + Stats)", "Managerial + HR"],
     codingQuestion: { title: "Implement K-Nearest Neighbors", desc: "Write a simple KNN classifier from scratch using Euclidean distance.", difficulty: "Medium", starter: `import numpy as np\ndef knn_predict(X_train, y_train, x_test, k=3):\n    # Calculate distances and vote\n    pass` },
@@ -348,7 +348,7 @@ const AIML_COMPANIES: CompanyTrack[] = [
 // ─── AIDS ────────────────────────────────────────────────────────────────────
 const AIDS_COMPANIES: CompanyTrack[] = [
   {
-    name: "Mu Sigma", logo: "📈", color: "from-teal-600 to-orange-600", difficulty: "Medium",
+    name: "Mu Sigma", logo: "📈", color: "from-teal-600 to-cyan-600", difficulty: "Medium",
     roles: ["Decision Scientist", "Data Analyst", "Business Analyst"],
     avgPackage: "₹8-14 LPA", rounds: ["Aptitude + Puzzles", "Case Study + SQL", "Technical + HR"],
     codingQuestion: { title: "SQL: Second Highest Salary", desc: "Write a query to find the second highest salary from an Employee table.", difficulty: "Easy", starter: `SELECT MAX(salary) AS second_highest\nFROM employee\nWHERE salary < (SELECT MAX(salary) FROM employee);` },

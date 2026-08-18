@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
-  Trophy, Gem, Lock, CheckCircle2, Heart, BookOpen,
+  Trophy, Gem, Lock, CheckCircle2, Sparkles, BookOpen,
   ArrowRight, Gift, X, Zap, Target, ChevronDown, ChevronRight,
   Code2, Brain, Cpu, Bolt, Wrench, Building, Database, Shield,
   Lightbulb, HelpCircle, FileText, Check, Award, Video, Play,
@@ -68,17 +68,17 @@ export const PHASE_METADATA: Record<number, { title: string; subtitle: string; i
     title: "Phase 1: Aptitude Foundation",
     subtitle: "Quantitative Aptitude, Logical Reasoning & Verbal Ability for TCS, Wipro, Infosys screening exams.",
     icon: BookOpen,
-    color: "text-rose-400",
-    bg: "from-rose-950/60 to-slate-950",
-    border: "border-rose-500/30"
+    color: "text-purple-400",
+    bg: "from-purple-950/60 to-slate-950",
+    border: "border-purple-500/30"
   },
   2: {
     title: "Phase 2: Technical Foundation",
     subtitle: "Department Core Subjects, Programming Memory Models (C++, Java, Python) & Logic Building.",
     icon: Code2,
-    color: "text-orange-400",
+    color: "text-cyan-400",
     bg: "from-cyan-950/60 to-slate-950",
-    border: "border-orange-500/30"
+    border: "border-cyan-500/30"
   },
   3: {
     title: "Phase 3: Advanced Preparation",
@@ -649,7 +649,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
     if (!unlocked) return <Lock size={24} className="text-slate-600" />;
     if (n.type === "chest") return <Gift size={28} className="text-yellow-300 animate-bounce" />;
     if (n.type === "boss") return <Trophy size={28} className="text-amber-400" />;
-    if (n.type === "code") return <Code2 size={26} className="text-orange-300" />;
+    if (n.type === "code") return <Code2 size={26} className="text-cyan-300" />;
     return <BookOpen size={26} className="text-white" />;
   };
 
@@ -658,11 +658,11 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
   return (
     <div className="w-full space-y-8 pb-20 text-slate-100 max-w-6xl mx-auto">
       {/* ── HEADER STATS ── */}
-      <div className="relative overflow-hidden rounded-3xl p-6 bg-gradient-to-br from-slate-900 via-purple-950/60 to-slate-950 border border-rose-500/30 shadow-2xl">
+      <div className="relative overflow-hidden rounded-3xl p-6 bg-gradient-to-br from-slate-900 via-purple-950/60 to-slate-950 border border-purple-500/30 shadow-2xl">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
             <div className="flex flex-wrap gap-2 mb-2">
-              <span className="text-[11px] font-extrabold uppercase tracking-widest text-rose-400 bg-rose-500/10 px-3 py-1 rounded-full border border-rose-500/20">
+              <span className="text-[11px] font-extrabold uppercase tracking-widest text-purple-400 bg-purple-500/10 px-3 py-1 rounded-full border border-purple-500/20">
                 {branchId?.toUpperCase() || "CSE"} — 5-Phase Master Path
               </span>
               {nextNode && (
@@ -672,7 +672,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
               )}
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white flex items-center gap-2">
-              Integrated Placement Curriculum <Heart size={22} className="text-amber-400" />
+              Integrated Placement Curriculum <Sparkles size={22} className="text-amber-400" />
             </h2>
             <p className="text-xs sm:text-sm text-slate-400 mt-1">Select a phase below to focus on its separate curriculum chart and dedicated topics.</p>
           </div>
@@ -680,7 +680,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
             <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-300 text-sm font-bold">
               <Zap size={15} /> {userXp} XP
             </div>
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-orange-500/10 border border-orange-500/20 text-orange-300 text-sm font-bold">
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-sm font-bold">
               <Gem size={15} /> {userDiamonds}
             </div>
           </div>
@@ -694,7 +694,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
           </div>
           <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
             <motion.div
-              className="h-full bg-gradient-to-r from-rose-500 to-orange-400 rounded-full"
+              className="h-full bg-gradient-to-r from-purple-500 to-cyan-400 rounded-full"
               animate={{ width: `${(completedIds.size / nodes.length) * 100}%` }}
               transition={{ duration: 0.5 }}
             />
@@ -706,12 +706,12 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <span className="text-xs font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-            <Layers3 size={16} className="text-rose-400" /> Select Separate Phase View
+            <Layers3 size={16} className="text-purple-400" /> Select Separate Phase View
           </span>
           {activePhaseFilter !== "all" && (
             <button
               onClick={() => { setActivePhaseFilter("all"); setActiveSubTopic("all"); }}
-              className="text-xs text-rose-400 hover:text-rose-300 font-bold underline"
+              className="text-xs text-purple-400 hover:text-purple-300 font-bold underline"
             >
               View Full 5-Phase Roadmap
             </button>
@@ -724,7 +724,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
             onClick={() => { setActivePhaseFilter("all"); setActiveSubTopic("all"); }}
             className={`p-3 rounded-2xl border text-xs font-extrabold transition-all flex flex-col items-center justify-center gap-1 cursor-pointer ${
               activePhaseFilter === "all"
-                ? "bg-rose-600 border-rose-400 text-white shadow-lg shadow-rose-900/50"
+                ? "bg-purple-600 border-purple-400 text-white shadow-lg shadow-purple-900/50"
                 : "bg-slate-900/80 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700"
             }`}
           >
@@ -743,7 +743,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                 onClick={() => { setActivePhaseFilter(pNum); setActiveSubTopic("all"); }}
                 className={`p-3 rounded-2xl border text-xs font-extrabold transition-all flex flex-col items-center justify-center gap-1 cursor-pointer ${
                   active
-                    ? "bg-slate-900 border-rose-400 text-white ring-2 ring-rose-500/50 shadow-lg"
+                    ? "bg-slate-900 border-purple-400 text-white ring-2 ring-purple-500/50 shadow-lg"
                     : "bg-slate-900/80 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700"
                 }`}
               >
@@ -764,7 +764,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
               onClick={() => setActiveSubTopic("all")}
               className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${
                 activeSubTopic === "all"
-                  ? "bg-rose-500/20 text-rose-300 border border-rose-500/40"
+                  ? "bg-purple-500/20 text-purple-300 border border-purple-500/40"
                   : "bg-slate-950 text-slate-400 border border-slate-800 hover:text-slate-200"
               }`}
             >
@@ -776,7 +776,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                 onClick={() => setActiveSubTopic(st)}
                 className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${
                   activeSubTopic.toLowerCase() === st.toLowerCase()
-                    ? "bg-orange-500/20 text-orange-300 border border-orange-500/40"
+                    ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/40"
                     : "bg-slate-950 text-slate-400 border border-slate-800 hover:text-slate-200"
                 }`}
               >
@@ -823,7 +823,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                   return (
                     <div key={node.id} className="flex flex-col items-center relative" style={{ transform: `translateX(${xOffset}px)` }}>
                       {idx < phaseNodes.length - 1 && (
-                        <div className="absolute top-[72px] left-1/2 -translate-x-1/2 w-0.5 h-12 bg-gradient-to-b from-rose-500/40 to-transparent" />
+                        <div className="absolute top-[72px] left-1/2 -translate-x-1/2 w-0.5 h-12 bg-gradient-to-b from-purple-500/40 to-transparent" />
                       )}
 
                       <motion.button
@@ -839,7 +839,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                               ? "bg-gradient-to-tr from-rose-600 to-orange-500 border-orange-300 shadow-rose-500/40 animate-pulse"
                               : node.type === "chest"
                               ? "bg-gradient-to-tr from-amber-500 to-yellow-400 border-yellow-200 shadow-amber-400/40"
-                              : "bg-gradient-to-tr from-rose-600 to-orange-500 border-orange-300 shadow-rose-500/40 animate-pulse"
+                              : "bg-gradient-to-tr from-purple-600 to-cyan-500 border-cyan-300 shadow-purple-500/40 animate-pulse"
                             : "bg-slate-900 border-slate-700 cursor-not-allowed"
                         }`}
                       >
@@ -850,13 +850,13 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                       </motion.button>
 
                       <div className="mt-2 text-center max-w-[200px]">
-                        <span className="text-[9px] font-bold uppercase tracking-wider text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded-full border border-rose-500/20">
+                        <span className="text-[9px] font-bold uppercase tracking-wider text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded-full border border-purple-500/20">
                           {node.subTopic}
                         </span>
                         <p className="text-xs font-bold text-white mt-1 line-clamp-2">{node.title}</p>
                         <div className="flex items-center justify-center gap-2 mt-0.5">
                           <span className="text-[10px] text-amber-400 font-mono">+{node.xpReward} XP</span>
-                          <span className="text-[10px] text-orange-400 font-mono">+{node.diamondReward}</span>
+                          <span className="text-[10px] text-cyan-400 font-mono">+{node.diamondReward}</span>
                         </div>
                       </div>
                     </div>
@@ -876,16 +876,16 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="relative w-full max-w-4xl max-h-[92vh] flex flex-col rounded-3xl bg-slate-900 border border-rose-500/30 shadow-2xl overflow-hidden"
+              className="relative w-full max-w-4xl max-h-[92vh] flex flex-col rounded-3xl bg-slate-900 border border-purple-500/30 shadow-2xl overflow-hidden"
             >
               {/* Modal Header */}
               <div className="p-6 border-b border-slate-800 flex justify-between items-start bg-slate-950/60">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-[11px] font-extrabold uppercase tracking-widest text-rose-400">
+                    <span className="text-[11px] font-extrabold uppercase tracking-widest text-purple-400">
                       Step {activeNode.step} • {activeNode.category}
                     </span>
-                    <span className="text-[10px] font-bold text-orange-400 bg-orange-500/10 px-2 py-0.5 rounded-full border border-orange-500/20">
+                    <span className="text-[10px] font-bold text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded-full border border-cyan-500/20">
                       {activeNode.subTopic}
                     </span>
                   </div>
@@ -917,7 +917,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                     onClick={() => setModalTab("textbook")}
                     className={`pb-3 px-4 text-xs font-bold transition-all border-b-2 whitespace-nowrap flex items-center gap-1.5 ${
                       modalTab === "textbook"
-                        ? "border-rose-500 text-rose-400"
+                        ? "border-purple-500 text-purple-400"
                         : "border-transparent text-slate-400 hover:text-slate-200"
                     }`}
                   >
@@ -927,7 +927,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                     onClick={() => setModalTab("formulas")}
                     className={`pb-3 px-4 text-xs font-bold transition-all border-b-2 whitespace-nowrap flex items-center gap-1.5 ${
                       modalTab === "formulas"
-                        ? "border-orange-500 text-orange-400"
+                        ? "border-cyan-500 text-cyan-400"
                         : "border-transparent text-slate-400 hover:text-slate-200"
                     }`}
                   >
@@ -979,7 +979,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                       <div className="space-y-6">
                         {activeNode.theory && (
                           <>
-                            <div className="p-4 rounded-2xl bg-rose-950/40 border border-rose-500/20 text-slate-200 text-sm leading-relaxed">
+                            <div className="p-4 rounded-2xl bg-purple-950/40 border border-purple-500/20 text-slate-200 text-sm leading-relaxed">
                               <strong>Summary:</strong> {activeNode.theory.summary}
                             </div>
 
@@ -992,11 +992,11 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                             {/* Author References */}
                             {activeNode.theory.authorReferences?.length && (
                               <div className="space-y-3 pt-2">
-                                <h4 className="text-xs font-extrabold uppercase tracking-wider text-orange-400">Author Textbook References</h4>
+                                <h4 className="text-xs font-extrabold uppercase tracking-wider text-cyan-400">Author Textbook References</h4>
                                 {activeNode.theory.authorReferences.map((ref, i) => (
                                   <div key={i} className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-1">
                                     <div className="text-xs font-bold text-white">{ref.bookTitle}</div>
-                                    <div className="text-[11px] text-rose-400 font-medium">— {ref.author}</div>
+                                    <div className="text-[11px] text-purple-400 font-medium">— {ref.author}</div>
                                     <div className="text-xs text-slate-300 italic pt-1">"{ref.coreInsight}"</div>
                                   </div>
                                 ))}
@@ -1005,7 +1005,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
 
                             {/* Key Takeaways */}
                             <div className="space-y-3 pt-2">
-                              <h4 className="text-xs font-extrabold uppercase tracking-wider text-rose-400">Core Takeaways</h4>
+                              <h4 className="text-xs font-extrabold uppercase tracking-wider text-purple-400">Core Takeaways</h4>
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                                 {activeNode.theory.keyPoints.map((kp, i) => (
                                   <div key={i} className="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-start gap-2 text-xs text-slate-300">
@@ -1053,8 +1053,8 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
 
                         {activeNode.theory?.code && (
                           <div className="space-y-2">
-                            <span className="text-xs font-bold text-orange-400 uppercase tracking-wider">Implementation Code Blueprint</span>
-                            <pre className="p-4 rounded-2xl bg-slate-950 border border-slate-800 font-mono text-xs text-orange-300 overflow-x-auto">
+                            <span className="text-xs font-bold text-cyan-400 uppercase tracking-wider">Implementation Code Blueprint</span>
+                            <pre className="p-4 rounded-2xl bg-slate-950 border border-slate-800 font-mono text-xs text-cyan-300 overflow-x-auto">
                               <code>{activeNode.theory.code}</code>
                             </pre>
                           </div>
@@ -1062,7 +1062,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
 
                         {activeNode.theory?.examples?.length && (
                           <div className="space-y-3">
-                            <span className="text-xs font-bold text-rose-400 uppercase tracking-wider">Worked Step-by-Step Examples</span>
+                            <span className="text-xs font-bold text-purple-400 uppercase tracking-wider">Worked Step-by-Step Examples</span>
                             {activeNode.theory.examples.map((ex, i) => (
                               <div key={i} className="p-4 rounded-2xl bg-slate-950 border border-slate-800 text-xs text-slate-300 whitespace-pre-line leading-relaxed font-mono">
                                 {ex}
@@ -1165,7 +1165,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                               <div
                                 className={`p-4 rounded-2xl text-xs leading-relaxed whitespace-pre-line ${
                                   msg.sender === "user"
-                                    ? "bg-rose-600 text-white rounded-br-none"
+                                    ? "bg-purple-600 text-white rounded-br-none"
                                     : "bg-slate-900 border border-slate-800 text-slate-200 rounded-bl-none prose prose-invert"
                                 }`}
                               >
@@ -1218,14 +1218,14 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                           <button
                             disabled={aiThinking}
                             onClick={() => handleAISubmit("Generate 1,000,000+ words expanded syllabus for this topic")}
-                            className="px-3 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-300 text-xs font-bold transition-all"
+                            className="px-3 py-2 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 text-purple-300 text-xs font-bold transition-all"
                           >
                             Expand Syllabus Details
                           </button>
                           <button
                             disabled={aiThinking}
                             onClick={() => handleAISubmit("Generate top MNC coding interview questions for this lesson")}
-                            className="px-3 py-2 rounded-xl bg-orange-500/10 hover:bg-orange-500/20 border border-orange-500/30 text-orange-300 text-xs font-bold transition-all"
+                            className="px-3 py-2 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 text-cyan-300 text-xs font-bold transition-all"
                           >
                             MNC Placement Secrets
                           </button>
@@ -1280,11 +1280,11 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                       {activeNode.questions[qIdx].options.map((opt, i) => {
                         const correct = i === activeNode.questions![qIdx].correct;
                         const picked = selected === i;
-                        let cls = "bg-slate-950 border-slate-800 text-slate-300 hover:border-rose-500/50";
+                        let cls = "bg-slate-950 border-slate-800 text-slate-300 hover:border-purple-500/50";
                         if (submitted) {
                           if (correct) cls = "bg-emerald-950/60 border-emerald-500 text-emerald-200";
                           else if (picked) cls = "bg-rose-950/60 border-rose-500 text-rose-300";
-                        } else if (picked) cls = "bg-rose-950/60 border-rose-400 text-white";
+                        } else if (picked) cls = "bg-purple-950/60 border-purple-400 text-white";
 
                         return (
                           <button
@@ -1318,14 +1318,14 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                   activeNode.questions?.length ? (
                     <button
                       onClick={() => setStep("quiz")}
-                      className="w-full py-4 rounded-2xl bg-gradient-to-r from-rose-600 via-orange-500 to-amber-500 text-white font-extrabold text-sm flex items-center justify-center gap-2 hover:opacity-95 transition-opacity"
+                      className="w-full py-4 rounded-2xl bg-gradient-to-r from-purple-600 via-cyan-500 to-emerald-500 text-white font-extrabold text-sm flex items-center justify-center gap-2 hover:opacity-95 transition-opacity"
                     >
                       Start Practice Assessment <ArrowRight size={18} />
                     </button>
                   ) : (
                     <button
                       onClick={() => completeNode(activeNode)}
-                      className="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-orange-500 text-white font-extrabold text-sm flex items-center justify-center gap-2 hover:opacity-95 transition-opacity"
+                      className="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-extrabold text-sm flex items-center justify-center gap-2 hover:opacity-95 transition-opacity"
                     >
                       Mark Complete & Claim Rewards <Gift size={18} />
                     </button>
@@ -1335,14 +1335,14 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                     <button
                       disabled={selected === null}
                       onClick={() => setSubmitted(true)}
-                      className="w-full py-4 rounded-2xl bg-rose-600 disabled:opacity-40 text-white font-bold text-sm hover:bg-rose-500 transition-colors"
+                      className="w-full py-4 rounded-2xl bg-purple-600 disabled:opacity-40 text-white font-bold text-sm hover:bg-purple-500 transition-colors"
                     >
                       Verify Answer
                     </button>
                   ) : (
                     <button
                       onClick={handleNextQuestion}
-                      className="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-orange-500 text-white font-bold text-sm flex items-center justify-center gap-2 hover:opacity-95"
+                      className="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-bold text-sm flex items-center justify-center gap-2 hover:opacity-95"
                     >
                       Continue <ArrowRight size={18} />
                     </button>

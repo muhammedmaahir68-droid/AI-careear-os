@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Brain, Download, Send, Heart, FileText, Code2, Briefcase, Zap } from "lucide-react";
+import { Brain, Download, Send, Sparkles, FileText, Code2, Briefcase, Zap } from "lucide-react";
 
 interface MaahirMsg { sender: "user" | "ai"; text: string; ts: string; }
 
@@ -174,7 +174,7 @@ export default function MaahirAIPanel({ branchId, roleId }: { branchId?: string 
           <div key={i} className={`flex flex-col max-w-[85%] ${msg.sender === "user" ? "ml-auto items-end" : "mr-auto items-start"}`}>
             <div className={`p-4 rounded-2xl text-xs leading-relaxed whitespace-pre-line ${
               msg.sender === "user"
-                ? "bg-rose-600 text-white rounded-br-none"
+                ? "bg-purple-600 text-white rounded-br-none"
                 : "bg-black/40 border border-white/10 text-slate-200 rounded-bl-none"
             }`}>
               {msg.text}
@@ -199,8 +199,8 @@ export default function MaahirAIPanel({ branchId, roleId }: { branchId?: string 
       {/* Quick Actions */}
       <div className="px-4 py-2 border-t border-white/5 flex flex-wrap gap-2 shrink-0 bg-black/20">
         <button disabled={thinking} onClick={() => send("Summarize my study notes")} className="px-3 py-1.5 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-[11px] font-bold transition-all flex items-center gap-1"><FileText size={11} /> Summarize Text</button>
-        <button disabled={thinking} onClick={() => send("Analyze resume keywords for ATS")} className="px-3 py-1.5 rounded-full bg-orange-500/10 hover:bg-orange-500/20 border border-orange-500/30 text-orange-300 text-[11px] font-bold transition-all flex items-center gap-1"><Briefcase size={11} /> Resume Keywords</button>
-        <button disabled={thinking} onClick={() => send("Give me a coding puzzle to practice")} className="px-3 py-1.5 rounded-full bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-300 text-[11px] font-bold transition-all flex items-center gap-1"><Code2 size={11} /> Coding Puzzle</button>
+        <button disabled={thinking} onClick={() => send("Analyze resume keywords for ATS")} className="px-3 py-1.5 rounded-full bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 text-cyan-300 text-[11px] font-bold transition-all flex items-center gap-1"><Briefcase size={11} /> Resume Keywords</button>
+        <button disabled={thinking} onClick={() => send("Give me a coding puzzle to practice")} className="px-3 py-1.5 rounded-full bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 text-purple-300 text-[11px] font-bold transition-all flex items-center gap-1"><Code2 size={11} /> Coding Puzzle</button>
         <button disabled={thinking} onClick={() => send("Placement interview tips and strategies")} className="px-3 py-1.5 rounded-full bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 text-[11px] font-bold transition-all flex items-center gap-1"><Zap size={11} /> Interview Tips</button>
       </div>
 
