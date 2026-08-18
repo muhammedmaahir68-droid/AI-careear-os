@@ -97,24 +97,24 @@ ${email ? `<a href="mailto:${email}">Email</a>` : ""}
         {/* Projects */}
         <div className="p-6 rounded-3xl border border-border bg-white/5 space-y-4">
           <div className="flex justify-between items-center">
-            <h3 className="text-sm font-bold text-purple-400">Projects</h3>
-            <button onClick={addProject} className="text-xs px-3 py-1.5 rounded-full bg-purple-500/20 text-purple-300 hover:bg-purple-500/30 flex items-center gap-1"><Plus size={12} /> Add</button>
+            <h3 className="text-sm font-bold text-rose-400">Projects</h3>
+            <button onClick={addProject} className="text-xs px-3 py-1.5 rounded-full bg-rose-500/20 text-rose-300 hover:bg-rose-500/30 flex items-center gap-1"><Plus size={12} /> Add</button>
           </div>
           {projects.map((p, i) => (
             <div key={i} className="space-y-2 p-3 rounded-xl bg-black/20 border border-white/5">
               <div className="flex gap-2">
-                <input value={p.title} onChange={e => updateProject(i, "title", e.target.value)} placeholder="Project Title" className="flex-1 bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-purple-400" />
+                <input value={p.title} onChange={e => updateProject(i, "title", e.target.value)} placeholder="Project Title" className="flex-1 bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-rose-400" />
                 <button onClick={() => removeProject(i)} className="p-2 rounded-lg hover:bg-red-500/20 text-red-400"><Trash2 size={14} /></button>
               </div>
-              <input value={p.desc} onChange={e => updateProject(i, "desc", e.target.value)} placeholder="Short description" className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-purple-400" />
-              <input value={p.link} onChange={e => updateProject(i, "link", e.target.value)} placeholder="Live URL / GitHub link" className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-purple-400" />
+              <input value={p.desc} onChange={e => updateProject(i, "desc", e.target.value)} placeholder="Short description" className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-rose-400" />
+              <input value={p.link} onChange={e => updateProject(i, "link", e.target.value)} placeholder="Live URL / GitHub link" className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-rose-400" />
             </div>
           ))}
         </div>
 
         {/* Theme */}
         <div className="p-6 rounded-3xl border border-border bg-white/5 space-y-3">
-          <h3 className="text-sm font-bold text-cyan-400">Select Theme</h3>
+          <h3 className="text-sm font-bold text-orange-400">Select Theme</h3>
           <div className="grid grid-cols-2 gap-3">
             {THEMES.map(t => (
               <button key={t.id} onClick={() => setTheme(t)}
@@ -134,7 +134,7 @@ ${email ? `<a href="mailto:${email}">Email</a>` : ""}
         <div className="p-6 rounded-3xl border border-border bg-white/5 space-y-4">
           <div className="flex justify-between items-center">
             <h3 className="text-sm font-bold text-emerald-400">Actions</h3>
-            <button onClick={() => setShowPreview(!showPreview)} className="text-xs px-3 py-1.5 rounded-full bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/30 flex items-center gap-1"><Eye size={12} /> {showPreview ? "Hide" : "Show"} Preview</button>
+            <button onClick={() => setShowPreview(!showPreview)} className="text-xs px-3 py-1.5 rounded-full bg-orange-500/20 text-orange-300 hover:bg-orange-500/30 flex items-center gap-1"><Eye size={12} /> {showPreview ? "Hide" : "Show"} Preview</button>
           </div>
           <button onClick={downloadPortfolio} className="w-full px-6 py-3 rounded-full bg-gradient-to-r from-fuchsia-500 to-purple-600 hover:from-fuchsia-600 hover:to-purple-700 text-white font-bold text-sm transition-all flex items-center justify-center gap-2">
             <Download size={16} /> Download HTML Portfolio

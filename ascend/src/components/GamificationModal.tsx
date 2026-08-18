@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Trophy, Sparkles, Gem, Flame, Award, Gift, CheckCircle2, ChevronRight, Zap, Shield, Star, RefreshCw } from "lucide-react";
+import { Trophy, Heart, Gem, Flame, Award, Gift, CheckCircle2, ChevronRight, Zap, Shield, Star, RefreshCw } from "lucide-react";
 
 interface GamificationModalProps {
   isOpen: boolean;
@@ -15,9 +15,9 @@ export const LEAGUES = [
   { name: "Bronze Diamond", icon: "💎", minXp: 0, color: "from-amber-700 to-amber-900", border: "border-amber-600/40" },
   { name: "Silver Diamond", icon: "⚡", minXp: 500, color: "from-slate-400 to-slate-600", border: "border-slate-400/40" },
   { name: "Gold Diamond", icon: "🌟", minXp: 1500, color: "from-yellow-400 to-amber-500", border: "border-yellow-400/40" },
-  { name: "Platinum League", icon: "✨", minXp: 3000, color: "from-cyan-400 to-blue-500", border: "border-cyan-400/40" },
+  { name: "Platinum League", icon: "✨", minXp: 3000, color: "from-cyan-400 to-blue-500", border: "border-orange-400/40" },
   { name: "Emerald League", icon: "❇️", minXp: 5000, color: "from-emerald-400 to-green-600", border: "border-emerald-400/40" },
-  { name: "Master Diamond", icon: "👑", minXp: 8000, color: "from-purple-500 to-indigo-600", border: "border-purple-400/40" },
+  { name: "Master Diamond", icon: "👑", minXp: 8000, color: "from-rose-500 to-indigo-600", border: "border-rose-400/40" },
   { name: "Placement Legend", icon: "🏆", minXp: 12000, color: "from-rose-500 to-amber-500", border: "border-rose-400/40" },
 ];
 
@@ -54,10 +54,10 @@ export default function GamificationModal({
           initial={{ scale: 0.8, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.8, opacity: 0, y: 20 }}
-          className="relative w-full max-w-lg p-6 rounded-3xl bg-gradient-to-b from-slate-900 via-purple-950/80 to-slate-950 border border-purple-500/40 shadow-2xl shadow-purple-500/20 text-center overflow-hidden"
+          className="relative w-full max-w-lg p-6 rounded-3xl bg-gradient-to-b from-slate-900 via-purple-950/80 to-slate-950 border border-rose-500/40 shadow-2xl shadow-rose-500/20 text-center overflow-hidden"
         >
           {/* Glowing Background FX */}
-          <div className="absolute -top-24 -left-24 w-48 h-48 bg-purple-500/20 rounded-full blur-3xl" />
+          <div className="absolute -top-24 -left-24 w-48 h-48 bg-rose-500/20 rounded-full blur-3xl" />
           <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-amber-500/20 rounded-full blur-3xl" />
 
           {/* Header */}
@@ -65,8 +65,8 @@ export default function GamificationModal({
             <span className="flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400">
               <Flame size={14} className="text-amber-400 animate-bounce" /> Duolingo Placement League
             </span>
-            <span className="flex items-center gap-1 text-xs font-mono text-cyan-300 bg-cyan-500/10 px-3 py-1 rounded-full border border-cyan-500/30">
-              <Gem size={14} className="text-cyan-400" /> +{diamondsEarned} Diamonds
+            <span className="flex items-center gap-1 text-xs font-mono text-orange-300 bg-orange-500/10 px-3 py-1 rounded-full border border-orange-500/30">
+              <Gem size={14} className="text-orange-400" /> +{diamondsEarned} Diamonds
             </span>
           </div>
 
@@ -100,7 +100,7 @@ export default function GamificationModal({
                 onClick={handleOpenChest}
                 className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600 font-bold text-slate-950 text-sm shadow-lg shadow-amber-500/20 hover:brightness-110 transition cursor-pointer flex items-center justify-center gap-2"
               >
-                <Sparkles size={18} /> Crack Open Loot Box!
+                <Heart size={18} /> Crack Open Loot Box!
               </button>
             </div>
           ) : (
@@ -126,8 +126,8 @@ export default function GamificationModal({
                   <div className="text-[10px] text-slate-400 uppercase font-semibold">XP Gained</div>
                 </div>
 
-                <div className="p-3 rounded-2xl bg-slate-900/90 border border-cyan-500/30 text-center">
-                  <div className="text-xl font-bold text-cyan-400">+{diamondsEarned} 💎</div>
+                <div className="p-3 rounded-2xl bg-slate-900/90 border border-orange-500/30 text-center">
+                  <div className="text-xl font-bold text-orange-400">+{diamondsEarned} 💎</div>
                   <div className="text-[10px] text-slate-400 uppercase font-semibold">Diamonds</div>
                 </div>
 
@@ -138,12 +138,12 @@ export default function GamificationModal({
               </div>
 
               {/* Badge Unlock Notification */}
-              <div className="p-3.5 rounded-2xl bg-gradient-to-r from-purple-900/40 to-indigo-900/40 border border-purple-400/30 flex items-center gap-3 text-left">
-                <div className="p-2.5 rounded-xl bg-purple-500/20 text-purple-300 shrink-0">
+              <div className="p-3.5 rounded-2xl bg-gradient-to-r from-rose-900/40 to-indigo-900/40 border border-rose-400/30 flex items-center gap-3 text-left">
+                <div className="p-2.5 rounded-xl bg-rose-500/20 text-rose-300 shrink-0">
                   <Award size={20} />
                 </div>
                 <div>
-                  <div className="text-xs font-bold text-purple-200">Unlocked Badge: {badgeName}</div>
+                  <div className="text-xs font-bold text-rose-200">Unlocked Badge: {badgeName}</div>
                   <div className="text-[10px] text-slate-400">Recognized by MNC Recruiters on your profile portfolio!</div>
                 </div>
               </div>

@@ -890,12 +890,12 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
 
   const steps: { icon: React.ReactNode; title: string; type: StepType }[] = [
     { icon: <Target className="text-blue-400" size={18} />, title: "Daily Goal", type: "goal" },
-    { icon: <BookOpen className="text-purple-400" size={18} />, title: "Study Material", type: "study" },
+    { icon: <BookOpen className="text-rose-400" size={18} />, title: "Study Material", type: "study" },
     { icon: <Video className="text-rose-400" size={18} />, title: "Watch Videos", type: "videos" as StepType },
     { icon: <BrainCircuit className="text-green-400" size={18} />, title: "AI Explain", type: "ai_explain" },
     { icon: <Bug className="text-red-400" size={18} />, title: "Debug Challenge", type: "debug" },
     { icon: <HelpCircle className="text-orange-400" size={18} />, title: "Quiz", type: "quiz" },
-    { icon: <Building2 className="text-cyan-400" size={18} />, title: "MNC Questions", type: "mnc" },
+    { icon: <Building2 className="text-orange-400" size={18} />, title: "MNC Questions", type: "mnc" },
     { icon: <Mic className="text-pink-400" size={18} />, title: "Mock Interview", type: "mock" },
     { icon: <Code2 className="text-blue-400" size={18} />, title: "Coding Challenge", type: "code" },
     { icon: <FlaskConical className="text-yellow-400" size={18} />, title: "Final Test", type: "reward" },
@@ -1024,13 +1024,13 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
               {currentType === "study" && (
                 <div className="space-y-5">
                   {/* Comprehensive Overview */}
-                  <div className="p-5 rounded-2xl border border-purple-500/30 bg-purple-500/5">
+                  <div className="p-5 rounded-2xl border border-rose-500/30 bg-rose-500/5">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
-                        <BookOpen size={18} className="text-purple-400" />
+                        <BookOpen size={18} className="text-rose-400" />
                         <h3 className="text-lg font-bold">Executive Masterclass & Core Fundamentals</h3>
                       </div>
-                      <span className="text-xs px-2.5 py-1 rounded-full bg-purple-500/20 text-purple-300 font-mono">Zero-to-Hero Placement Spec</span>
+                      <span className="text-xs px-2.5 py-1 rounded-full bg-rose-500/20 text-rose-300 font-mono">Zero-to-Hero Placement Spec</span>
                     </div>
                     <p className="text-sm text-gray-200 leading-relaxed whitespace-pre-wrap">{mod.studyMaterial.summary}</p>
                   </div>
@@ -1055,18 +1055,18 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
 
                   {/* Dynamic Visual Flowchart */}
                   {(mod.studyMaterial as any).flowchartSteps && (mod.studyMaterial as any).flowchartSteps.length > 0 && (
-                    <div className="p-5 rounded-2xl border border-cyan-500/30 bg-cyan-500/5 space-y-3">
-                      <h4 className="text-sm font-bold text-cyan-400 flex items-center gap-2">
+                    <div className="p-5 rounded-2xl border border-orange-500/30 bg-orange-500/5 space-y-3">
+                      <h4 className="text-sm font-bold text-orange-400 flex items-center gap-2">
                         <span>🔄</span> Execution Logic & Dynamic Flowchart
                       </h4>
                       <div className="flex flex-wrap items-center gap-2 pt-1">
                         {((mod.studyMaterial as any).flowchartSteps as string[]).map((step: string, si: number) => (
                           <React.Fragment key={si}>
-                            <div className="px-3.5 py-2 rounded-xl bg-cyan-950 border border-cyan-500/40 text-xs font-mono text-cyan-200 shadow-lg">
+                            <div className="px-3.5 py-2 rounded-xl bg-orange-950 border border-orange-500/40 text-xs font-mono text-orange-200 shadow-lg">
                               {step}
                             </div>
                             {si < ((mod.studyMaterial as any).flowchartSteps as string[]).length - 1 && (
-                              <ChevronRight size={16} className="text-cyan-400 shrink-0" />
+                              <ChevronRight size={16} className="text-orange-400 shrink-0" />
                             )}
                           </React.Fragment>
                         ))}
@@ -1159,7 +1159,7 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
 
                   <button
                     onClick={() => setActiveStep(2)}
-                    className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 text-sm font-medium transition-colors"
+                    className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 text-sm font-medium transition-colors"
                   >
                     Next: Watch Videos <ChevronRight size={16} />
                   </button>
@@ -1364,18 +1364,18 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
               {currentType === "mnc" && (
                 <div className="space-y-4">
                   <div className="flex items-center gap-2 mb-2">
-                    <Building2 size={18} className="text-cyan-400" />
+                    <Building2 size={18} className="text-orange-400" />
                     <h3 className="text-lg font-bold">Top MNC Previous Questions</h3>
                   </div>
                   <p className="text-xs text-muted-foreground -mt-2 mb-2">Actual questions asked in placement drives</p>
                   {mod.mnc.map((item, i) => (
-                    <div key={i} className="rounded-2xl border border-cyan-500/20 bg-cyan-500/5 overflow-hidden">
+                    <div key={i} className="rounded-2xl border border-orange-500/20 bg-orange-500/5 overflow-hidden">
                       <button
                         className="w-full flex justify-between items-center p-4 text-left"
                         onClick={() => setShowAnswer(showAnswer === i ? null : i)}
                       >
                         <div className="flex items-center gap-3">
-                          <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+                          <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-orange-500/20 text-orange-300 border border-orange-500/30">
                             {item.company}
                           </span>
                           <span className="text-xs text-muted-foreground">{item.year}</span>
@@ -1397,7 +1397,7 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
                   ))}
                   <button
                     onClick={() => setActiveStep(6)}
-                    className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 text-sm font-medium transition-colors"
+                    className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-orange-500/20 hover:bg-orange-500/30 text-orange-300 text-sm font-medium transition-colors"
                   >
                     Next: Mock Interview <ChevronRight size={16} />
                   </button>

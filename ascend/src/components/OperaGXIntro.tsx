@@ -103,17 +103,17 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
           />
 
           {/* Ambient Cyber Light */}
-          <div className="absolute w-[600px] h-[600px] md:w-[900px] md:h-[900px] rounded-full bg-gradient-to-r from-[#7C3AED]/25 via-[#00E5FF]/25 to-transparent blur-[130px] pointer-events-none animate-pulse" />
+          <div className="absolute w-[600px] h-[600px] md:w-[900px] md:h-[900px] rounded-full bg-gradient-to-r from-[#FF512F]/25 via-[#F09819]/25 to-transparent blur-[130px] pointer-events-none animate-pulse" />
 
           {/* Cyber Grid */}
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#00E5FF15_1px,transparent_1px),linear-gradient(to_bottom,#7C3AED15_1px,transparent_1px)] bg-[size:2.5rem_2.5rem] [mask-image:radial-gradient(ellipse_80%_80%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none" />
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#F0981915_1px,transparent_1px),linear-gradient(to_bottom,#FF512F15_1px,transparent_1px)] bg-[size:2.5rem_2.5rem] [mask-image:radial-gradient(ellipse_80%_80%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none" />
 
           {/* Laser Scanline */}
           <motion.div
             initial={{ top: "0%" }}
             animate={{ top: ["0%", "100%", "50%"] }}
             transition={{ duration: 1.1, ease: "easeInOut" }}
-            className="absolute left-0 right-0 h-1.5 bg-gradient-to-r from-transparent via-[#00E5FF] to-transparent shadow-[0_0_40px_#00E5FF] opacity-90 pointer-events-none"
+            className="absolute left-0 right-0 h-1.5 bg-gradient-to-r from-transparent via-[#F09819] to-transparent shadow-[0_0_40px_#F09819] opacity-90 pointer-events-none"
           />
 
           {/* Radial Energy Shockwave Ring */}
@@ -123,22 +123,22 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
                 initial={{ scale: 0.1, opacity: 1 }}
                 animate={{ scale: 4.8, opacity: 0 }}
                 transition={{ duration: 0.85, ease: "easeOut" }}
-                className="absolute w-72 h-72 rounded-full border-4 border-[#00E5FF] shadow-[0_0_100px_#00E5FF,inset_0_0_60px_#7C3AED] pointer-events-none"
+                className="absolute w-72 h-72 rounded-full border-4 border-[#F09819] shadow-[0_0_100px_#F09819,inset_0_0_60px_#FF512F] pointer-events-none"
               />
               <motion.div
                 initial={{ scale: 0.1, opacity: 0.8 }}
                 animate={{ scale: 3.2, opacity: 0 }}
                 transition={{ duration: 0.65, delay: 0.08, ease: "easeOut" }}
-                className="absolute w-72 h-72 rounded-full border-2 border-[#7C3AED] shadow-[0_0_60px_#7C3AED] pointer-events-none"
+                className="absolute w-72 h-72 rounded-full border-2 border-[#FF512F] shadow-[0_0_60px_#FF512F] pointer-events-none"
               />
             </>
           )}
 
           {/* Tech HUD Corner Brackets */}
-          <div className="absolute top-6 left-6 border-t-4 border-l-4 border-[#00E5FF] w-8 h-8 pointer-events-none" />
-          <div className="absolute top-6 right-6 border-t-4 border-r-4 border-[#7C3AED] w-8 h-8 pointer-events-none" />
-          <div className="absolute bottom-6 left-6 border-b-4 border-l-4 border-[#7C3AED] w-8 h-8 pointer-events-none" />
-          <div className="absolute bottom-6 right-6 border-b-4 border-r-4 border-[#00E5FF] w-8 h-8 pointer-events-none" />
+          <div className="absolute top-6 left-6 border-t-4 border-l-4 border-[#F09819] w-8 h-8 pointer-events-none" />
+          <div className="absolute top-6 right-6 border-t-4 border-r-4 border-[#FF512F] w-8 h-8 pointer-events-none" />
+          <div className="absolute bottom-6 left-6 border-b-4 border-l-4 border-[#FF512F] w-8 h-8 pointer-events-none" />
+          <div className="absolute bottom-6 right-6 border-b-4 border-r-4 border-[#F09819] w-8 h-8 pointer-events-none" />
 
           {/* Audio Frequency Spectrum Equalizer */}
           <div className="absolute inset-x-0 bottom-24 flex justify-center items-end gap-1.5 h-14 opacity-40 pointer-events-none">
@@ -148,14 +148,14 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
                 initial={{ height: 4 }}
                 animate={{ height: ignited ? [`${h}%`, "15%", `${h * 0.9}%`] : ["10%", "25%", "10%"] }}
                 transition={{ repeat: Infinity, duration: 0.35 + (i % 4) * 0.1 }}
-                className="w-1.5 rounded-full bg-gradient-to-t from-[#7C3AED] to-[#00E5FF]"
+                className="w-1.5 rounded-full bg-gradient-to-t from-[#FF512F] to-[#F09819]"
               />
             ))}
           </div>
 
           {/* Top Status Header */}
-          <div className="absolute top-6 flex items-center gap-2.5 text-[11px] font-mono tracking-widest text-cyan-400/90 uppercase">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#00E5FF] shadow-[0_0_12px_#00E5FF] animate-ping" />
+          <div className="absolute top-6 flex items-center gap-2.5 text-[11px] font-mono tracking-widest text-orange-400/90 uppercase">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#F09819] shadow-[0_0_12px_#F09819] animate-ping" />
             <span>CARVEX ENGINE v2.0 // {ignited ? "SYSTEM ONLINE" : "READY FOR IGNITION"}</span>
           </div>
 
@@ -171,7 +171,7 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
               }}
               transition={{ duration: 0.5, type: "spring", stiffness: 240, damping: 18 }}
               className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-3xl flex items-center justify-center shadow-[0_0_80px_rgba(0,229,255,0.6)]"
-              style={{ background: "linear-gradient(135deg, #7C3AED 0%, #00E5FF 100%)" }}
+              style={{ background: "linear-gradient(135deg, #FF512F 0%, #F09819 100%)" }}
             >
               <svg width="52" height="52" viewBox="0 0 22 22" fill="none">
                 <polyline
@@ -181,9 +181,9 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
-                <circle cx="11" cy="4" r="2.8" fill="#00E5FF" />
+                <circle cx="11" cy="4" r="2.8" fill="#F09819" />
               </svg>
-              <span className="absolute -top-2 w-4 h-4 rounded-full bg-[#00E5FF] shadow-[0_0_30px_#00E5FF] animate-pulse" />
+              <span className="absolute -top-2 w-4 h-4 rounded-full bg-[#F09819] shadow-[0_0_30px_#F09819] animate-pulse" />
             </motion.div>
 
             {/* CARVEX Glitch Lettering */}
@@ -209,7 +209,7 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
                   style={{
                     textShadow:
                       stage === "shockwave"
-                        ? "0 0 40px #00E5FF, 0 0 80px #7C3AED, -3px 0 #00E5FF, 3px 0 #7C3AED"
+                        ? "0 0 40px #F09819, 0 0 80px #FF512F, -3px 0 #F09819, 3px 0 #FF512F"
                         : "0 0 25px rgba(0,229,255,0.6), 0 0 50px rgba(124,58,237,0.4)",
                   }}
                 >
@@ -223,7 +223,7 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.4 }}
-              className="text-xs sm:text-sm font-mono tracking-[0.35em] text-cyan-300 font-extrabold uppercase mt-2 drop-shadow-[0_0_12px_#00E5FF]"
+              className="text-xs sm:text-sm font-mono tracking-[0.35em] text-orange-300 font-extrabold uppercase mt-2 drop-shadow-[0_0_12px_#F09819]"
             >
               REACH YOUR CAREER VERTEX
             </motion.p>

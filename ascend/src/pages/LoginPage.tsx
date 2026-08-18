@@ -57,10 +57,10 @@ export default function LoginPage() {
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-3 mb-4">
             {/* CARVEX vertex icon mark */}
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{background: "linear-gradient(135deg, #7C3AED 0%, #00E5FF 100%)"}}>
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{background: "linear-gradient(135deg, #FF512F 0%, #F09819 100%)"}}>
               <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
                 <polyline points="2,18 11,4 20,18" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <circle cx="11" cy="4" r="2" fill="#00E5FF"/>
+                <circle cx="11" cy="4" r="2" fill="#F09819"/>
               </svg>
             </div>
             <span className="text-2xl font-bold tracking-widest text-white" style={{letterSpacing:"0.2em"}}>CARVEX</span>

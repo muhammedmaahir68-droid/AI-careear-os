@@ -106,7 +106,7 @@ const COMPANY_TRACKS: CompanyDetails[] = [
   {
     name: "Google",
     logo: "🔵",
-    color: "from-blue-600/20 to-cyan-600/20",
+    color: "from-blue-600/20 to-orange-600/20",
     border: "border-blue-500/30",
     description: "Google focuses heavily on raw problem solving, algorithm design, and system scalability. They expect clean code and optimal time/space complexity.",
     codingRound: {
@@ -537,7 +537,7 @@ export default function Dashboard() {
     { label: "Coding", score: Math.min(100, Math.floor(xp / 15)), color: "bg-blue-500" },
     { label: "SQL", score: Math.min(100, Math.floor(xp / 20)), color: "bg-green-500" },
     { label: "Communication", score: Math.min(100, Math.floor(xp / 25)), color: "bg-pink-500" },
-    { label: "DSA", score: Math.min(100, Math.floor(xp / 30)), color: "bg-purple-500" },
+    { label: "DSA", score: Math.min(100, Math.floor(xp / 30)), color: "bg-rose-500" },
     { label: "Interview", score: Math.min(100, Math.floor(xp / 40)), color: "bg-orange-500" },
   ];
 
@@ -573,10 +573,10 @@ export default function Dashboard() {
               <ArrowLeft size={18} />
             </button>
             {/* CARVEX icon mark */}
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{background:"linear-gradient(135deg,#7C3AED 0%,#00E5FF 100%)"}}>
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{background:"linear-gradient(135deg,#FF512F 0%,#F09819 100%)"}}>
               <svg width="17" height="17" viewBox="0 0 22 22" fill="none">
                 <polyline points="2,18 11,4 20,18" stroke="white" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"/>
-                <circle cx="11" cy="4" r="2.2" fill="#00E5FF"/>
+                <circle cx="11" cy="4" r="2.2" fill="#F09819"/>
               </svg>
             </div>
             <span className="text-lg font-bold tracking-widest text-white" style={{letterSpacing:"0.18em"}}>CARVEX</span>
@@ -584,9 +584,9 @@ export default function Dashboard() {
 
           {/* Stats */}
           <div className="flex items-center gap-6">
-            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 shadow-sm" title="Duolingo Placement Diamonds">
+            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20 shadow-sm" title="Duolingo Placement Diamonds">
               <span className="text-sm">💎</span>
-              <span className="text-sm font-bold text-cyan-300">{Math.floor((xp ?? 0) * 0.4) + 50} 💎</span>
+              <span className="text-sm font-bold text-orange-300">{Math.floor((xp ?? 0) * 0.4) + 50} 💎</span>
             </div>
             <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20">
               <Flame className="text-orange-400" size={16} />
@@ -596,9 +596,9 @@ export default function Dashboard() {
               <Star className="text-yellow-400" size={16} />
               <span className="text-sm font-bold text-yellow-300">{xp} XP</span>
             </div>
-            <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20">
-              <Trophy className="text-purple-400" size={16} />
-              <span className="text-sm font-bold text-purple-300">Level {level}</span>
+            <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-500/10 border border-rose-500/20">
+              <Trophy className="text-rose-400" size={16} />
+              <span className="text-sm font-bold text-rose-300">Level {level}</span>
             </div>
             <button
               onClick={() => setShowCertification(true)}
@@ -722,12 +722,12 @@ export default function Dashboard() {
                 <div className="p-6 rounded-3xl border border-border bg-white/5">
                   <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-3">
-                      <Users className="text-purple-400" size={24} />
+                      <Users className="text-rose-400" size={24} />
                       <h3 className="text-xl font-display">Active Study Groups</h3>
                     </div>
                     <button
                       onClick={() => setShowCreateGroup(!showCreateGroup)}
-                      className="text-xs px-3 py-1.5 rounded-full bg-purple-500/20 text-purple-300 hover:bg-purple-500/30 transition-colors flex items-center gap-1"
+                      className="text-xs px-3 py-1.5 rounded-full bg-rose-500/20 text-rose-300 hover:bg-rose-500/30 transition-colors flex items-center gap-1"
                     >
                       {showCreateGroup ? "✕ Cancel" : "+ Create Group"}
                     </button>
@@ -735,21 +735,21 @@ export default function Dashboard() {
 
                   {/* Create Group Form */}
                   {showCreateGroup && (
-                    <div className="mb-4 p-4 rounded-2xl bg-white/5 border border-purple-500/20 space-y-3">
+                    <div className="mb-4 p-4 rounded-2xl bg-white/5 border border-rose-500/20 space-y-3">
                       <input
                         type="text" placeholder="Group name (e.g. DSA Warriors)" maxLength={50}
                         value={newGroupForm.name} onChange={(e) => setNewGroupForm(f => ({ ...f, name: e.target.value }))}
-                        className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-400"
+                        className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-rose-400"
                       />
                       <input
                         type="text" placeholder="Topic (e.g. Data Structures & Algorithms)" maxLength={60}
                         value={newGroupForm.topic} onChange={(e) => setNewGroupForm(f => ({ ...f, topic: e.target.value }))}
-                        className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-400"
+                        className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-rose-400"
                       />
                       <textarea
                         placeholder="Short description (optional)" maxLength={200} rows={2}
                         value={newGroupForm.description} onChange={(e) => setNewGroupForm(f => ({ ...f, description: e.target.value }))}
-                        className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-400 resize-none"
+                        className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-rose-400 resize-none"
                       />
                       <button
                         disabled={communityActionLoading || !newGroupForm.name.trim() || !newGroupForm.topic.trim()}
@@ -757,7 +757,7 @@ export default function Dashboard() {
                           const ok = await createGroup(newGroupForm);
                           if (ok) { setNewGroupForm({ name: "", topic: "", description: "" }); setShowCreateGroup(false); }
                         }}
-                        className="w-full py-2 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white text-sm font-semibold rounded-lg transition-colors"
+                        className="w-full py-2 bg-rose-600 hover:bg-rose-700 disabled:opacity-50 text-white text-sm font-semibold rounded-lg transition-colors"
                       >
                         {communityActionLoading ? "Creating..." : "Create Group"}
                       </button>
@@ -798,7 +798,7 @@ export default function Dashboard() {
                             </button>
                           )}
                           {g.is_owner && (
-                            <span className="text-xs px-2 py-1 rounded-full bg-purple-500/20 text-purple-300">Owner</span>
+                            <span className="text-xs px-2 py-1 rounded-full bg-rose-500/20 text-rose-300">Owner</span>
                           )}
                         </div>
                       </div>
@@ -921,17 +921,17 @@ export default function Dashboard() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Left: Resume Editor */}
                 <div className="p-6 rounded-3xl border border-border bg-white/5 space-y-4">
-                  <h3 className="text-lg font-display flex items-center gap-2"><Briefcase size={20} className="text-purple-400" /> Personal Details</h3>
-                  <input value={resumeName} onChange={e => setResumeName(e.target.value)} placeholder="Full Name" className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-400" />
+                  <h3 className="text-lg font-display flex items-center gap-2"><Briefcase size={20} className="text-rose-400" /> Personal Details</h3>
+                  <input value={resumeName} onChange={e => setResumeName(e.target.value)} placeholder="Full Name" className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-rose-400" />
                   <div className="grid grid-cols-2 gap-3">
-                    <input value={resumeEmail} onChange={e => setResumeEmail(e.target.value)} placeholder="Email" className="bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-400" />
-                    <input value={resumePhone} onChange={e => setResumePhone(e.target.value)} placeholder="Phone" className="bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-400" />
+                    <input value={resumeEmail} onChange={e => setResumeEmail(e.target.value)} placeholder="Email" className="bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-rose-400" />
+                    <input value={resumePhone} onChange={e => setResumePhone(e.target.value)} placeholder="Phone" className="bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-rose-400" />
                   </div>
-                  <textarea value={resumeSummary} onChange={e => setResumeSummary(e.target.value)} placeholder="Professional Summary (use industry keywords)" rows={3} className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-400 resize-none" />
-                  <textarea value={resumeExperience} onChange={e => setResumeExperience(e.target.value)} placeholder="Experience (quantify achievements, e.g. 'Improved efficiency by 30%')" rows={4} className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-400 resize-none" />
-                  <textarea value={resumeEducation} onChange={e => setResumeEducation(e.target.value)} placeholder="Education (Degree, University, Year)" rows={2} className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-400 resize-none" />
-                  <textarea value={resumeSkills} onChange={e => setResumeSkills(e.target.value)} placeholder="Skills (comma-separated: React, Python, SQL, Docker...)" rows={2} className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-400 resize-none" />
-                  <textarea value={resumeJobDesc} onChange={e => setResumeJobDesc(e.target.value)} placeholder="Paste Target Job Description (for ATS keyword matching)" rows={3} className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-cyan-400 resize-none" />
+                  <textarea value={resumeSummary} onChange={e => setResumeSummary(e.target.value)} placeholder="Professional Summary (use industry keywords)" rows={3} className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-rose-400 resize-none" />
+                  <textarea value={resumeExperience} onChange={e => setResumeExperience(e.target.value)} placeholder="Experience (quantify achievements, e.g. 'Improved efficiency by 30%')" rows={4} className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-rose-400 resize-none" />
+                  <textarea value={resumeEducation} onChange={e => setResumeEducation(e.target.value)} placeholder="Education (Degree, University, Year)" rows={2} className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-rose-400 resize-none" />
+                  <textarea value={resumeSkills} onChange={e => setResumeSkills(e.target.value)} placeholder="Skills (comma-separated: React, Python, SQL, Docker...)" rows={2} className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-rose-400 resize-none" />
+                  <textarea value={resumeJobDesc} onChange={e => setResumeJobDesc(e.target.value)} placeholder="Paste Target Job Description (for ATS keyword matching)" rows={3} className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-400 resize-none" />
                 </div>
 
                 {/* Right: ATS Score + Actions */}
@@ -948,7 +948,7 @@ export default function Dashboard() {
                         <span className="text-3xl font-bold">{resumeAtsScore !== null ? `${resumeAtsScore}%` : "—"}</span>
                       </div>
                     </div>
-                    <button onClick={handleAtsCheck} disabled={resumeScoring} className="px-6 py-3 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white font-bold text-sm transition-all disabled:opacity-50">
+                    <button onClick={handleAtsCheck} disabled={resumeScoring} className="px-6 py-3 rounded-full bg-gradient-to-r from-emerald-500 to-orange-500 hover:from-emerald-600 hover:to-orange-600 text-white font-bold text-sm transition-all disabled:opacity-50">
                       {resumeScoring ? "Analyzing..." : "🔍 Run ATS Analysis"}
                     </button>
                   </div>
@@ -968,7 +968,7 @@ export default function Dashboard() {
 
                   {/* Download Buttons */}
                   <div className="p-5 rounded-3xl border border-border bg-white/5 space-y-3">
-                    <h4 className="text-sm font-bold text-purple-400">Download Resume</h4>
+                    <h4 className="text-sm font-bold text-rose-400">Download Resume</h4>
                     <div className="flex flex-wrap gap-3">
                       <button onClick={() => downloadResume("pdf")} className="px-4 py-2.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-300 text-xs font-bold transition-all flex items-center gap-1.5"><Download size={14} /> PDF</button>
                       <button onClick={() => downloadResume("doc")} className="px-4 py-2.5 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 text-blue-300 text-xs font-bold transition-all flex items-center gap-1.5"><Download size={14} /> DOC</button>
@@ -1001,8 +1001,8 @@ export default function Dashboard() {
           {/* ── LIFE OS AI PLANNER (STANDALONE) ── */}
           {activeTab === "life-os" && (
             <motion.div key="life-os" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-              <h2 className="text-3xl font-display mb-2 flex items-center gap-3"><Target className="text-cyan-400" size={28} /> Life OS AI Study Planner</h2>
-              <p className="text-muted-foreground mb-6">Real-time study schedule generator, habits tracker, and placement timeline planning. <span className="text-cyan-400 font-bold">No level progression required.</span></p>
+              <h2 className="text-3xl font-display mb-2 flex items-center gap-3"><Target className="text-orange-400" size={28} /> Life OS AI Study Planner</h2>
+              <p className="text-muted-foreground mb-6">Real-time study schedule generator, habits tracker, and placement timeline planning. <span className="text-orange-400 font-bold">No level progression required.</span></p>
               <LifeOSPanel branchId={branchId} roleId={roleId} />
             </motion.div>
           )}
