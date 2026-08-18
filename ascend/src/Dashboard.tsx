@@ -217,11 +217,11 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const { profile, signOut, updateXP, updateStreak } = useAuth();
 
-  const [theme, setTheme] = useState<"light"|"navy"|"black">("light");
+  const [theme, setTheme] = useState<"light"|"navy"|"black">("navy");
 
   useEffect(() => {
-    document.documentElement.classList.remove("theme-navy", "theme-black");
-    if (theme === "navy") document.documentElement.classList.add("theme-navy");
+    document.documentElement.classList.remove("theme-light", "theme-black");
+    if (theme === "light") document.documentElement.classList.add("theme-light");
     if (theme === "black") document.documentElement.classList.add("theme-black");
   }, [theme]);
 
