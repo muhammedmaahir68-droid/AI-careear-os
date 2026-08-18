@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
-  Trophy, Gem, Lock, CheckCircle2, Sparkles, BookOpen,
+  Trophy, Gem, Lock, CheckCircle2, BookOpen,
   ArrowRight, Gift, X, Zap, Target, ChevronDown, ChevronRight,
   Code2, Brain, Cpu, Bolt, Wrench, Building, Database, Shield,
   Lightbulb, HelpCircle, FileText, Check, Award, Video, Play,
@@ -672,7 +672,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
               )}
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground flex items-center gap-2">
-              Integrated Placement Curriculum <Sparkles size={22} className="text-amber-400" />
+              Integrated Placement Curriculum 
             </h2>
             <p className="text-xs sm:text-sm text-muted-foreground mt-1">Select a phase below to focus on its separate curriculum chart and dedicated topics.</p>
           </div>

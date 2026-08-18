@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Trophy, Sparkles, Gem, Flame, Award, Gift, CheckCircle2, ChevronRight, Zap, Shield, Star, RefreshCw } from "lucide-react";
+import { Trophy, Gem, Flame, Award, Gift, CheckCircle2, ChevronRight, Zap, Shield, Star, RefreshCw } from "lucide-react";
 
 interface GamificationModalProps {
   isOpen: boolean;
@@ -100,7 +100,7 @@ export default function GamificationModal({
                 onClick={handleOpenChest}
                 className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600 font-bold text-slate-950 text-sm shadow-lg shadow-amber-500/20 hover:brightness-110 transition cursor-pointer flex items-center justify-center gap-2"
               >
-                <Sparkles size={18} /> Crack Open Loot Box!
+                 Crack Open Loot Box!
               </button>
             </div>
           ) : (

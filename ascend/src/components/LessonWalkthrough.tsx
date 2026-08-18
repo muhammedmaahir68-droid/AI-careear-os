@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
-  BookOpen, Code2, Sparkles, CheckCircle2, ChevronRight,
+  BookOpen, Code2, CheckCircle2, ChevronRight,
   ChevronLeft, Award, HelpCircle, Lightbulb, Play, ArrowRight, Zap, Target
 } from "lucide-react";
 import { LESSON_BANK, getLessonSyllabus, type LevelSyllabusLesson, type TopicLesson } from "../data/lessonBank";
@@ -226,7 +226,7 @@ export function LessonWalkthrough({
               <h3 className="text-xl font-bold text-foreground">MNC Placement Interview Strategy</h3>
               <div className="p-6 rounded-2xl bg-gradient-to-r from-amber-500/10 to-yellow-500/10 border border-amber-500/30 text-amber-100 text-sm leading-relaxed space-y-3">
                 <div className="flex items-center gap-2 text-amber-400 font-bold text-base">
-                  <Sparkles size={20} />
+                  
                   <span>High-Yield Interview Tip</span>
                 </div>
                 <p>{currentTopic.placementTip}</p>

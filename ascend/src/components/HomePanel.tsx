@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "motion/react";
 import {
-  Play, Sparkles, Flame, Gem, Zap, Trophy, Award, ArrowRight,
+  Play, Flame, Gem, Zap, Trophy, Award, ArrowRight,
   BookOpen, Mic, Building2, CheckCircle2, Shield, BrainCircuit, Code2
 } from "lucide-react";
 
@@ -48,7 +48,7 @@ export default function HomePanel({
               </span>
             )}
             <span className="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-3.5 py-1 rounded-full border border-emerald-500/30 flex items-center gap-1">
-              <Sparkles size={12} /> 5-Phase Placement Curriculum
+               5-Phase Placement Curriculum
             </span>
           </div>
 

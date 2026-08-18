@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Brain, Download, Send, Sparkles, FileText, Code2, Briefcase, Zap } from "lucide-react";
+import { Brain, Download, Send, FileText, Code2, Briefcase, Zap } from "lucide-react";
 
 interface MaahirMsg { sender: "user" | "ai"; text: string; ts: string; }
 
