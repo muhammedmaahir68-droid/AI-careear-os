@@ -104,7 +104,7 @@ export default function PlacementCertification({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+    <div className="fixed inset-0 z-50 bg-card backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
       <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl text-slate-100 flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-slate-800 bg-slate-950/60 sticky top-0 z-10">
@@ -114,7 +114,7 @@ export default function PlacementCertification({
               <h2 className="text-xl font-bold bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-500 bg-clip-text text-transparent">
                 National Placement Readiness Certification
               </h2>
-              <p className="text-xs text-slate-400">Proctored Final Placement Exit Examination</p>
+              <p className="text-xs text-muted-foreground">Proctored Final Placement Exit Examination</p>
             </div>
           </div>
           <button
@@ -138,16 +138,16 @@ export default function PlacementCertification({
               </p>
 
               <div className="grid grid-cols-3 gap-4 py-4 text-left">
-                <div className="p-4 rounded-xl bg-slate-800/60 border border-slate-700/50">
-                  <div className="text-xs text-slate-400">Questions</div>
+                <div className="p-4 rounded-xl bg-muted border border-slate-700/50">
+                  <div className="text-xs text-muted-foreground">Questions</div>
                   <div className="text-xl font-bold text-amber-400">60 MCQs</div>
                 </div>
-                <div className="p-4 rounded-xl bg-slate-800/60 border border-slate-700/50">
-                  <div className="text-xs text-slate-400">Time Limit</div>
+                <div className="p-4 rounded-xl bg-muted border border-slate-700/50">
+                  <div className="text-xs text-muted-foreground">Time Limit</div>
                   <div className="text-xl font-bold text-amber-400">60 Minutes</div>
                 </div>
-                <div className="p-4 rounded-xl bg-slate-800/60 border border-slate-700/50">
-                  <div className="text-xs text-slate-400">Passing Grade</div>
+                <div className="p-4 rounded-xl bg-muted border border-slate-700/50">
+                  <div className="text-xs text-muted-foreground">Passing Grade</div>
                   <div className="text-xl font-bold text-emerald-400">70% (42/60)</div>
                 </div>
               </div>
@@ -168,7 +168,7 @@ export default function PlacementCertification({
           {examStarted && !examCompleted && (
             <div className="space-y-6">
               {/* Top Progress & Timer Bar */}
-              <div className="flex items-center justify-between p-4 rounded-xl bg-slate-800/80 border border-slate-700">
+              <div className="flex items-center justify-between p-4 rounded-xl bg-muted border border-slate-700">
                 <div className="text-sm font-medium text-slate-300">
                   Question <span className="text-amber-400 font-bold">{currentIndex + 1}</span> of {questions.length}
                 </div>
@@ -178,7 +178,7 @@ export default function PlacementCertification({
                 </div>
                 <button
                   onClick={handleSubmitExam}
-                  className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-xs font-bold text-white transition shadow"
+                  className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-xs font-bold text-foreground transition shadow"
                 >
                   Finish & Submit Exam
                 </button>
@@ -186,12 +186,12 @@ export default function PlacementCertification({
 
               {/* Question Card */}
               {questions[currentIndex] && (
-                <div className="space-y-4 bg-slate-800/40 p-6 rounded-2xl border border-slate-800">
+                <div className="space-y-4 bg-muted p-6 rounded-2xl border border-slate-800">
                   <div className="flex items-center justify-between text-xs">
                     <span className="px-2.5 py-1 rounded-md bg-amber-500/10 text-amber-400 border border-amber-500/20 font-semibold uppercase">
                       {questions[currentIndex].module} • {questions[currentIndex].topic}
                     </span>
-                    <span className="text-slate-400 uppercase font-mono">
+                    <span className="text-muted-foreground uppercase font-mono">
                       Difficulty: {questions[currentIndex].difficulty}
                     </span>
                   </div>
@@ -216,12 +216,12 @@ export default function PlacementCertification({
                           className={`w-full p-4 rounded-xl text-left border text-sm transition flex items-center justify-between ${
                             isSelected
                               ? "bg-amber-500/20 border-amber-500 text-amber-200 font-medium"
-                              : "bg-slate-800/70 border-slate-700/60 hover:bg-slate-800 text-slate-300"
+                              : "bg-muted border-slate-700/60 hover:bg-slate-800 text-slate-300"
                           }`}
                         >
                           <span className="flex items-center gap-3">
                             <span className={`w-6 h-6 rounded-full border flex items-center justify-center text-xs font-bold ${
-                              isSelected ? "border-amber-400 bg-amber-400 text-slate-950" : "border-slate-600 text-slate-400"
+                              isSelected ? "border-amber-400 bg-amber-400 text-slate-950" : "border-slate-600 text-muted-foreground"
                             }`}>
                               {String.fromCharCode(65 + oIdx)}
                             </span>
@@ -254,7 +254,7 @@ export default function PlacementCertification({
                           ? "bg-amber-500 text-slate-950 ring-2 ring-amber-400"
                           : selectedAnswers[i] !== undefined
                           ? "bg-emerald-600/30 text-emerald-300 border border-emerald-500/40"
-                          : "bg-slate-800 text-slate-400 hover:bg-slate-700"
+                          : "bg-slate-800 text-muted-foreground hover:bg-slate-700"
                       }`}
                     >
                       {i + 1}
@@ -295,20 +295,20 @@ export default function PlacementCertification({
                     <div className="flex items-center justify-between border-b border-amber-500/20 pb-4 mb-6">
                       <div>
                         <h4 className="text-xl font-bold tracking-wider text-amber-400 uppercase">AI Career OS Credentials</h4>
-                        <div className="text-xs text-slate-400 font-mono">Verification ID: {certId}</div>
+                        <div className="text-xs text-muted-foreground font-mono">Verification ID: {certId}</div>
                       </div>
                       <ShieldCheck className="w-8 h-8 text-amber-400" />
                     </div>
 
                     <div className="space-y-4 my-6">
-                      <div className="text-xs uppercase text-slate-400 tracking-widest">This is to certify that</div>
-                      <div className="text-3xl font-extrabold text-white tracking-wide">{userName}</div>
+                      <div className="text-xs uppercase text-muted-foreground tracking-widest">This is to certify that</div>
+                      <div className="text-3xl font-extrabold text-foreground tracking-wide">{userName}</div>
                       <div className="text-sm text-slate-300 max-w-xl leading-relaxed">
                         has successfully completed the proctored placement examination for <strong className="text-amber-300">{userBranch}</strong>, demonstrating industry-ready competence in Algorithms, Systems Architecture, and Technical Problem Solving.
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between pt-6 border-t border-amber-500/20 text-xs text-slate-400">
+                    <div className="flex items-center justify-between pt-6 border-t border-amber-500/20 text-xs text-muted-foreground">
                       <div>
                         <div>Issued Date: <span className="text-slate-200 font-medium">{issueDate}</span></div>
                         <div>Status: <span className="text-emerald-400 font-bold">VERIFIED & ACCREDITED</span></div>
@@ -343,10 +343,10 @@ export default function PlacementCertification({
                   <div>
                     <h3 className="text-2xl font-bold text-rose-400">Passing Grade Not Reached</h3>
                     <p className="text-slate-300 text-sm mt-1">
-                      Your score was <span className="font-bold text-white">{score}%</span> (Minimum 70% required).
+                      Your score was <span className="font-bold text-foreground">{score}%</span> (Minimum 70% required).
                     </p>
                   </div>
-                  <p className="text-slate-400 text-xs max-w-md mx-auto">
+                  <p className="text-muted-foreground text-xs max-w-md mx-auto">
                     Review your weak areas using the Daily 40-Question Challenges and topic modules, then re-attempt when you are ready.
                   </p>
                   <button

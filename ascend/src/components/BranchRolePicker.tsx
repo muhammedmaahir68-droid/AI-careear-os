@@ -68,7 +68,7 @@ export default function BranchRolePicker({ onSelect, currentBranchId, currentRol
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {BRANCHES.map((branch, i) => {
-                  const colorClass = BRANCH_COLORS[branch.id] ?? "from-gray-600/20 to-gray-500/5 border-gray-500/30 text-gray-400";
+                  const colorClass = BRANCH_COLORS[branch.id] ?? "from-gray-600/20 to-gray-500/5 border-gray-500/30 text-muted-foreground";
                   return (
                     <motion.button
                       key={branch.id}
@@ -81,7 +81,7 @@ export default function BranchRolePicker({ onSelect, currentBranchId, currentRol
                       className={`p-6 rounded-2xl border bg-gradient-to-br text-left transition-all ${colorClass} hover:shadow-lg hover:shadow-black/20`}
                     >
                       <div className="mb-4 opacity-80">{ICON_MAP[branch.icon]}</div>
-                      <h3 className="text-base font-bold mb-1 text-white">{branch.name}</h3>
+                      <h3 className="text-base font-bold mb-1 text-foreground">{branch.name}</h3>
                       <p className="text-xs text-muted-foreground leading-relaxed mb-3">{branch.description}</p>
                       <div className="flex items-center gap-1 text-xs font-medium opacity-70">
                         {branch.roles.length} career tracks <ChevronRight size={12} />
@@ -101,14 +101,14 @@ export default function BranchRolePicker({ onSelect, currentBranchId, currentRol
               <div className="flex items-center gap-4 mb-8">
                 <button
                   onClick={() => { setStep("branch"); setSelectedBranch(null); }}
-                  className="flex items-center gap-2 text-sm text-muted-foreground hover:text-white transition-colors"
+                  className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   <ArrowLeft size={16} /> Back to branches
                 </button>
                 <div className="flex-1 text-center">
                   <h1 className="text-3xl font-display font-bold mb-1">Choose Your Career Track</h1>
                   <p className="text-muted-foreground text-sm">
-                    Branch: <span className="text-white font-medium">{selectedBranch?.name}</span>
+                    Branch: <span className="text-foreground font-medium">{selectedBranch?.name}</span>
                   </p>
                 </div>
               </div>
@@ -129,12 +129,12 @@ export default function BranchRolePicker({ onSelect, currentBranchId, currentRol
                       className={`p-5 rounded-2xl border text-left transition-all ${
                         isSelected
                           ? `bg-gradient-to-br ${colorClass} shadow-lg`
-                          : "bg-white/5 border-white/10 hover:bg-white/10"
+                          : "bg-white/5 border-border hover:bg-white/10"
                       }`}
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div>
-                          <h4 className="text-sm font-bold mb-1 text-white">{role.name}</h4>
+                          <h4 className="text-sm font-bold mb-1 text-foreground">{role.name}</h4>
                           <p className="text-xs text-muted-foreground leading-relaxed">{role.description}</p>
                         </div>
                         {isSelected && <CheckCircle2 size={20} className="text-green-400 shrink-0 mt-0.5" />}
@@ -150,7 +150,7 @@ export default function BranchRolePicker({ onSelect, currentBranchId, currentRol
                   whileTap={{ scale: 0.95 }}
                   onClick={handleConfirm}
                   disabled={!selectedRoleId}
-                  className="px-10 py-3.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 disabled:opacity-40 text-white font-bold rounded-full text-sm transition-all shadow-lg shadow-blue-500/20"
+                  className="px-10 py-3.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 disabled:opacity-40 text-foreground font-bold rounded-full text-sm transition-all shadow-lg shadow-blue-500/20"
                 >
                   🚀 Start My Personalized Roadmap
                 </motion.button>

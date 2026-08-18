@@ -951,7 +951,7 @@ export default function SyllabusModule({ completedModules, onSelectConcept, syll
 
   return (
     <div className="p-6 rounded-3xl border border-border bg-white/5 backdrop-blur-sm max-h-[85vh] overflow-y-auto custom-scrollbar">
-      <div className="sticky top-0 bg-background/95 backdrop-blur-md pt-2 pb-6 z-20 border-b border-white/5 mb-6">
+      <div className="sticky top-0 bg-background/95 backdrop-blur-md pt-2 pb-6 z-20 border-b border-border mb-6">
         <h2 className="text-2xl font-display mb-1">Career Roadmap</h2>
         <p className="text-sm text-muted-foreground">
           Phase 0 → Level {activeSyllabus.length - 1} · Read, Solve & Master before unlocking next level.
@@ -987,7 +987,7 @@ export default function SyllabusModule({ completedModules, onSelectConcept, syll
                 ) : isActive ? (
                   <Circle className="text-blue-400 fill-blue-400/20 bg-background" size={28} />
                 ) : (
-                  <Lock className="text-muted-foreground p-1.5 border border-white/20 rounded-full bg-background" size={28} />
+                  <Lock className="text-muted-foreground p-1.5 border border-border rounded-full bg-background" size={28} />
                 )}
               </div>
 
@@ -1023,7 +1023,7 @@ export default function SyllabusModule({ completedModules, onSelectConcept, syll
                       <button
                         onClick={() => calculateScore(concepts.reduce((acc: number, c: any) => acc + (c.questions?.length || 0), 0))}
                         disabled={calculating || loading}
-                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-sm font-semibold rounded-lg flex items-center gap-2 transition-colors"
+                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-foreground text-sm font-semibold rounded-lg flex items-center gap-2 transition-colors"
                       >
                         {calculating ? <Loader2 size={16} className="animate-spin" /> : <Zap size={16} />}
                         Get My Readiness Score
@@ -1032,7 +1032,7 @@ export default function SyllabusModule({ completedModules, onSelectConcept, syll
 
                     {history.length > 0 && (
                       <div className="space-y-4">
-                        <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+                        <div className="p-4 rounded-xl bg-white/5 border border-border">
                           <div className="flex items-end gap-3 mb-2">
                             <span className="text-3xl font-bold text-green-400">{history[0].score}%</span>
                             <span className="text-sm text-muted-foreground pb-1">Current Readiness Score</span>
@@ -1044,7 +1044,7 @@ export default function SyllabusModule({ completedModules, onSelectConcept, syll
                           <div className="flex flex-wrap gap-2">
                             <span className="text-xs text-muted-foreground py-1 mr-2">History:</span>
                             {history.slice(1, 4).map((h) => (
-                              <div key={h.id} className="text-xs px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-gray-400">
+                              <div key={h.id} className="text-xs px-2.5 py-1 rounded-full bg-white/5 border border-border text-muted-foreground">
                                 {h.score}% <span className="opacity-50">({new Date(h.calculated_at).toLocaleDateString()})</span>
                               </div>
                             ))}
@@ -1069,7 +1069,7 @@ export default function SyllabusModule({ completedModules, onSelectConcept, syll
                           const key = `${i}-${ci}`;
                           const conceptOpen = expandedConcept === key;
                           return (
-                            <div key={ci} className="rounded-xl border border-white/10 bg-white/5 overflow-hidden">
+                            <div key={ci} className="rounded-xl border border-border bg-white/5 overflow-hidden">
                               {/* Concept Row */}
                               <button
                                 className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-white/5 transition-colors"
@@ -1098,11 +1098,11 @@ export default function SyllabusModule({ completedModules, onSelectConcept, syll
                                     exit={{ height: 0, opacity: 0 }}
                                     className="overflow-hidden"
                                   >
-                                    <div className="border-t border-white/10 pt-3 px-4 pb-3 space-y-3">
+                                    <div className="border-t border-border pt-3 px-4 pb-3 space-y-3">
                                       <div className="flex justify-end">
                                         <button
                                           onClick={() => onSelectConcept?.(concept.name, phase.title)}
-                                          className="text-xs px-3.5 py-1.5 rounded-full bg-blue-500 hover:bg-blue-600 text-white font-semibold flex items-center gap-1 transition-colors"
+                                          className="text-xs px-3.5 py-1.5 rounded-full bg-blue-500 hover:bg-blue-600 text-foreground font-semibold flex items-center gap-1 transition-colors"
                                         >
                                           <Zap size={12} /> Start Learning Flow
                                         </button>
@@ -1118,7 +1118,7 @@ export default function SyllabusModule({ completedModules, onSelectConcept, syll
                                                   onClick={() => toggleItem(itemId, isChecked)}
                                                   className={`mt-0.5 w-4 h-4 rounded-sm border shrink-0 flex items-center justify-center transition-colors ${isChecked ? "bg-blue-500 border-blue-500" : "border-gray-500 hover:border-gray-400"}`}
                                                 >
-                                                  {isChecked && <CheckCircle2 size={12} className="text-white" />}
+                                                  {isChecked && <CheckCircle2 size={12} className="text-foreground" />}
                                                 </button>
                                               ) : (
                                                 <span className="text-blue-400 font-mono shrink-0 w-5">{qi + 1}.</span>

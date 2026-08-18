@@ -650,7 +650,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
     if (n.type === "chest") return <Gift size={28} className="text-yellow-300 animate-bounce" />;
     if (n.type === "boss") return <Trophy size={28} className="text-amber-400" />;
     if (n.type === "code") return <Code2 size={26} className="text-cyan-300" />;
-    return <BookOpen size={26} className="text-white" />;
+    return <BookOpen size={26} className="text-foreground" />;
   };
 
   const nextNode = nodes.find(n => !completedIds.has(n.id));
@@ -671,10 +671,10 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                 </span>
               )}
             </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white flex items-center gap-2">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground flex items-center gap-2">
               Integrated Placement Curriculum <Sparkles size={22} className="text-amber-400" />
             </h2>
-            <p className="text-xs sm:text-sm text-slate-400 mt-1">Select a phase below to focus on its separate curriculum chart and dedicated topics.</p>
+            <p className="text-xs sm:text-sm text-muted-foreground mt-1">Select a phase below to focus on its separate curriculum chart and dedicated topics.</p>
           </div>
           <div className="flex flex-wrap gap-2">
             <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-300 text-sm font-bold">
@@ -705,7 +705,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
       {/* ── SEPARATE PHASE SELECTOR TABS ── */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <span className="text-xs font-extrabold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
             <Layers3 size={16} className="text-purple-400" /> Select Separate Phase View
           </span>
           {activePhaseFilter !== "all" && (
@@ -724,8 +724,8 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
             onClick={() => { setActivePhaseFilter("all"); setActiveSubTopic("all"); }}
             className={`p-3 rounded-2xl border text-xs font-extrabold transition-all flex flex-col items-center justify-center gap-1 cursor-pointer ${
               activePhaseFilter === "all"
-                ? "bg-purple-600 border-purple-400 text-white shadow-lg shadow-purple-900/50"
-                : "bg-slate-900/80 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700"
+                ? "bg-purple-600 border-purple-400 text-foreground shadow-lg shadow-purple-900/50"
+                : "bg-card border-slate-800 text-muted-foreground hover:text-slate-200 hover:border-slate-700"
             }`}
           >
             <Layers size={18} />
@@ -743,8 +743,8 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                 onClick={() => { setActivePhaseFilter(pNum); setActiveSubTopic("all"); }}
                 className={`p-3 rounded-2xl border text-xs font-extrabold transition-all flex flex-col items-center justify-center gap-1 cursor-pointer ${
                   active
-                    ? "bg-slate-900 border-purple-400 text-white ring-2 ring-purple-500/50 shadow-lg"
-                    : "bg-slate-900/80 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700"
+                    ? "bg-slate-900 border-purple-400 text-foreground ring-2 ring-purple-500/50 shadow-lg"
+                    : "bg-card border-slate-800 text-muted-foreground hover:text-slate-200 hover:border-slate-700"
                 }`}
               >
                 <Icon size={18} className={meta.color} />
@@ -756,8 +756,8 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
 
         {/* Sub-Topic Filtering Pills when a specific phase is selected */}
         {activePhaseFilter !== "all" && availableSubTopics.length > 0 && (
-          <div className="flex flex-wrap items-center gap-2 pt-2 p-3 rounded-2xl bg-slate-900/60 border border-slate-800">
-            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mr-1 flex items-center gap-1">
+          <div className="flex flex-wrap items-center gap-2 pt-2 p-3 rounded-2xl bg-card border border-slate-800">
+            <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider mr-1 flex items-center gap-1">
               <Filter size={12} /> Sub-Topics:
             </span>
             <button
@@ -765,7 +765,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
               className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${
                 activeSubTopic === "all"
                   ? "bg-purple-500/20 text-purple-300 border border-purple-500/40"
-                  : "bg-slate-950 text-slate-400 border border-slate-800 hover:text-slate-200"
+                  : "bg-slate-950 text-muted-foreground border border-slate-800 hover:text-slate-200"
               }`}
             >
               All Topics
@@ -777,7 +777,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                 className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${
                   activeSubTopic.toLowerCase() === st.toLowerCase()
                     ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/40"
-                    : "bg-slate-950 text-slate-400 border border-slate-800 hover:text-slate-200"
+                    : "bg-slate-950 text-muted-foreground border border-slate-800 hover:text-slate-200"
                 }`}
               >
                 {st}
@@ -807,7 +807,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                   </div>
                   <p className="text-xs text-slate-300 max-w-2xl leading-relaxed">{meta.subtitle}</p>
                 </div>
-                <div className="text-xs font-mono font-bold text-slate-400 bg-slate-950/60 px-3 py-1.5 rounded-full border border-slate-800">
+                <div className="text-xs font-mono font-bold text-muted-foreground bg-slate-950/60 px-3 py-1.5 rounded-full border border-slate-800">
                   {phaseNodes.length} Learning Steps
                 </div>
               </div>
@@ -844,7 +844,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                         }`}
                       >
                         {nodeIcon(node, done, unlocked)}
-                        <span className="absolute -top-1 -left-1 w-5 h-5 rounded-full bg-slate-900 border border-slate-700 text-[9px] font-bold text-slate-400 flex items-center justify-center">
+                        <span className="absolute -top-1 -left-1 w-5 h-5 rounded-full bg-slate-900 border border-slate-700 text-[9px] font-bold text-muted-foreground flex items-center justify-center">
                           {node.step}
                         </span>
                       </motion.button>
@@ -853,7 +853,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                         <span className="text-[9px] font-bold uppercase tracking-wider text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded-full border border-purple-500/20">
                           {node.subTopic}
                         </span>
-                        <p className="text-xs font-bold text-white mt-1 line-clamp-2">{node.title}</p>
+                        <p className="text-xs font-bold text-foreground mt-1 line-clamp-2">{node.title}</p>
                         <div className="flex items-center justify-center gap-2 mt-0.5">
                           <span className="text-[10px] text-amber-400 font-mono">+{node.xpReward} XP</span>
                           <span className="text-[10px] text-cyan-400 font-mono">+{node.diamondReward}</span>
@@ -871,7 +871,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
       {/* ── EXPANDED DETAILED STUDY MODAL ── */}
       <AnimatePresence>
         {activeNode && activeNode.type !== "chest" && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-card backdrop-blur-xl">
             <motion.div
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -889,7 +889,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                       {activeNode.subTopic}
                     </span>
                   </div>
-                  <h3 className="text-2xl font-extrabold text-white mt-1">{activeNode.title}</h3>
+                  <h3 className="text-2xl font-extrabold text-foreground mt-1">{activeNode.title}</h3>
                 </div>
                 <div className="flex items-center gap-2">
                   {/* Download Study Document Button */}
@@ -903,7 +903,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                   </button>
                   <button
                     onClick={() => setActiveNode(null)}
-                    className="p-2.5 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors"
+                    className="p-2.5 rounded-full bg-slate-800 hover:bg-slate-700 text-muted-foreground hover:text-foreground transition-colors"
                   >
                     <X size={18} />
                   </button>
@@ -918,7 +918,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                     className={`pb-3 px-4 text-xs font-bold transition-all border-b-2 whitespace-nowrap flex items-center gap-1.5 ${
                       modalTab === "textbook"
                         ? "border-purple-500 text-purple-400"
-                        : "border-transparent text-slate-400 hover:text-slate-200"
+                        : "border-transparent text-muted-foreground hover:text-slate-200"
                     }`}
                   >
                     <BookOpen size={15} /> 📖 Textbook Chapter
@@ -928,7 +928,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                     className={`pb-3 px-4 text-xs font-bold transition-all border-b-2 whitespace-nowrap flex items-center gap-1.5 ${
                       modalTab === "formulas"
                         ? "border-cyan-500 text-cyan-400"
-                        : "border-transparent text-slate-400 hover:text-slate-200"
+                        : "border-transparent text-muted-foreground hover:text-slate-200"
                     }`}
                   >
                     <Code2 size={15} /> Formulas & Debugging
@@ -938,7 +938,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                     className={`pb-3 px-4 text-xs font-bold transition-all border-b-2 whitespace-nowrap flex items-center gap-1.5 ${
                       modalTab === "videos"
                         ? "border-emerald-500 text-emerald-400"
-                        : "border-transparent text-slate-400 hover:text-slate-200"
+                        : "border-transparent text-muted-foreground hover:text-slate-200"
                     }`}
                   >
                     <Video size={15} /> 11 Indian Languages Videos
@@ -948,7 +948,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                     className={`pb-3 px-4 text-xs font-bold transition-all border-b-2 whitespace-nowrap flex items-center gap-1.5 ${
                       modalTab === "placement"
                         ? "border-amber-500 text-amber-400"
-                        : "border-transparent text-slate-400 hover:text-slate-200"
+                        : "border-transparent text-muted-foreground hover:text-slate-200"
                     }`}
                   >
                     <Lightbulb size={15} /> MNC Interview Secrets
@@ -995,7 +995,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                                 <h4 className="text-xs font-extrabold uppercase tracking-wider text-cyan-400">Author Textbook References</h4>
                                 {activeNode.theory.authorReferences.map((ref, i) => (
                                   <div key={i} className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-1">
-                                    <div className="text-xs font-bold text-white">{ref.bookTitle}</div>
+                                    <div className="text-xs font-bold text-foreground">{ref.bookTitle}</div>
                                     <div className="text-[11px] text-purple-400 font-medium">— {ref.author}</div>
                                     <div className="text-xs text-slate-300 italic pt-1">"{ref.coreInsight}"</div>
                                   </div>
@@ -1090,13 +1090,13 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                               href={v.url}
                               target="_blank"
                               rel="noreferrer"
-                              className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 hover:border-emerald-500/50 hover:bg-slate-800/80 transition-all flex items-center justify-between group"
+                              className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 hover:border-emerald-500/50 hover:bg-muted transition-all flex items-center justify-between group"
                             >
                               <div className="flex items-center gap-2.5">
                                 <span className="text-xl">{v.flag}</span>
                                 <div>
-                                  <div className="text-xs font-bold text-white group-hover:text-emerald-300 transition-colors">{v.language}</div>
-                                  <div className="text-[10px] text-slate-400 line-clamp-1">{v.title}</div>
+                                  <div className="text-xs font-bold text-foreground group-hover:text-emerald-300 transition-colors">{v.language}</div>
+                                  <div className="text-[10px] text-muted-foreground line-clamp-1">{v.title}</div>
                                 </div>
                               </div>
                               <Play size={14} className="text-emerald-400 shrink-0 group-hover:scale-125 transition-transform" />
@@ -1165,7 +1165,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                               <div
                                 className={`p-4 rounded-2xl text-xs leading-relaxed whitespace-pre-line ${
                                   msg.sender === "user"
-                                    ? "bg-purple-600 text-white rounded-br-none"
+                                    ? "bg-purple-600 text-foreground rounded-br-none"
                                     : "bg-slate-900 border border-slate-800 text-slate-200 rounded-bl-none prose prose-invert"
                                 }`}
                               >
@@ -1250,13 +1250,13 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                               }
                             }}
                             placeholder="Ask the local AI assistant anything about this topic..."
-                            className="flex-1 px-4 py-3 rounded-2xl bg-slate-950 border border-slate-800 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-fuchsia-500/60"
+                            className="flex-1 px-4 py-3 rounded-2xl bg-slate-950 border border-slate-800 text-foreground placeholder-slate-500 text-xs focus:outline-none focus:border-fuchsia-500/60"
                             disabled={aiThinking}
                           />
                           <button
                             onClick={() => handleAISubmit(aiPrompt)}
                             disabled={aiThinking || !aiPrompt.trim()}
-                            className="px-4 py-3 rounded-2xl bg-fuchsia-600 hover:bg-fuchsia-500 disabled:opacity-50 text-white text-xs font-bold transition-all"
+                            className="px-4 py-3 rounded-2xl bg-fuchsia-600 hover:bg-fuchsia-500 disabled:opacity-50 text-foreground text-xs font-bold transition-all"
                           >
                             Ask AI
                           </button>
@@ -1269,12 +1269,12 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                 {/* QUIZ STEP */}
                 {step === "quiz" && activeNode.questions && activeNode.questions[qIdx] && (
                   <div className="space-y-5">
-                    <div className="flex justify-between items-center text-xs text-slate-400">
+                    <div className="flex justify-between items-center text-xs text-muted-foreground">
                       <span>Question {qIdx + 1} of {activeNode.questions.length}</span>
                       <span className="text-amber-400 font-mono">+{activeNode.xpReward} XP on completion</span>
                     </div>
 
-                    <p className="text-lg font-bold text-white">{activeNode.questions[qIdx].prompt}</p>
+                    <p className="text-lg font-bold text-foreground">{activeNode.questions[qIdx].prompt}</p>
 
                     <div className="space-y-2.5">
                       {activeNode.questions[qIdx].options.map((opt, i) => {
@@ -1284,7 +1284,7 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                         if (submitted) {
                           if (correct) cls = "bg-emerald-950/60 border-emerald-500 text-emerald-200";
                           else if (picked) cls = "bg-rose-950/60 border-rose-500 text-rose-300";
-                        } else if (picked) cls = "bg-purple-950/60 border-purple-400 text-white";
+                        } else if (picked) cls = "bg-purple-950/60 border-purple-400 text-foreground";
 
                         return (
                           <button
@@ -1318,14 +1318,14 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                   activeNode.questions?.length ? (
                     <button
                       onClick={() => setStep("quiz")}
-                      className="w-full py-4 rounded-2xl bg-gradient-to-r from-purple-600 via-cyan-500 to-emerald-500 text-white font-extrabold text-sm flex items-center justify-center gap-2 hover:opacity-95 transition-opacity"
+                      className="w-full py-4 rounded-2xl bg-gradient-to-r from-purple-600 via-cyan-500 to-emerald-500 text-foreground font-extrabold text-sm flex items-center justify-center gap-2 hover:opacity-95 transition-opacity"
                     >
                       Start Practice Assessment <ArrowRight size={18} />
                     </button>
                   ) : (
                     <button
                       onClick={() => completeNode(activeNode)}
-                      className="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-extrabold text-sm flex items-center justify-center gap-2 hover:opacity-95 transition-opacity"
+                      className="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-foreground font-extrabold text-sm flex items-center justify-center gap-2 hover:opacity-95 transition-opacity"
                     >
                       Mark Complete & Claim Rewards <Gift size={18} />
                     </button>
@@ -1335,14 +1335,14 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                     <button
                       disabled={selected === null}
                       onClick={() => setSubmitted(true)}
-                      className="w-full py-4 rounded-2xl bg-purple-600 disabled:opacity-40 text-white font-bold text-sm hover:bg-purple-500 transition-colors"
+                      className="w-full py-4 rounded-2xl bg-purple-600 disabled:opacity-40 text-foreground font-bold text-sm hover:bg-purple-500 transition-colors"
                     >
                       Verify Answer
                     </button>
                   ) : (
                     <button
                       onClick={handleNextQuestion}
-                      className="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-bold text-sm flex items-center justify-center gap-2 hover:opacity-95"
+                      className="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-foreground font-bold text-sm flex items-center justify-center gap-2 hover:opacity-95"
                     >
                       Continue <ArrowRight size={18} />
                     </button>

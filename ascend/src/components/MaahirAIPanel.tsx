@@ -157,7 +157,7 @@ export default function MaahirAIPanel({ branchId, roleId }: { branchId?: string 
   return (
     <div className="flex flex-col h-[600px] rounded-3xl border border-fuchsia-500/20 bg-white/5 overflow-hidden">
       {/* Header */}
-      <div className="p-4 border-b border-white/10 bg-fuchsia-950/30 flex justify-between items-center shrink-0">
+      <div className="p-4 border-b border-border bg-fuchsia-950/30 flex justify-between items-center shrink-0">
         <div className="flex items-center gap-2">
           <Brain size={20} className="text-fuchsia-400 animate-pulse" />
           <span className="text-sm font-bold text-fuchsia-300">Maahir AI — Inbuilt Large LLM Engine</span>
@@ -174,8 +174,8 @@ export default function MaahirAIPanel({ branchId, roleId }: { branchId?: string 
           <div key={i} className={`flex flex-col max-w-[85%] ${msg.sender === "user" ? "ml-auto items-end" : "mr-auto items-start"}`}>
             <div className={`p-4 rounded-2xl text-xs leading-relaxed whitespace-pre-line ${
               msg.sender === "user"
-                ? "bg-purple-600 text-white rounded-br-none"
-                : "bg-black/40 border border-white/10 text-slate-200 rounded-bl-none"
+                ? "bg-purple-600 text-foreground rounded-br-none"
+                : "bg-card border border-border text-slate-200 rounded-bl-none"
             }`}>
               {msg.text}
             </div>
@@ -184,7 +184,7 @@ export default function MaahirAIPanel({ branchId, roleId }: { branchId?: string 
         ))}
         {thinking && (
           <div className="flex items-start mr-auto max-w-[80%]">
-            <div className="p-4 rounded-2xl bg-black/40 border border-white/10 text-slate-300 rounded-bl-none text-xs flex items-center gap-2">
+            <div className="p-4 rounded-2xl bg-card border border-border text-slate-300 rounded-bl-none text-xs flex items-center gap-2">
               <span className="flex h-2 w-2 relative">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-fuchsia-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-fuchsia-500" />
@@ -197,7 +197,7 @@ export default function MaahirAIPanel({ branchId, roleId }: { branchId?: string 
       </div>
 
       {/* Quick Actions */}
-      <div className="px-4 py-2 border-t border-white/5 flex flex-wrap gap-2 shrink-0 bg-black/20">
+      <div className="px-4 py-2 border-t border-border flex flex-wrap gap-2 shrink-0 bg-card">
         <button disabled={thinking} onClick={() => send("Summarize my study notes")} className="px-3 py-1.5 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-[11px] font-bold transition-all flex items-center gap-1"><FileText size={11} /> Summarize Text</button>
         <button disabled={thinking} onClick={() => send("Analyze resume keywords for ATS")} className="px-3 py-1.5 rounded-full bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 text-cyan-300 text-[11px] font-bold transition-all flex items-center gap-1"><Briefcase size={11} /> Resume Keywords</button>
         <button disabled={thinking} onClick={() => send("Give me a coding puzzle to practice")} className="px-3 py-1.5 rounded-full bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 text-purple-300 text-[11px] font-bold transition-all flex items-center gap-1"><Code2 size={11} /> Coding Puzzle</button>
@@ -205,13 +205,13 @@ export default function MaahirAIPanel({ branchId, roleId }: { branchId?: string 
       </div>
 
       {/* Input */}
-      <div className="p-3 border-t border-white/10 flex gap-2 shrink-0">
+      <div className="p-3 border-t border-border flex gap-2 shrink-0">
         <input type="text" value={input} onChange={e => setInput(e.target.value)}
           onKeyDown={e => { if (e.key === "Enter") send(input); }}
           placeholder="Ask Maahir AI anything..." disabled={thinking}
-          className="flex-1 px-4 py-3 rounded-2xl bg-black/30 border border-white/10 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-fuchsia-500/60" />
+          className="flex-1 px-4 py-3 rounded-2xl bg-card border border-border text-foreground placeholder-slate-500 text-xs focus:outline-none focus:border-fuchsia-500/60" />
         <button onClick={() => send(input)} disabled={thinking || !input.trim()}
-          className="px-5 py-3 rounded-2xl bg-fuchsia-600 hover:bg-fuchsia-500 disabled:opacity-50 text-white text-xs font-bold transition-all flex items-center gap-1.5">
+          className="px-5 py-3 rounded-2xl bg-fuchsia-600 hover:bg-fuchsia-500 disabled:opacity-50 text-foreground text-xs font-bold transition-all flex items-center gap-1.5">
           <Send size={14} /> Ask
         </button>
       </div>

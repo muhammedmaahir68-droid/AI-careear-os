@@ -49,7 +49,7 @@ export default function GamificationModal({
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-card backdrop-blur-md">
         <motion.div
           initial={{ scale: 0.8, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -84,13 +84,13 @@ export default function GamificationModal({
                     🎁
                   </div>
                 </div>
-                <div className="absolute -top-2 -right-2 bg-rose-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full animate-pulse">
+                <div className="absolute -top-2 -right-2 bg-rose-500 text-foreground text-[10px] font-bold px-2 py-0.5 rounded-full animate-pulse">
                   TAP TO UNLOCK
                 </div>
               </motion.div>
 
               <div>
-                <h3 className="text-2xl font-bold text-white mb-1">Daily Placement Prize Chest!</h3>
+                <h3 className="text-2xl font-bold text-foreground mb-1">Daily Placement Prize Chest!</h3>
                 <p className="text-xs text-slate-300 max-w-xs mx-auto">
                   You finished your day-wise target! Tap the chest to crack open your diamond rewards & XP multipliers.
                 </p>
@@ -121,19 +121,19 @@ export default function GamificationModal({
 
               {/* Reward Grid */}
               <div className="grid grid-cols-3 gap-3">
-                <div className="p-3 rounded-2xl bg-slate-900/90 border border-amber-500/30 text-center">
+                <div className="p-3 rounded-2xl bg-card border border-amber-500/30 text-center">
                   <div className="text-xl font-bold text-amber-400">+{xpEarned}</div>
-                  <div className="text-[10px] text-slate-400 uppercase font-semibold">XP Gained</div>
+                  <div className="text-[10px] text-muted-foreground uppercase font-semibold">XP Gained</div>
                 </div>
 
-                <div className="p-3 rounded-2xl bg-slate-900/90 border border-cyan-500/30 text-center">
+                <div className="p-3 rounded-2xl bg-card border border-cyan-500/30 text-center">
                   <div className="text-xl font-bold text-cyan-400">+{diamondsEarned} 💎</div>
-                  <div className="text-[10px] text-slate-400 uppercase font-semibold">Diamonds</div>
+                  <div className="text-[10px] text-muted-foreground uppercase font-semibold">Diamonds</div>
                 </div>
 
-                <div className="p-3 rounded-2xl bg-slate-900/90 border border-rose-500/30 text-center">
+                <div className="p-3 rounded-2xl bg-card border border-rose-500/30 text-center">
                   <div className="text-xl font-bold text-rose-400">2x</div>
-                  <div className="text-[10px] text-slate-400 uppercase font-semibold">XP Boost 1hr</div>
+                  <div className="text-[10px] text-muted-foreground uppercase font-semibold">XP Boost 1hr</div>
                 </div>
               </div>
 
@@ -144,14 +144,14 @@ export default function GamificationModal({
                 </div>
                 <div>
                   <div className="text-xs font-bold text-purple-200">Unlocked Badge: {badgeName}</div>
-                  <div className="text-[10px] text-slate-400">Recognized by MNC Recruiters on your profile portfolio!</div>
+                  <div className="text-[10px] text-muted-foreground">Recognized by MNC Recruiters on your profile portfolio!</div>
                 </div>
               </div>
 
               <button
                 onClick={handleClaim}
                 disabled={claimed}
-                className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-green-600 font-bold text-white text-sm shadow-lg shadow-emerald-500/20 hover:brightness-110 transition cursor-pointer flex items-center justify-center gap-2"
+                className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-green-600 font-bold text-foreground text-sm shadow-lg shadow-emerald-500/20 hover:brightness-110 transition cursor-pointer flex items-center justify-center gap-2"
               >
                 {claimed ? (
                   <span className="flex items-center gap-2"><CheckCircle2 size={18} /> Rewards Claimed!</span>

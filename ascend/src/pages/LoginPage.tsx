@@ -63,23 +63,23 @@ export default function LoginPage() {
                 <circle cx="11" cy="4" r="2" fill="#00E5FF"/>
               </svg>
             </div>
-            <span className="text-2xl font-bold tracking-widest text-white" style={{letterSpacing:"0.2em"}}>CARVEX</span>
+            <span className="text-2xl font-bold tracking-widest text-foreground" style={{letterSpacing:"0.2em"}}>CARVEX</span>
           </div>
           <p className="text-muted-foreground text-sm">Reach your career vertex. Start your journey.</p>
         </div>
 
-        <div className="p-8 rounded-3xl border border-border bg-black/40 backdrop-blur-xl">
+        <div className="p-8 rounded-3xl border border-border bg-card backdrop-blur-xl">
           {/* Mode Toggle */}
           <div className="flex bg-white/5 rounded-2xl p-1 mb-6">
             <button
               onClick={() => { setMode("login"); setError(null); }}
-              className={`flex-1 py-2 rounded-xl text-sm font-medium transition-colors ${mode === "login" ? "bg-white text-black" : "text-muted-foreground"}`}
+              className={`flex-1 py-2 rounded-xl text-sm font-medium transition-colors ${mode === "login" ? "bg-white text-background" : "text-muted-foreground"}`}
             >
               Sign In
             </button>
             <button
               onClick={() => { setMode("signup"); setError(null); }}
-              className={`flex-1 py-2 rounded-xl text-sm font-medium transition-colors ${mode === "signup" ? "bg-white text-black" : "text-muted-foreground"}`}
+              className={`flex-1 py-2 rounded-xl text-sm font-medium transition-colors ${mode === "signup" ? "bg-white text-background" : "text-muted-foreground"}`}
             >
               Create Account
             </button>
@@ -113,7 +113,7 @@ export default function LoginPage() {
                       value={name}
                       onChange={e => setName(e.target.value)}
                       placeholder="Full Name"
-                      className="w-full bg-white/5 border border-border rounded-2xl py-3 pl-11 pr-4 text-sm focus:outline-none focus:border-white/40 transition-colors placeholder:text-muted-foreground"
+                      className="w-full bg-white/5 border border-border rounded-2xl py-3 pl-11 pr-4 text-sm focus:outline-none focus:border-border transition-colors placeholder:text-muted-foreground"
                     />
                   </div>
                 </motion.div>
@@ -129,7 +129,7 @@ export default function LoginPage() {
                 onChange={e => setEmail(e.target.value)}
                 placeholder="Email address"
                 required
-                className="w-full bg-white/5 border border-border rounded-2xl py-3 pl-11 pr-4 text-sm focus:outline-none focus:border-white/40 transition-colors placeholder:text-muted-foreground"
+                className="w-full bg-white/5 border border-border rounded-2xl py-3 pl-11 pr-4 text-sm focus:outline-none focus:border-border transition-colors placeholder:text-muted-foreground"
               />
             </div>
 
@@ -142,7 +142,7 @@ export default function LoginPage() {
                 onChange={e => setPassword(e.target.value)}
                 placeholder="Password"
                 required
-                className="w-full bg-white/5 border border-border rounded-2xl py-3 pl-11 pr-11 text-sm focus:outline-none focus:border-white/40 transition-colors placeholder:text-muted-foreground"
+                className="w-full bg-white/5 border border-border rounded-2xl py-3 pl-11 pr-11 text-sm focus:outline-none focus:border-border transition-colors placeholder:text-muted-foreground"
               />
               <button type="button" onClick={() => setShowPass(!showPass)}
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors">
@@ -156,7 +156,7 @@ export default function LoginPage() {
               disabled={loading}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl bg-white text-black font-semibold text-sm hover:bg-white/90 transition-colors disabled:opacity-50"
+              className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl bg-white text-background font-semibold text-sm hover:bg-white/90 transition-colors disabled:opacity-50"
             >
               {loading ? (
                 <span className="animate-pulse">Please wait...</span>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
-  ArrowLeft, Trophy, Flame, Star, MessageSquare,
+  ArrowLeft, Trophy, Flame, Star, MessageSquare, Moon, Sun, Monitor,
   ChevronRight, Target, BookOpen, Code2, BarChart3,
   Zap, Users, Medal, CheckCircle2, Send, LayoutDashboard,
   Map, Mic, FileText, Building2, LogOut, Download, AlertCircle, Play, RefreshCw, Award,
@@ -77,7 +77,7 @@ function createCompanyDetails(track: CompanyTrack): CompanyDetails {
     name: track.name,
     logo: track.logo,
     color: track.color,
-    border: "border-white/10",
+    border: "border-border",
     description: `${track.name} preparation track for ${track.roles.join(", ")}. Interview flow: ${track.rounds.join(" • ")}.`,
     codingRound: {
       question: track.codingQuestion.title,
@@ -216,6 +216,14 @@ const COMPANY_TRACKS: CompanyDetails[] = [
 export default function Dashboard() {
   const navigate = useNavigate();
   const { profile, signOut, updateXP, updateStreak } = useAuth();
+
+  const [theme, setTheme] = useState<"light"|"navy"|"black">("light");
+
+  useEffect(() => {
+    document.documentElement.classList.remove("theme-navy", "theme-black");
+    if (theme === "navy") document.documentElement.classList.add("theme-navy");
+    if (theme === "black") document.documentElement.classList.add("theme-black");
+  }, [theme]);
 
   const [activeTab, setActiveTab] = useState<Tab>("home");
   const [challengeCompleted, setChallengeCompleted] = useState(false);
@@ -566,7 +574,7 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       {/* Top Header */}
-      <header className="sticky top-0 z-30 bg-background/95 backdrop-blur-md border-b border-white/10 px-6 py-4">
+      <header className="sticky top-0 z-30 bg-background/95 backdrop-blur-md border-b border-border px-6 py-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-3">
             <button onClick={clearRole} className="p-2 rounded-full hover:bg-white/10 transition-colors">
@@ -579,11 +587,16 @@ export default function Dashboard() {
                 <circle cx="11" cy="4" r="2.2" fill="#00E5FF"/>
               </svg>
             </div>
-            <span className="text-lg font-bold tracking-widest text-white" style={{letterSpacing:"0.18em"}}>CARVEX</span>
+            <span className="text-lg font-bold tracking-widest text-foreground" style={{letterSpacing:"0.18em"}}>CARVEX</span>
           </div>
 
           {/* Stats */}
           <div className="flex items-center gap-6">
+            <div className="flex items-center bg-background/50 border border-border rounded-full p-1 gap-1">
+              <button onClick={() => setTheme("light")} className={`p-1.5 rounded-full transition-colors ${theme === "light" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted"}`} title="Light Theme"><Sun size={14} /></button>
+              <button onClick={() => setTheme("navy")} className={`p-1.5 rounded-full transition-colors ${theme === "navy" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted"}`} title="Warm Dark Theme"><Monitor size={14} /></button>
+              <button onClick={() => setTheme("black")} className={`p-1.5 rounded-full transition-colors ${theme === "black" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted"}`} title="Pure Black Theme"><Moon size={14} /></button>
+            </div>
             <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 shadow-sm" title="Duolingo Placement Diamonds">
               <span className="text-sm">💎</span>
               <span className="text-sm font-bold text-cyan-300">{Math.floor((xp ?? 0) * 0.4) + 50} 💎</span>
@@ -608,7 +621,7 @@ export default function Dashboard() {
               <span>Get Certified</span>
             </button>
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 border-2 border-white/20 flex items-center justify-center text-sm font-bold shrink-0">
+              <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 border-2 border-border flex items-center justify-center text-sm font-bold shrink-0">
                 {avatarInitial}
               </div>
               <button onClick={handleSignOut} title="Sign Out"
@@ -627,7 +640,7 @@ export default function Dashboard() {
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors shrink-0 ${
                 activeTab === tab.id
-                  ? "bg-white text-black"
+                  ? "bg-white text-background"
                   : "text-muted-foreground hover:text-foreground hover:bg-white/10"
               }`}
             >
@@ -693,10 +706,10 @@ export default function Dashboard() {
                   </div>
                   {leaderboard.length > 0 ? (
                     leaderboard.map((user, i) => (
-                      <div key={user.user_id} className={`flex items-center justify-between py-3 border-b border-white/5 last:border-0 ${user.user_id === profile?.id ? "text-blue-400 font-semibold" : ""}`}>
+                      <div key={user.user_id} className={`flex items-center justify-between py-3 border-b border-border last:border-0 ${user.user_id === profile?.id ? "text-blue-400 font-semibold" : ""}`}>
                         <div className="flex items-center gap-3">
                           <span className="w-6 text-center text-sm font-mono text-muted-foreground">#{i + 1}</span>
-                          <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center text-xs font-bold shrink-0 text-white">
+                          <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center text-xs font-bold shrink-0 text-foreground">
                             {(user.display_name || "U")[0].toUpperCase()}
                           </div>
                           <span className="text-sm">{user.user_id === profile?.id ? "You" : user.display_name}</span>
@@ -708,7 +721,7 @@ export default function Dashboard() {
                     <div className="flex items-center justify-between py-3">
                       <div className="flex items-center gap-3">
                         <span className="w-6 text-center text-sm font-mono text-muted-foreground">#1</span>
-                        <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center text-xs font-bold shrink-0 text-white">
+                        <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center text-xs font-bold shrink-0 text-foreground">
                           {avatarInitial}
                         </div>
                         <span className="text-sm font-semibold text-blue-400">You (First place)</span>
@@ -739,17 +752,17 @@ export default function Dashboard() {
                       <input
                         type="text" placeholder="Group name (e.g. DSA Warriors)" maxLength={50}
                         value={newGroupForm.name} onChange={(e) => setNewGroupForm(f => ({ ...f, name: e.target.value }))}
-                        className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-400"
+                        className="w-full bg-card border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-400"
                       />
                       <input
                         type="text" placeholder="Topic (e.g. Data Structures & Algorithms)" maxLength={60}
                         value={newGroupForm.topic} onChange={(e) => setNewGroupForm(f => ({ ...f, topic: e.target.value }))}
-                        className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-400"
+                        className="w-full bg-card border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-400"
                       />
                       <textarea
                         placeholder="Short description (optional)" maxLength={200} rows={2}
                         value={newGroupForm.description} onChange={(e) => setNewGroupForm(f => ({ ...f, description: e.target.value }))}
-                        className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-400 resize-none"
+                        className="w-full bg-card border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-400 resize-none"
                       />
                       <button
                         disabled={communityActionLoading || !newGroupForm.name.trim() || !newGroupForm.topic.trim()}
@@ -757,7 +770,7 @@ export default function Dashboard() {
                           const ok = await createGroup(newGroupForm);
                           if (ok) { setNewGroupForm({ name: "", topic: "", description: "" }); setShowCreateGroup(false); }
                         }}
-                        className="w-full py-2 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white text-sm font-semibold rounded-lg transition-colors"
+                        className="w-full py-2 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-foreground text-sm font-semibold rounded-lg transition-colors"
                       >
                         {communityActionLoading ? "Creating..." : "Create Group"}
                       </button>
@@ -770,7 +783,7 @@ export default function Dashboard() {
                     <div className="text-sm text-muted-foreground">No groups yet — be the first to create one!</div>
                   ) : (
                     studyGroups.map((g) => (
-                      <div key={g.id} className="flex items-center justify-between py-3 border-b border-white/5 last:border-0">
+                      <div key={g.id} className="flex items-center justify-between py-3 border-b border-border last:border-0">
                         <div>
                           <div className="text-sm font-medium">{g.name}</div>
                           <div className="text-xs text-muted-foreground mt-0.5">{g.member_count} members · {g.topic}</div>
@@ -827,16 +840,16 @@ export default function Dashboard() {
                       <input
                         type="text" placeholder="Event title" maxLength={80}
                         value={newEventForm.title} onChange={(e) => setNewEventForm(f => ({ ...f, title: e.target.value }))}
-                        className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-green-400"
+                        className="w-full bg-card border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-green-400"
                       />
                       <input
                         type="text" placeholder="Speaker / Host name" maxLength={60}
                         value={newEventForm.speaker} onChange={(e) => setNewEventForm(f => ({ ...f, speaker: e.target.value }))}
-                        className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-green-400"
+                        className="w-full bg-card border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-green-400"
                       />
                       <select
                         value={newEventForm.type} onChange={(e) => setNewEventForm(f => ({ ...f, type: e.target.value }))}
-                        className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-green-400"
+                        className="w-full bg-card border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-green-400"
                       >
                         {["Masterclass","Workshop","Practice Session","Hackathon","Contest","Interview Prep"].map(t => (
                           <option key={t} value={t}>{t}</option>
@@ -848,7 +861,7 @@ export default function Dashboard() {
                           type="datetime-local"
                           value={newEventForm.event_time} onChange={(e) => setNewEventForm(f => ({ ...f, event_time: e.target.value }))}
                           min={new Date().toISOString().slice(0, 16)}
-                          className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-green-400"
+                          className="w-full bg-card border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-green-400"
                         />
                       </div>
                       <button
@@ -857,7 +870,7 @@ export default function Dashboard() {
                           const ok = await createEvent({ ...newEventForm, event_time: new Date(newEventForm.event_time).toISOString() });
                           if (ok) { setNewEventForm({ title: "", speaker: "", type: "Masterclass", event_time: "" }); setShowCreateEvent(false); }
                         }}
-                        className="w-full py-2 bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white text-sm font-semibold rounded-lg transition-colors"
+                        className="w-full py-2 bg-green-600 hover:bg-green-700 disabled:opacity-50 text-foreground text-sm font-semibold rounded-lg transition-colors"
                       >
                         {communityActionLoading ? "Saving..." : "Create Event"}
                       </button>
@@ -870,11 +883,11 @@ export default function Dashboard() {
                     <div className="text-sm text-muted-foreground">No upcoming events — create one above!</div>
                   ) : (
                     communityEvents.map((e) => (
-                      <div key={e.id} className={`py-3 border-b border-white/5 last:border-0 ${e.is_past ? "opacity-50" : ""}`}>
+                      <div key={e.id} className={`py-3 border-b border-border last:border-0 ${e.is_past ? "opacity-50" : ""}`}>
                         <div className="flex justify-between items-start mb-1">
                           <div className="text-sm font-medium">{e.title}</div>
                           <div className="flex items-center gap-1.5 shrink-0 ml-2">
-                            {e.is_past && <span className="text-xs px-2 py-0.5 rounded-full bg-gray-500/20 text-gray-400">Ended</span>}
+                            {e.is_past && <span className="text-xs px-2 py-0.5 rounded-full bg-gray-500/20 text-muted-foreground">Ended</span>}
                             <span className="text-xs px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300">{e.type}</span>
                           </div>
                         </div>
@@ -922,16 +935,16 @@ export default function Dashboard() {
                 {/* Left: Resume Editor */}
                 <div className="p-6 rounded-3xl border border-border bg-white/5 space-y-4">
                   <h3 className="text-lg font-display flex items-center gap-2"><Briefcase size={20} className="text-purple-400" /> Personal Details</h3>
-                  <input value={resumeName} onChange={e => setResumeName(e.target.value)} placeholder="Full Name" className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-400" />
+                  <input value={resumeName} onChange={e => setResumeName(e.target.value)} placeholder="Full Name" className="w-full bg-card border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-400" />
                   <div className="grid grid-cols-2 gap-3">
-                    <input value={resumeEmail} onChange={e => setResumeEmail(e.target.value)} placeholder="Email" className="bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-400" />
-                    <input value={resumePhone} onChange={e => setResumePhone(e.target.value)} placeholder="Phone" className="bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-400" />
+                    <input value={resumeEmail} onChange={e => setResumeEmail(e.target.value)} placeholder="Email" className="bg-card border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-400" />
+                    <input value={resumePhone} onChange={e => setResumePhone(e.target.value)} placeholder="Phone" className="bg-card border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-400" />
                   </div>
-                  <textarea value={resumeSummary} onChange={e => setResumeSummary(e.target.value)} placeholder="Professional Summary (use industry keywords)" rows={3} className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-400 resize-none" />
-                  <textarea value={resumeExperience} onChange={e => setResumeExperience(e.target.value)} placeholder="Experience (quantify achievements, e.g. 'Improved efficiency by 30%')" rows={4} className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-400 resize-none" />
-                  <textarea value={resumeEducation} onChange={e => setResumeEducation(e.target.value)} placeholder="Education (Degree, University, Year)" rows={2} className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-400 resize-none" />
-                  <textarea value={resumeSkills} onChange={e => setResumeSkills(e.target.value)} placeholder="Skills (comma-separated: React, Python, SQL, Docker...)" rows={2} className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-400 resize-none" />
-                  <textarea value={resumeJobDesc} onChange={e => setResumeJobDesc(e.target.value)} placeholder="Paste Target Job Description (for ATS keyword matching)" rows={3} className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-cyan-400 resize-none" />
+                  <textarea value={resumeSummary} onChange={e => setResumeSummary(e.target.value)} placeholder="Professional Summary (use industry keywords)" rows={3} className="w-full bg-card border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-400 resize-none" />
+                  <textarea value={resumeExperience} onChange={e => setResumeExperience(e.target.value)} placeholder="Experience (quantify achievements, e.g. 'Improved efficiency by 30%')" rows={4} className="w-full bg-card border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-400 resize-none" />
+                  <textarea value={resumeEducation} onChange={e => setResumeEducation(e.target.value)} placeholder="Education (Degree, University, Year)" rows={2} className="w-full bg-card border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-400 resize-none" />
+                  <textarea value={resumeSkills} onChange={e => setResumeSkills(e.target.value)} placeholder="Skills (comma-separated: React, Python, SQL, Docker...)" rows={2} className="w-full bg-card border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-400 resize-none" />
+                  <textarea value={resumeJobDesc} onChange={e => setResumeJobDesc(e.target.value)} placeholder="Paste Target Job Description (for ATS keyword matching)" rows={3} className="w-full bg-card border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-cyan-400 resize-none" />
                 </div>
 
                 {/* Right: ATS Score + Actions */}
@@ -948,7 +961,7 @@ export default function Dashboard() {
                         <span className="text-3xl font-bold">{resumeAtsScore !== null ? `${resumeAtsScore}%` : "—"}</span>
                       </div>
                     </div>
-                    <button onClick={handleAtsCheck} disabled={resumeScoring} className="px-6 py-3 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white font-bold text-sm transition-all disabled:opacity-50">
+                    <button onClick={handleAtsCheck} disabled={resumeScoring} className="px-6 py-3 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-foreground font-bold text-sm transition-all disabled:opacity-50">
                       {resumeScoring ? "Analyzing..." : "🔍 Run ATS Analysis"}
                     </button>
                   </div>
@@ -958,7 +971,7 @@ export default function Dashboard() {
                     <div className="p-5 rounded-3xl border border-border bg-white/5 space-y-3">
                       <h4 className="text-sm font-bold text-amber-400 flex items-center gap-2"><AlertCircle size={16} /> ATS Feedback</h4>
                       {resumeAtsFeedback.map((fb, i) => (
-                        <div key={i} className="p-3 rounded-xl bg-black/30 border border-white/5 text-xs text-slate-300 flex items-start gap-2">
+                        <div key={i} className="p-3 rounded-xl bg-card border border-border text-xs text-slate-300 flex items-start gap-2">
                           <CheckCircle2 size={14} className="text-emerald-400 shrink-0 mt-0.5" />
                           <span>{fb}</span>
                         </div>
@@ -1030,10 +1043,10 @@ function AIMentorChat({ messages, chatInput, setChatInput, onSend }: {
 }) {
   return (
     <div className="p-6 rounded-3xl border border-border bg-white/5 backdrop-blur-sm flex flex-col h-[680px]">
-      <div className="flex items-center justify-between mb-5 border-b border-white/10 pb-4 shrink-0">
+      <div className="flex items-center justify-between mb-5 border-b border-border pb-4 shrink-0">
         <div className="flex items-center gap-3">
           <div className="relative">
-            <MessageSquare className="text-white/80" size={22} />
+            <MessageSquare className="text-foreground/80" size={22} />
             <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-background"></span>
           </div>
           <div>
@@ -1068,7 +1081,7 @@ function AIMentorChat({ messages, chatInput, setChatInput, onSend }: {
           onChange={(e) => setChatInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && onSend()}
           placeholder="Ask me anything..."
-          className="flex-1 bg-black/40 border border-white/10 rounded-full py-3 px-4 text-sm focus:outline-none focus:border-white/30 transition-colors placeholder:text-muted-foreground"
+          className="flex-1 bg-card border border-border rounded-full py-3 px-4 text-sm focus:outline-none focus:border-border transition-colors placeholder:text-muted-foreground"
         />
         <motion.button
           whileHover={{ scale: 1.1 }}

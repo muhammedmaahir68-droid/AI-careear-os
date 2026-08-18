@@ -53,7 +53,7 @@ export default function HomePanel({
           </div>
 
           <div className="space-y-2">
-            <h1 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight leading-tight">
+            <h1 className="text-3xl md:text-5xl font-extrabold text-foreground tracking-tight leading-tight">
               Welcome Back, <span className="bg-gradient-to-r from-purple-400 via-cyan-300 to-amber-300 bg-clip-text text-transparent">{userName}</span>!
             </h1>
             <p className="text-base md:text-lg text-slate-300 max-w-2xl">
@@ -67,7 +67,7 @@ export default function HomePanel({
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => onStartJourney(1)}
-              className="px-8 py-5 rounded-2xl bg-gradient-to-r from-purple-600 via-cyan-500 to-emerald-500 hover:from-purple-500 hover:to-emerald-400 text-white font-extrabold text-lg shadow-2xl shadow-purple-500/40 flex items-center justify-center gap-3 transition-all cursor-pointer"
+              className="px-8 py-5 rounded-2xl bg-gradient-to-r from-purple-600 via-cyan-500 to-emerald-500 hover:from-purple-500 hover:to-emerald-400 text-foreground font-extrabold text-lg shadow-2xl shadow-purple-500/40 flex items-center justify-center gap-3 transition-all cursor-pointer"
             >
               <Play size={24} className="fill-white" />
               <span>Continue Your Learning Journey — Step 1</span>
@@ -76,7 +76,7 @@ export default function HomePanel({
 
             <button
               onClick={onOpenCertification}
-              className="px-6 py-5 rounded-2xl bg-slate-900/80 hover:bg-slate-800 border border-slate-700 text-slate-200 font-bold text-sm flex items-center justify-center gap-2 transition-all cursor-pointer"
+              className="px-6 py-5 rounded-2xl bg-card hover:bg-slate-800 border border-slate-700 text-slate-200 font-bold text-sm flex items-center justify-center gap-2 transition-all cursor-pointer"
             >
               <Award size={18} className="text-amber-400" />
               <span>View Certification Exit Exam</span>
@@ -87,55 +87,55 @@ export default function HomePanel({
 
       {/* ── STATS & PROGRESS CARDS ── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-center gap-4 shadow-lg">
+        <div className="p-5 rounded-2xl bg-card border border-slate-800 flex items-center gap-4 shadow-lg">
           <div className="w-12 h-12 rounded-xl bg-orange-500/10 border border-orange-500/30 flex items-center justify-center text-orange-400">
             <Flame size={24} />
           </div>
           <div>
-            <div className="text-2xl font-bold text-white">{streak} Days</div>
-            <div className="text-xs text-slate-400 font-medium">Daily Streak</div>
+            <div className="text-2xl font-bold text-foreground">{streak} Days</div>
+            <div className="text-xs text-muted-foreground font-medium">Daily Streak</div>
           </div>
         </div>
 
-        <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-center gap-4 shadow-lg">
+        <div className="p-5 rounded-2xl bg-card border border-slate-800 flex items-center gap-4 shadow-lg">
           <div className="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
             <Gem size={24} />
           </div>
           <div>
-            <div className="text-2xl font-bold text-white">{diamonds}</div>
-            <div className="text-xs text-slate-400 font-medium">Placement Diamonds</div>
+            <div className="text-2xl font-bold text-foreground">{diamonds}</div>
+            <div className="text-xs text-muted-foreground font-medium">Placement Diamonds</div>
           </div>
         </div>
 
-        <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-center gap-4 shadow-lg">
+        <div className="p-5 rounded-2xl bg-card border border-slate-800 flex items-center gap-4 shadow-lg">
           <div className="w-12 h-12 rounded-xl bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center text-yellow-400">
             <Zap size={24} />
           </div>
           <div>
-            <div className="text-2xl font-bold text-white">{xp} XP</div>
-            <div className="text-xs text-slate-400 font-medium">Total Experience</div>
+            <div className="text-2xl font-bold text-foreground">{xp} XP</div>
+            <div className="text-xs text-muted-foreground font-medium">Total Experience</div>
           </div>
         </div>
 
-        <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-center gap-4 shadow-lg">
+        <div className="p-5 rounded-2xl bg-card border border-slate-800 flex items-center gap-4 shadow-lg">
           <div className="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400">
             <Trophy size={24} />
           </div>
           <div>
-            <div className="text-2xl font-bold text-white">Level {level}</div>
-            <div className="text-xs text-slate-400 font-medium">League Tier</div>
+            <div className="text-2xl font-bold text-foreground">Level {level}</div>
+            <div className="text-xs text-muted-foreground font-medium">League Tier</div>
           </div>
         </div>
       </div>
 
       {/* ── PLACEMENT READINESS METRIC ── */}
-      <div className="p-6 rounded-3xl bg-slate-900/90 border border-slate-800 shadow-xl space-y-4">
+      <div className="p-6 rounded-3xl bg-card border border-slate-800 shadow-xl space-y-4">
         <div className="flex justify-between items-center">
           <div>
-            <h3 className="text-xl font-bold text-white flex items-center gap-2">
+            <h3 className="text-xl font-bold text-foreground flex items-center gap-2">
               Placement Readiness Score <Shield size={20} className="text-cyan-400" />
             </h3>
-            <p className="text-xs text-slate-400 mt-0.5">Calculated across Aptitude, Coding, CS Theory & AI Mock Performance</p>
+            <p className="text-xs text-muted-foreground mt-0.5">Calculated across Aptitude, Coding, CS Theory & AI Mock Performance</p>
           </div>
           <div className="text-3xl font-extrabold text-cyan-400 font-mono">{placementScore}%</div>
         </div>
@@ -153,7 +153,7 @@ export default function HomePanel({
       {/* ── 5-PHASE INTEGRATED PATH LANDMARKS ── */}
       <div className="space-y-4">
         <div className="flex justify-between items-center">
-          <h4 className="text-sm font-extrabold uppercase tracking-wider text-slate-400">5-Phase Master Curriculum Roadmap</h4>
+          <h4 className="text-sm font-extrabold uppercase tracking-wider text-muted-foreground">5-Phase Master Curriculum Roadmap</h4>
           <span className="text-xs text-purple-400 font-bold">100% Department & Role Customized</span>
         </div>
 
@@ -161,80 +161,80 @@ export default function HomePanel({
           {/* Phase 1 */}
           <div
             onClick={() => onStartJourney(1)}
-            className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-purple-500/50 hover:bg-slate-900 transition-all cursor-pointer space-y-3 group"
+            className="p-5 rounded-2xl bg-card border border-slate-800 hover:border-purple-500/50 hover:bg-slate-900 transition-all cursor-pointer space-y-3 group"
           >
             <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 group-hover:scale-110 transition-transform">
               <BookOpen size={20} />
             </div>
             <div>
               <span className="text-[10px] font-extrabold uppercase text-purple-400 tracking-wider">Phase 1</span>
-              <h5 className="text-sm font-bold text-white">Aptitude Foundation</h5>
+              <h5 className="text-sm font-bold text-foreground">Aptitude Foundation</h5>
             </div>
-            <p className="text-xs text-slate-400 leading-relaxed">Quantitative Aptitude, Logical Reasoning & Verbal Ability for TCS, Wipro, Infosys.</p>
+            <p className="text-xs text-muted-foreground leading-relaxed">Quantitative Aptitude, Logical Reasoning & Verbal Ability for TCS, Wipro, Infosys.</p>
             <span className="text-xs font-bold text-purple-400 flex items-center gap-1 pt-1">Jump to Phase 1 <ArrowRight size={14} /></span>
           </div>
 
           {/* Phase 2 */}
           <div
             onClick={() => onStartJourney(2)}
-            className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-cyan-500/50 hover:bg-slate-900 transition-all cursor-pointer space-y-3 group"
+            className="p-5 rounded-2xl bg-card border border-slate-800 hover:border-cyan-500/50 hover:bg-slate-900 transition-all cursor-pointer space-y-3 group"
           >
             <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 group-hover:scale-110 transition-transform">
               <Code2 size={20} />
             </div>
             <div>
               <span className="text-[10px] font-extrabold uppercase text-cyan-400 tracking-wider">Phase 2</span>
-              <h5 className="text-sm font-bold text-white">Technical Foundation</h5>
+              <h5 className="text-sm font-bold text-foreground">Technical Foundation</h5>
             </div>
-            <p className="text-xs text-slate-400 leading-relaxed">Department Core Subjects, Programming Languages (C++, Java, Python) & Coding Logic.</p>
+            <p className="text-xs text-muted-foreground leading-relaxed">Department Core Subjects, Programming Languages (C++, Java, Python) & Coding Logic.</p>
             <span className="text-xs font-bold text-cyan-400 flex items-center gap-1 pt-1">Jump to Phase 2 <ArrowRight size={14} /></span>
           </div>
 
           {/* Phase 3 */}
           <div
             onClick={() => onStartJourney(3)}
-            className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-amber-500/50 hover:bg-slate-900 transition-all cursor-pointer space-y-3 group"
+            className="p-5 rounded-2xl bg-card border border-slate-800 hover:border-amber-500/50 hover:bg-slate-900 transition-all cursor-pointer space-y-3 group"
           >
             <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 group-hover:scale-110 transition-transform">
               <BrainCircuit size={20} />
             </div>
             <div>
               <span className="text-[10px] font-extrabold uppercase text-amber-400 tracking-wider">Phase 3</span>
-              <h5 className="text-sm font-bold text-white">Advanced Preparation</h5>
+              <h5 className="text-sm font-bold text-foreground">Advanced Preparation</h5>
             </div>
-            <p className="text-xs text-slate-400 leading-relaxed">Data Structures & Algorithms, SQL Databases, System Design & Scaling Patterns.</p>
+            <p className="text-xs text-muted-foreground leading-relaxed">Data Structures & Algorithms, SQL Databases, System Design & Scaling Patterns.</p>
             <span className="text-xs font-bold text-amber-400 flex items-center gap-1 pt-1">Jump to Phase 3 <ArrowRight size={14} /></span>
           </div>
 
           {/* Phase 4 */}
           <div
             onClick={() => onStartJourney(4)}
-            className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-emerald-500/50 hover:bg-slate-900 transition-all cursor-pointer space-y-3 group"
+            className="p-5 rounded-2xl bg-card border border-slate-800 hover:border-emerald-500/50 hover:bg-slate-900 transition-all cursor-pointer space-y-3 group"
           >
             <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
               <Building2 size={20} />
             </div>
             <div>
               <span className="text-[10px] font-extrabold uppercase text-emerald-400 tracking-wider">Phase 4</span>
-              <h5 className="text-sm font-bold text-white">Placement Readiness</h5>
+              <h5 className="text-sm font-bold text-foreground">Placement Readiness</h5>
             </div>
-            <p className="text-xs text-slate-400 leading-relaxed">ATS Resume & Portfolio, Capstone Industry Projects, Company-wise Prep (Amazon/TCS).</p>
+            <p className="text-xs text-muted-foreground leading-relaxed">ATS Resume & Portfolio, Capstone Industry Projects, Company-wise Prep (Amazon/TCS).</p>
             <span className="text-xs font-bold text-emerald-400 flex items-center gap-1 pt-1">Jump to Phase 4 <ArrowRight size={14} /></span>
           </div>
 
           {/* Phase 5 */}
           <div
             onClick={() => onStartJourney(5)}
-            className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-rose-500/50 hover:bg-slate-900 transition-all cursor-pointer space-y-3 group"
+            className="p-5 rounded-2xl bg-card border border-slate-800 hover:border-rose-500/50 hover:bg-slate-900 transition-all cursor-pointer space-y-3 group"
           >
             <div className="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-400 group-hover:scale-110 transition-transform">
               <Trophy size={20} />
             </div>
             <div>
               <span className="text-[10px] font-extrabold uppercase text-rose-400 tracking-wider">Phase 5</span>
-              <h5 className="text-sm font-bold text-white">Placement Rounds</h5>
+              <h5 className="text-sm font-bold text-foreground">Placement Rounds</h5>
             </div>
-            <p className="text-xs text-slate-400 leading-relaxed">Aptitude, Coding, Technical, HR, Managerial & Full AI Mock Placement Exams.</p>
+            <p className="text-xs text-muted-foreground leading-relaxed">Aptitude, Coding, Technical, HR, Managerial & Full AI Mock Placement Exams.</p>
             <span className="text-xs font-bold text-rose-400 flex items-center gap-1 pt-1">Jump to Phase 5 <ArrowRight size={14} /></span>
           </div>
         </div>

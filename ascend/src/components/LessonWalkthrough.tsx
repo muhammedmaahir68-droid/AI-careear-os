@@ -34,7 +34,7 @@ export function LessonWalkthrough({
   return (
     <div className="rounded-3xl border border-blue-500/30 bg-slate-950/90 backdrop-blur-xl p-6 sm:p-8 shadow-2xl space-y-6 text-foreground">
       {/* ── HEADER ── */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-white/10 pb-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-border pb-6">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="px-3 py-1 rounded-full bg-blue-500/20 text-blue-400 font-mono text-xs font-semibold uppercase tracking-wider">
@@ -42,7 +42,7 @@ export function LessonWalkthrough({
             </span>
             <span className="text-xs text-muted-foreground">• Step {activeStep + 1} of {totalSteps}</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-display font-bold text-white">
+          <h2 className="text-2xl sm:text-3xl font-display font-bold text-foreground">
             {lessonSyllabus.title}
           </h2>
           <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
@@ -51,7 +51,7 @@ export function LessonWalkthrough({
         </div>
 
         {/* Level Switcher */}
-        <div className="flex items-center gap-2 bg-white/5 p-1.5 rounded-2xl border border-white/10 shrink-0">
+        <div className="flex items-center gap-2 bg-white/5 p-1.5 rounded-2xl border border-border shrink-0">
           <span className="text-xs text-muted-foreground px-2 font-medium">Level:</span>
           {[1, 2, 3, 4, 5].map((lvl) => (
             <button
@@ -63,8 +63,8 @@ export function LessonWalkthrough({
               }}
               className={`w-8 h-8 rounded-xl text-xs font-bold transition-all ${
                 selectedLevel === lvl
-                  ? "bg-blue-600 text-white shadow-lg shadow-blue-500/30"
-                  : "text-gray-400 hover:text-white hover:bg-white/10"
+                  ? "bg-blue-600 text-foreground shadow-lg shadow-blue-500/30"
+                  : "text-muted-foreground hover:text-foreground hover:bg-white/10"
               }`}
             >
               L{lvl}
@@ -87,7 +87,7 @@ export function LessonWalkthrough({
               className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-2 border ${
                 activeTopicIndex === idx
                   ? "bg-blue-500/20 border-blue-400 text-blue-300"
-                  : "bg-white/5 border-white/10 text-muted-foreground hover:text-white hover:bg-white/10"
+                  : "bg-white/5 border-border text-muted-foreground hover:text-foreground hover:bg-white/10"
               }`}
             >
               <BookOpen size={14} />
@@ -114,10 +114,10 @@ export function LessonWalkthrough({
                 onClick={() => setActiveStep(sIdx)}
                 className={`p-3 rounded-2xl border text-left transition-all flex flex-col justify-between ${
                   isCurrent
-                    ? "bg-blue-600/20 border-blue-400 text-white ring-1 ring-blue-400/50"
+                    ? "bg-blue-600/20 border-blue-400 text-foreground ring-1 ring-blue-400/50"
                     : isCompleted
                     ? "bg-green-500/10 border-green-500/30 text-green-300"
-                    : "bg-white/5 border-white/10 text-muted-foreground hover:text-white"
+                    : "bg-white/5 border-border text-muted-foreground hover:text-foreground"
                 }`}
               >
                 <div className="flex items-center justify-between mb-2">
@@ -132,7 +132,7 @@ export function LessonWalkthrough({
       </div>
 
       {/* ── STEP CONTENT AREA ── */}
-      <div className="p-6 rounded-3xl border border-white/10 bg-white/5 min-h-[320px] flex flex-col justify-between">
+      <div className="p-6 rounded-3xl border border-border bg-white/5 min-h-[320px] flex flex-col justify-between">
         <AnimatePresence mode="wait">
           {/* STEP 0: THEORY */}
           {activeStep === 0 && (
@@ -147,7 +147,7 @@ export function LessonWalkthrough({
                 <BookOpen size={18} />
                 <span>Topic: {currentTopic.topicName}</span>
               </div>
-              <h3 className="text-xl font-bold text-white">Theoretical Foundation & Core Principles</h3>
+              <h3 className="text-xl font-bold text-foreground">Theoretical Foundation & Core Principles</h3>
               <ul className="space-y-3 pt-2">
                 {currentTopic.theory.map((point, pIdx) => (
                   <li key={pIdx} className="flex items-start gap-3 text-sm text-gray-300 leading-relaxed">
@@ -174,8 +174,8 @@ export function LessonWalkthrough({
                 <Code2 size={18} />
                 <span>Key Formula / Syntax Breakdown</span>
               </div>
-              <h3 className="text-xl font-bold text-white">Mathematical Model & Code Representation</h3>
-              <div className="p-5 rounded-2xl bg-black/70 border border-purple-500/30 font-mono text-sm text-purple-200 overflow-x-auto leading-relaxed shadow-inner">
+              <h3 className="text-xl font-bold text-foreground">Mathematical Model & Code Representation</h3>
+              <div className="p-5 rounded-2xl bg-card border border-purple-500/30 font-mono text-sm text-purple-200 overflow-x-auto leading-relaxed shadow-inner">
                 <pre>{currentTopic.keyFormulasOrSyntax}</pre>
               </div>
               <div className="p-4 rounded-xl bg-purple-500/10 border border-purple-500/20 text-xs text-purple-300">
@@ -197,11 +197,11 @@ export function LessonWalkthrough({
                 <Target size={18} />
                 <span>Step-by-Step Problem Walkthrough</span>
               </div>
-              <h3 className="text-xl font-bold text-white">Example Problem</h3>
+              <h3 className="text-xl font-bold text-foreground">Example Problem</h3>
               <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-sm text-emerald-200 font-medium">
                 ❓ <strong>Problem:</strong> {currentTopic.exampleProblem.problem}
               </div>
-              <div className="p-5 rounded-2xl bg-white/5 border border-white/10 space-y-2">
+              <div className="p-5 rounded-2xl bg-white/5 border border-border space-y-2">
                 <div className="text-xs font-bold text-emerald-400 uppercase tracking-wider">Solution Walkthrough:</div>
                 <p className="text-sm text-gray-200 leading-relaxed">
                   {currentTopic.exampleProblem.solution}
@@ -223,7 +223,7 @@ export function LessonWalkthrough({
                 <Lightbulb size={18} />
                 <span>Recruiter & Technical Interview Insight</span>
               </div>
-              <h3 className="text-xl font-bold text-white">MNC Placement Interview Strategy</h3>
+              <h3 className="text-xl font-bold text-foreground">MNC Placement Interview Strategy</h3>
               <div className="p-6 rounded-2xl bg-gradient-to-r from-amber-500/10 to-yellow-500/10 border border-amber-500/30 text-amber-100 text-sm leading-relaxed space-y-3">
                 <div className="flex items-center gap-2 text-amber-400 font-bold text-base">
                   <Sparkles size={20} />
@@ -246,18 +246,18 @@ export function LessonWalkthrough({
               exit={{ opacity: 0 }}
               className="space-y-6 text-center py-4"
             >
-              <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-blue-600 to-purple-600 border border-white/20 flex items-center justify-center mx-auto text-white shadow-xl">
+              <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-blue-600 to-purple-600 border border-border flex items-center justify-center mx-auto text-foreground shadow-xl">
                 <Zap size={32} />
               </div>
               <div>
-                <h3 className="text-2xl font-bold text-white">Syllabus Lesson Completed!</h3>
+                <h3 className="text-2xl font-bold text-foreground">Syllabus Lesson Completed!</h3>
                 <p className="text-sm text-muted-foreground max-w-md mx-auto mt-2">
                   You have studied the theory, syntax, worked example, and MNC tips for Level {selectedLevel}. Now validate your knowledge with the adaptive test!
                 </p>
               </div>
               <button
                 onClick={() => onStartQuiz?.(selectedLevel)}
-                className="px-8 py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-base shadow-xl shadow-blue-500/30 flex items-center gap-3 mx-auto transition-all hover:scale-105 cursor-pointer"
+                className="px-8 py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-foreground font-bold text-base shadow-xl shadow-blue-500/30 flex items-center gap-3 mx-auto transition-all hover:scale-105 cursor-pointer"
               >
                 <Play size={20} />
                 <span>Start Adaptive Level {selectedLevel} Test (40 Questions)</span>
@@ -267,7 +267,7 @@ export function LessonWalkthrough({
         </AnimatePresence>
 
         {/* STEP CONTROLS */}
-        <div className="flex justify-between items-center border-t border-white/10 pt-4 mt-6">
+        <div className="flex justify-between items-center border-t border-border pt-4 mt-6">
           <button
             onClick={() => setActiveStep(Math.max(0, activeStep - 1))}
             disabled={activeStep === 0}
@@ -279,14 +279,14 @@ export function LessonWalkthrough({
           {activeStep < totalSteps - 1 ? (
             <button
               onClick={() => setActiveStep(activeStep + 1)}
-              className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center gap-1.5 transition-all shadow-md shadow-blue-600/30"
+              className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-foreground text-xs font-bold flex items-center gap-1.5 transition-all shadow-md shadow-blue-600/30"
             >
               Next Step <ChevronRight size={16} />
             </button>
           ) : (
             <button
               onClick={() => onStartQuiz?.(selectedLevel)}
-              className="px-5 py-2.5 rounded-xl bg-green-600 hover:bg-green-500 text-white text-xs font-bold flex items-center gap-1.5 transition-all shadow-md shadow-green-600/30"
+              className="px-5 py-2.5 rounded-xl bg-green-600 hover:bg-green-500 text-foreground text-xs font-bold flex items-center gap-1.5 transition-all shadow-md shadow-green-600/30"
             >
               Start Quiz <ArrowRight size={16} />
             </button>

@@ -928,11 +928,11 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
           <p className="text-xs text-muted-foreground">Follow all steps to earn XP and unlock next module.</p>
         </div>
         <div className="flex items-center gap-2">
-          <div className="flex bg-black/40 p-1 rounded-full border border-white/10">
+          <div className="flex bg-card p-1 rounded-full border border-border">
             <button
               onClick={() => setViewMode("flow")}
               className={`px-3 py-1 rounded-full text-xs font-semibold transition cursor-pointer ${
-                viewMode === "flow" ? "bg-white text-black" : "text-slate-400 hover:text-white"
+                viewMode === "flow" ? "bg-white text-background" : "text-muted-foreground hover:text-foreground"
               }`}
             >
               Step-by-Step Flow
@@ -952,7 +952,7 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
             <select
               value={moduleIdx}
               onChange={(e) => setModuleIdx(Number(e.target.value))}
-              className="text-xs bg-white/10 border border-white/20 rounded-full px-3 py-1.5 text-white"
+              className="text-xs bg-white/10 border border-border rounded-full px-3 py-1.5 text-foreground"
             >
               {branchModules.map((m, i) => (
                 <option key={i} value={i} className="bg-[#0d1117]">
@@ -972,20 +972,20 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
       {viewMode === "flow" ? (
       <div className="flex-1 flex gap-4 overflow-hidden">
         {/* Step Sidebar */}
-        <div className="w-[200px] shrink-0 border-r border-white/10 pr-3 overflow-y-auto custom-scrollbar space-y-1">
+        <div className="w-[200px] shrink-0 border-r border-border pr-3 overflow-y-auto custom-scrollbar space-y-1">
           {steps.map((step, idx) => (
             <button
               key={idx}
               onClick={() => setActiveStep(idx)}
               className={`w-full text-left p-2.5 rounded-xl flex gap-2.5 transition-colors ${
                 activeStep === idx
-                  ? "bg-white/10 border border-white/20"
+                  ? "bg-white/10 border border-border"
                   : "hover:bg-white/5 border border-transparent"
               }`}
             >
               <div className="mt-0.5 shrink-0">{step.icon}</div>
               <div>
-                <h4 className={`text-xs font-semibold leading-tight ${activeStep === idx ? "text-white" : "text-gray-300"}`}>
+                <h4 className={`text-xs font-semibold leading-tight ${activeStep === idx ? "text-foreground" : "text-gray-300"}`}>
                   {step.title}
                 </h4>
               </div>
@@ -1013,7 +1013,7 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
                   </div>
                   <button
                     onClick={() => setActiveStep(1)}
-                    className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-white text-black text-sm font-semibold hover:bg-white/90"
+                    className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-white text-background text-sm font-semibold hover:bg-white/90"
                   >
                     Start Learning <ChevronRight size={16} />
                   </button>
@@ -1043,9 +1043,9 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
                       </h4>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         {((mod.studyMaterial as any).authorReferences as any[]).map((auth: any, ai: number) => (
-                          <div key={ai} className="p-3.5 rounded-xl border border-amber-500/20 bg-black/40 space-y-1">
+                          <div key={ai} className="p-3.5 rounded-xl border border-amber-500/20 bg-card space-y-1">
                             <p className="text-xs font-bold text-amber-300">{auth.author}</p>
-                            <p className="text-xs text-gray-400 italic">"{auth.bookTitle}"</p>
+                            <p className="text-xs text-muted-foreground italic">"{auth.bookTitle}"</p>
                             <p className="text-xs text-gray-200 mt-2">{auth.coreInsight}</p>
                           </div>
                         ))}
@@ -1113,10 +1113,10 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
                       <p className="text-xs text-gray-300">{(mod.studyMaterial as any).concept3DSimulation.description}</p>
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
                         {((mod.studyMaterial as any).concept3DSimulation.interactiveNodes as any[]).map((node: any, ni: number) => (
-                          <div key={ni} className="p-3 rounded-xl border border-emerald-500/20 bg-black/50 hover:border-emerald-400/50 transition-all cursor-pointer group">
+                          <div key={ni} className="p-3 rounded-xl border border-emerald-500/20 bg-card hover:border-emerald-400/50 transition-all cursor-pointer group">
                             <span className="text-xs font-mono font-bold text-emerald-400 group-hover:text-emerald-300">{node.name}</span>
                             <span className="text-[10px] block text-emerald-600 font-semibold uppercase">{node.type}</span>
-                            <p className="text-[11px] text-gray-400 mt-1">{node.details}</p>
+                            <p className="text-[11px] text-muted-foreground mt-1">{node.details}</p>
                           </div>
                         ))}
                       </div>
@@ -1125,7 +1125,7 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
 
                   {/* Deep Textbook Chapter Content */}
                   {(mod.studyMaterial as any).deepDiveTextbook && (
-                    <div className="p-5 rounded-2xl border border-white/10 bg-black/40 space-y-3">
+                    <div className="p-5 rounded-2xl border border-border bg-card space-y-3">
                       <h4 className="text-sm font-bold text-indigo-400 flex items-center gap-2">
                         <span>📖</span> Comprehensive Placement Textbook Chapter
                       </h4>
@@ -1134,7 +1134,7 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
                   )}
 
                   {/* Key Points */}
-                  <div className="p-5 rounded-2xl border border-white/10 bg-white/5">
+                  <div className="p-5 rounded-2xl border border-border bg-white/5">
                     <h4 className="text-sm font-bold text-yellow-400 mb-3">⚡ Key Placement Principles</h4>
                     <ul className="space-y-2">
                       {mod.studyMaterial.keyPoints.map((p, i) => (
@@ -1146,7 +1146,7 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
                   </div>
 
                   {/* Worked Code Example */}
-                  <div className="p-5 rounded-2xl border border-white/10 bg-black/30">
+                  <div className="p-5 rounded-2xl border border-border bg-card">
                     <h4 className="text-sm font-bold text-blue-400 mb-3">💻 Code / Industry Implementation Example</h4>
                     <pre className="text-xs text-green-300 font-mono whitespace-pre-wrap leading-relaxed">{mod.studyMaterial.example}</pre>
                   </div>
@@ -1183,18 +1183,18 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
                             href={v.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-3 p-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-rose-400/40 transition-all group"
+                            className="flex items-center gap-3 p-3 rounded-xl border border-border bg-white/5 hover:bg-white/10 hover:border-rose-400/40 transition-all group"
                           >
                             <span className="text-lg">{v.flag}</span>
                             <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium text-white group-hover:text-rose-300 transition-colors truncate">{v.language}</p>
-                              <p className="text-xs text-gray-400 truncate">{v.title}</p>
+                              <p className="text-sm font-medium text-foreground group-hover:text-rose-300 transition-colors truncate">{v.language}</p>
+                              <p className="text-xs text-muted-foreground truncate">{v.title}</p>
                             </div>
                             <ExternalLink size={14} className="text-gray-500 group-hover:text-rose-400 shrink-0" />
                           </a>
                         ))
                       ) : (
-                        <div className="col-span-2 text-center py-6 text-gray-400 text-sm">
+                        <div className="col-span-2 text-center py-6 text-muted-foreground text-sm">
                           <p>🔍 Video links are being prepared for this module.</p>
                           <a
                             href={`https://www.youtube.com/results?search_query=${encodeURIComponent(mod.moduleTitle + " tutorial")}`}
@@ -1231,7 +1231,7 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
                           initial={{ opacity: 0, x: -10 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: i * 0.15 }}
-                          className="flex gap-3 p-3 rounded-xl bg-white/5 border border-white/5"
+                          className="flex gap-3 p-3 rounded-xl bg-white/5 border border-border"
                         >
                           <span className="text-green-400 font-bold text-sm shrink-0">{i + 1}.</span>
                           <span className="text-sm text-gray-200">{s}</span>
@@ -1272,7 +1272,7 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
                         <div className="px-4 pb-4 space-y-3">
                           <div>
                             <p className="text-xs text-red-400 mb-2 font-semibold">🐛 Buggy Code:</p>
-                            <pre className="bg-black/50 rounded-xl p-3 text-xs text-red-200 font-mono overflow-x-auto whitespace-pre">{d.buggy}</pre>
+                            <pre className="bg-card rounded-xl p-3 text-xs text-red-200 font-mono overflow-x-auto whitespace-pre">{d.buggy}</pre>
                           </div>
                           <div className="p-3 rounded-xl bg-yellow-500/10 border border-yellow-500/20 text-xs text-yellow-300">
                             💡 Hint: {d.hint}
@@ -1286,7 +1286,7 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
                           {showAnswer === di && (
                             <div>
                               <p className="text-xs text-green-400 mb-2 font-semibold">✅ Fixed Code:</p>
-                              <pre className="bg-black/50 rounded-xl p-3 text-xs text-green-200 font-mono overflow-x-auto whitespace-pre">{d.fixed}</pre>
+                              <pre className="bg-card rounded-xl p-3 text-xs text-green-200 font-mono overflow-x-auto whitespace-pre">{d.fixed}</pre>
                             </div>
                           )}
                         </div>
@@ -1311,7 +1311,7 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
                     <span className="text-xs text-muted-foreground">({mod.quiz.length} questions)</span>
                   </div>
                   {mod.quiz.map((q, qi) => (
-                    <div key={qi} className="p-4 rounded-2xl border border-white/10 bg-white/5">
+                    <div key={qi} className="p-4 rounded-2xl border border-border bg-white/5">
                       <p className="text-sm font-medium mb-3">{qi + 1}. {q.q}</p>
                       <div className="space-y-2">
                         {q.options.map((opt, oi) => {
@@ -1327,7 +1327,7 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
                                 correct ? "bg-green-500/20 border-green-500/40 text-green-300"
                                 : wrong ? "bg-red-500/20 border-red-500/40 text-red-300"
                                 : selected ? "bg-blue-500/20 border-blue-500/40 text-blue-300"
-                                : "bg-white/5 border-white/10 hover:bg-white/10"
+                                : "bg-white/5 border-border hover:bg-white/10"
                               }`}
                             >
                               {correct && "✅ "}{wrong && "❌ "}{opt}
@@ -1447,7 +1447,7 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
               {/* ── CODING CHALLENGE ── */}
               {currentType === "code" && (
                 <div className="flex flex-col gap-4">
-                  <div className="bg-black/40 rounded-xl p-4 text-sm border border-white/5">
+                  <div className="bg-card rounded-xl p-4 text-sm border border-border">
                     <p className="font-bold mb-2 text-blue-400">🧩 {mod.coding.problem}</p>
                     <p className="text-muted-foreground text-xs leading-relaxed mb-3">{mod.coding.desc}</p>
                     <div className="bg-white/5 p-3 rounded-lg text-xs font-mono text-gray-300 space-y-1">
@@ -1456,7 +1456,7 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
                     </div>
                   </div>
                   <div className="flex flex-col min-h-[280px]">
-                    <div className="bg-black/60 rounded-t-xl px-4 py-2 border border-white/10 border-b-0 flex items-center justify-between">
+                    <div className="bg-card rounded-t-xl px-4 py-2 border border-border border-b-0 flex items-center justify-between">
                       <span className="text-xs text-muted-foreground font-mono">solution.py</span>
                       {isCompleted && <span className="text-xs text-green-400">✅ Solved</span>}
                     </div>
@@ -1464,7 +1464,7 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
                       value={code}
                       onChange={e => setCode(e.target.value)}
                       disabled={isCompleted}
-                      className="flex-1 w-full bg-[#0d1117] text-green-300 font-mono text-xs p-4 border border-white/10 rounded-b-xl focus:outline-none focus:border-blue-500/50 resize-none"
+                      className="flex-1 w-full bg-[#0d1117] text-green-300 font-mono text-xs p-4 border border-border rounded-b-xl focus:outline-none focus:border-blue-500/50 resize-none"
                       rows={14}
                       spellCheck={false}
                     />
@@ -1482,7 +1482,7 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
                       onClick={handleRunCode}
                       disabled={isCompleted || running}
                       className={`flex items-center gap-2 px-6 py-2 rounded-full text-sm font-medium transition-colors ${
-                        isCompleted ? "bg-green-500/20 text-green-400 cursor-not-allowed" : "bg-white text-black hover:bg-white/90"
+                        isCompleted ? "bg-green-500/20 text-green-400 cursor-not-allowed" : "bg-white text-background hover:bg-white/90"
                       }`}
                     >
                       {running ? <span className="animate-pulse">Running...</span> : isCompleted ? <>Solved <CheckCircle2 size={16} /></> : <>Run Code <Play size={14} className="fill-black" /></>}
@@ -1499,15 +1499,15 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
                     <h3 className="text-2xl font-bold mb-2">Module Complete!</h3>
                     <p className="text-muted-foreground text-sm mb-4">You've completed all steps for <strong>{mod.moduleTitle}</strong></p>
                     <div className="grid grid-cols-3 gap-3 mb-6">
-                      <div className="p-3 rounded-xl bg-white/5 border border-white/10">
+                      <div className="p-3 rounded-xl bg-white/5 border border-border">
                         <div className="text-2xl font-bold text-yellow-400">+50</div>
                         <div className="text-xs text-muted-foreground">XP Earned</div>
                       </div>
-                      <div className="p-3 rounded-xl bg-white/5 border border-white/10">
+                      <div className="p-3 rounded-xl bg-white/5 border border-border">
                         <div className="text-2xl font-bold text-green-400">{quizScore}/{mod.quiz.length}</div>
                         <div className="text-xs text-muted-foreground">Quiz Score</div>
                       </div>
-                      <div className="p-3 rounded-xl bg-white/5 border border-white/10">
+                      <div className="p-3 rounded-xl bg-white/5 border border-border">
                         <div className="text-2xl font-bold text-blue-400">{mod.mnc.length}</div>
                         <div className="text-xs text-muted-foreground">MNC Q's Done</div>
                       </div>
@@ -1539,7 +1539,7 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
                       { label: "Mock Interview", done: true },
                       { label: "Coding Challenge", done: isCompleted },
                     ].map((item, i) => (
-                      <div key={i} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
+                      <div key={i} className="flex items-center justify-between py-2 border-b border-border last:border-0">
                         <span className="text-sm text-gray-300">{item.label}</span>
                         <div className="flex items-center gap-2">
                           {item.score && <span className="text-xs text-yellow-400">{item.score}</span>}
@@ -1556,15 +1556,15 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
         </div>
       </div>
       ) : (
-        <div className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-6 bg-slate-950/40 rounded-2xl border border-white/10">
+        <div className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-6 bg-slate-950/40 rounded-2xl border border-border">
           <div className="flex items-center justify-between p-4 rounded-xl bg-gradient-to-r from-amber-500/10 to-yellow-500/10 border border-amber-500/20">
             <div>
               <h3 className="text-lg font-bold text-amber-300">Daily 40-Question Adaptive Placement Challenge</h3>
-              <p className="text-xs text-slate-400">Tailored to your current level • 40 Questions</p>
+              <p className="text-xs text-muted-foreground">Tailored to your current level • 40 Questions</p>
             </div>
             <div className="flex items-center gap-4">
               <div className="text-right">
-                <div className="text-xs text-slate-400">Time Remaining</div>
+                <div className="text-xs text-muted-foreground">Time Remaining</div>
                 <div className="font-mono text-sm font-bold text-amber-400">
                   {Math.floor(daily40Timer / 60)}:{(daily40Timer % 60).toString().padStart(2, "0")}
                 </div>
@@ -1591,8 +1591,8 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
 
           {!daily40Submitted ? (
             <div className="space-y-6">
-              <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800">
-                <div className="text-xs text-slate-400 mb-2 flex justify-between">
+              <div className="p-3 rounded-xl bg-card border border-slate-800">
+                <div className="text-xs text-muted-foreground mb-2 flex justify-between">
                   <span>Question Palette (Answered: {Object.keys(daily40Answers).length}/40)</span>
                   <span>Click any number to jump</span>
                 </div>
@@ -1606,7 +1606,7 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
                           ? "bg-amber-500 text-slate-950 ring-2 ring-amber-400"
                           : daily40Answers[i] !== undefined
                           ? "bg-emerald-600/30 text-emerald-300 border border-emerald-500/40"
-                          : "bg-slate-800 text-slate-400 hover:bg-slate-700"
+                          : "bg-slate-800 text-muted-foreground hover:bg-slate-700"
                       }`}
                     >
                       {i + 1}
@@ -1616,12 +1616,12 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
               </div>
 
               {daily40Questions[daily40CurrentIndex] && (
-                <div className="p-6 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
+                <div className="p-6 rounded-2xl bg-card border border-slate-800 space-y-4">
                   <div className="flex items-center justify-between text-xs">
                     <span className="px-2.5 py-1 rounded-md bg-amber-500/10 text-amber-400 border border-amber-500/20 font-semibold uppercase">
                       Q{daily40CurrentIndex + 1} • {daily40Questions[daily40CurrentIndex].module} ({daily40Questions[daily40CurrentIndex].topic})
                     </span>
-                    <span className="text-slate-400 uppercase font-mono">
+                    <span className="text-muted-foreground uppercase font-mono">
                       Level: {daily40Questions[daily40CurrentIndex].difficulty}
                     </span>
                   </div>
@@ -1646,12 +1646,12 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
                           className={`w-full p-3.5 rounded-xl text-left border text-xs transition cursor-pointer flex items-center justify-between ${
                             isSelected
                               ? "bg-amber-500/20 border-amber-500 text-amber-200 font-medium"
-                              : "bg-slate-800/60 border-slate-700/50 hover:bg-slate-800 text-slate-300"
+                              : "bg-muted border-slate-700/50 hover:bg-slate-800 text-slate-300"
                           }`}
                         >
                           <span className="flex items-center gap-3">
                             <span className={`w-5 h-5 rounded-full border flex items-center justify-center text-[10px] font-bold ${
-                              isSelected ? "border-amber-400 bg-amber-400 text-slate-950" : "border-slate-600 text-slate-400"
+                              isSelected ? "border-amber-400 bg-amber-400 text-slate-950" : "border-slate-600 text-muted-foreground"
                             }`}>
                               {String.fromCharCode(65 + oIdx)}
                             </span>

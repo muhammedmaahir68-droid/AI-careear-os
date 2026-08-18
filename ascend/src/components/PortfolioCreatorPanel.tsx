@@ -84,13 +84,13 @@ ${email ? `<a href="mailto:${email}">Email</a>` : ""}
       <div className="space-y-4">
         <div className="p-6 rounded-3xl border border-border bg-white/5 space-y-4">
           <h3 className="text-lg font-display flex items-center gap-2"><Palette size={20} className="text-fuchsia-400" /> Profile Info</h3>
-          <input value={name} onChange={e => setName(e.target.value)} placeholder="Full Name" className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-fuchsia-400" />
-          <input value={tagline} onChange={e => setTagline(e.target.value)} placeholder="Tagline (e.g. Full-Stack Developer)" className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-fuchsia-400" />
-          <textarea value={about} onChange={e => setAbout(e.target.value)} placeholder="About Me" rows={3} className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-fuchsia-400 resize-none" />
+          <input value={name} onChange={e => setName(e.target.value)} placeholder="Full Name" className="w-full bg-card border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-fuchsia-400" />
+          <input value={tagline} onChange={e => setTagline(e.target.value)} placeholder="Tagline (e.g. Full-Stack Developer)" className="w-full bg-card border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-fuchsia-400" />
+          <textarea value={about} onChange={e => setAbout(e.target.value)} placeholder="About Me" rows={3} className="w-full bg-card border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-fuchsia-400 resize-none" />
           <div className="grid grid-cols-3 gap-3">
-            <input value={github} onChange={e => setGithub(e.target.value)} placeholder="GitHub URL" className="bg-black/30 border border-white/10 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-fuchsia-400" />
-            <input value={linkedin} onChange={e => setLinkedin(e.target.value)} placeholder="LinkedIn URL" className="bg-black/30 border border-white/10 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-fuchsia-400" />
-            <input value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" className="bg-black/30 border border-white/10 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-fuchsia-400" />
+            <input value={github} onChange={e => setGithub(e.target.value)} placeholder="GitHub URL" className="bg-card border border-border rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-fuchsia-400" />
+            <input value={linkedin} onChange={e => setLinkedin(e.target.value)} placeholder="LinkedIn URL" className="bg-card border border-border rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-fuchsia-400" />
+            <input value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" className="bg-card border border-border rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-fuchsia-400" />
           </div>
         </div>
 
@@ -101,13 +101,13 @@ ${email ? `<a href="mailto:${email}">Email</a>` : ""}
             <button onClick={addProject} className="text-xs px-3 py-1.5 rounded-full bg-purple-500/20 text-purple-300 hover:bg-purple-500/30 flex items-center gap-1"><Plus size={12} /> Add</button>
           </div>
           {projects.map((p, i) => (
-            <div key={i} className="space-y-2 p-3 rounded-xl bg-black/20 border border-white/5">
+            <div key={i} className="space-y-2 p-3 rounded-xl bg-card border border-border">
               <div className="flex gap-2">
-                <input value={p.title} onChange={e => updateProject(i, "title", e.target.value)} placeholder="Project Title" className="flex-1 bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-purple-400" />
+                <input value={p.title} onChange={e => updateProject(i, "title", e.target.value)} placeholder="Project Title" className="flex-1 bg-card border border-border rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-purple-400" />
                 <button onClick={() => removeProject(i)} className="p-2 rounded-lg hover:bg-red-500/20 text-red-400"><Trash2 size={14} /></button>
               </div>
-              <input value={p.desc} onChange={e => updateProject(i, "desc", e.target.value)} placeholder="Short description" className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-purple-400" />
-              <input value={p.link} onChange={e => updateProject(i, "link", e.target.value)} placeholder="Live URL / GitHub link" className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-purple-400" />
+              <input value={p.desc} onChange={e => updateProject(i, "desc", e.target.value)} placeholder="Short description" className="w-full bg-card border border-border rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-purple-400" />
+              <input value={p.link} onChange={e => updateProject(i, "link", e.target.value)} placeholder="Live URL / GitHub link" className="w-full bg-card border border-border rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-purple-400" />
             </div>
           ))}
         </div>
@@ -118,7 +118,7 @@ ${email ? `<a href="mailto:${email}">Email</a>` : ""}
           <div className="grid grid-cols-2 gap-3">
             {THEMES.map(t => (
               <button key={t.id} onClick={() => setTheme(t)}
-                className={`p-3 rounded-xl border text-xs font-bold text-left transition-all ${theme.id === t.id ? "border-fuchsia-500 bg-fuchsia-500/10 text-fuchsia-300" : "border-white/10 bg-black/20 text-slate-400 hover:border-white/30"}`}>
+                className={`p-3 rounded-xl border text-xs font-bold text-left transition-all ${theme.id === t.id ? "border-fuchsia-500 bg-fuchsia-500/10 text-fuchsia-300" : "border-border bg-card text-muted-foreground hover:border-border"}`}>
                 <div className="flex items-center gap-2 mb-1">
                   <div className="w-4 h-4 rounded-full" style={{ background: t.accent }} />
                   {t.label}
@@ -136,7 +136,7 @@ ${email ? `<a href="mailto:${email}">Email</a>` : ""}
             <h3 className="text-sm font-bold text-emerald-400">Actions</h3>
             <button onClick={() => setShowPreview(!showPreview)} className="text-xs px-3 py-1.5 rounded-full bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/30 flex items-center gap-1"><Eye size={12} /> {showPreview ? "Hide" : "Show"} Preview</button>
           </div>
-          <button onClick={downloadPortfolio} className="w-full px-6 py-3 rounded-full bg-gradient-to-r from-fuchsia-500 to-purple-600 hover:from-fuchsia-600 hover:to-purple-700 text-white font-bold text-sm transition-all flex items-center justify-center gap-2">
+          <button onClick={downloadPortfolio} className="w-full px-6 py-3 rounded-full bg-gradient-to-r from-fuchsia-500 to-purple-600 hover:from-fuchsia-600 hover:to-purple-700 text-foreground font-bold text-sm transition-all flex items-center justify-center gap-2">
             <Download size={16} /> Download HTML Portfolio
           </button>
         </div>

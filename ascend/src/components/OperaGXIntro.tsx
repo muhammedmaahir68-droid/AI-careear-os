@@ -92,7 +92,7 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, scale: 1.25, filter: "blur(20px)" }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
-          className="fixed inset-0 z-[99999] bg-[#02040a] text-white flex flex-col items-center justify-center overflow-hidden select-none cursor-pointer"
+          className="fixed inset-0 z-[99999] bg-[#02040a] text-foreground flex flex-col items-center justify-center overflow-hidden select-none cursor-pointer"
         >
           {/* HTML5 Audio element streaming exact user Opera GX track */}
           <audio
@@ -205,7 +205,7 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
                     stiffness: 350,
                     damping: 20,
                   }}
-                  className="text-4xl sm:text-7xl font-black tracking-widest text-white font-mono"
+                  className="text-4xl sm:text-7xl font-black tracking-widest text-foreground font-mono"
                   style={{
                     textShadow:
                       stage === "shockwave"
@@ -232,7 +232,7 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
           </div>
 
           {/* Bottom Controls */}
-          <div className="absolute bottom-6 flex items-center justify-end w-full max-w-4xl px-6 text-xs font-mono text-slate-400 z-20">
+          <div className="absolute bottom-6 flex items-center justify-end w-full max-w-4xl px-6 text-xs font-mono text-muted-foreground z-20">
             <span />
             <button
               type="button"
@@ -244,7 +244,7 @@ export default function OperaGXIntro({ onComplete }: OperaGXIntroProps) {
                 e.stopPropagation();
                 onComplete();
               }}
-              className="px-4 py-2 rounded-full bg-white/10 text-white font-bold text-xs hover:bg-white/20 transition-all cursor-pointer z-30"
+              className="px-4 py-2 rounded-full bg-white/10 text-foreground font-bold text-xs hover:bg-white/20 transition-all cursor-pointer z-30"
             >
               SKIP ➔
             </button>
