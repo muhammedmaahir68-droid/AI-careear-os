@@ -569,19 +569,17 @@ export default function Dashboard() {
     return <div className="min-h-screen flex items-center justify-center bg-background"><div className="text-muted-foreground">Loading your profile...</div></div>;
   }
 
-  if (!branchId || !roleId) {
-    return <BranchRolePicker onSelect={selectRole} />;
-  }
-
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       {/* Top Header */}
       <header className="sticky top-0 z-30 bg-background/95 backdrop-blur-md border-b border-border px-6 py-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <button onClick={clearRole} className="p-2 rounded-full hover:bg-white/10 transition-colors">
-              <ArrowLeft size={18} />
-            </button>
+            {branchId && roleId && (
+              <button onClick={clearRole} title="Change Department / Role" className="p-2 rounded-full hover:bg-white/10 transition-colors">
+                <ArrowLeft size={18} />
+              </button>
+            )}
             {/* CARVEX icon mark */}
             <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{background:"linear-gradient(135deg,#7C3AED 0%,#00E5FF 100%)"}}>
               <svg width="17" height="17" viewBox="0 0 22 22" fill="none">
@@ -659,36 +657,44 @@ export default function Dashboard() {
           {/* ── HOME DASHBOARD ── */}
           {activeTab === "home" && (
             <motion.div key="home" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-              <HomePanel
-                userName={profile?.name?.split(" ")[0] || "Student"}
-                branchId={branchId}
-                roleId={roleId}
-                xp={xp}
-                streak={streak}
-                diamonds={Math.floor((xp ?? 0) * 0.4) + 50}
-                level={level}
-                placementScore={placementScore}
-                onStartJourney={(phase) => {
-                  setTargetPhase(phase);
-                  setActiveTab("journey");
-                }}
-                onOpenCertification={() => setShowCertification(true)}
-              />
+              {!branchId || !roleId ? (
+                <BranchRolePicker onSelect={selectRole} />
+              ) : (
+                <HomePanel
+                  userName={profile?.name?.split(" ")[0] || "Student"}
+                  branchId={branchId}
+                  roleId={roleId}
+                  xp={xp}
+                  streak={streak}
+                  diamonds={Math.floor((xp ?? 0) * 0.4) + 50}
+                  level={level}
+                  placementScore={placementScore}
+                  onStartJourney={(phase) => {
+                    setTargetPhase(phase);
+                    setActiveTab("journey");
+                  }}
+                  onOpenCertification={() => setShowCertification(true)}
+                />
+              )}
             </motion.div>
           )}
 
           {/* ── MY JOURNEY (SINGLE LINEAR PATH) ── */}
           {activeTab === "journey" && (
             <motion.div key="journey" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-              <LearningGamePath
-                branchId={branchId}
-                roleId={roleId}
-                targetPhase={targetPhase}
-                onNodeComplete={(xpEarned) => {
-                  updateXP(xpEarned);
-                  updateStreak();
-                }}
-              />
+              {!branchId || !roleId ? (
+                <BranchRolePicker onSelect={selectRole} />
+              ) : (
+                <LearningGamePath
+                  branchId={branchId}
+                  roleId={roleId}
+                  targetPhase={targetPhase}
+                  onNodeComplete={(xpEarned) => {
+                    updateXP(xpEarned);
+                    updateStreak();
+                  }}
+                />
+              )}
             </motion.div>
           )}
 
