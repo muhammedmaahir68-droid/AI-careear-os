@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "motion/react";
 import {
   Play, Flame, Gem, Zap, Trophy, Award, ArrowRight,
-  BookOpen, Mic, Building2, CheckCircle2, Shield, BrainCircuit, Code2
+  BookOpen, Mic, Building2, CheckCircle2, Shield, BrainCircuit, Code2, GitCompare
 } from "lucide-react";
+import RoleComparisonModal from "./RoleComparisonModal";
 
 interface HomePanelProps {
   userName?: string;
@@ -30,6 +31,7 @@ export default function HomePanel({
   onStartJourney,
   onOpenCertification,
 }: HomePanelProps) {
+  const [isCompareOpen, setIsCompareOpen] = useState(false);
   return (
     <div className="w-full max-w-6xl mx-auto space-y-8 pb-16 text-slate-100">
       {/* ── HERO BANNER WITH SINGLE PRIMARY CTA ── */}
@@ -75,15 +77,23 @@ export default function HomePanel({
             </motion.button>
 
             <button
-              onClick={onOpenCertification}
-              className="px-6 py-5 rounded-2xl bg-card hover:bg-slate-800 border border-slate-700 text-slate-200 font-bold text-sm flex items-center justify-center gap-2 transition-all cursor-pointer"
+              onClick={() => setIsCompareOpen(true)}
+              className="px-5 py-3.5 rounded-2xl border border-purple-500/30 hover:bg-purple-500/10 text-purple-300 text-sm font-bold transition-all flex items-center justify-center gap-2 shadow-lg backdrop-blur-md"
             >
-              <Award size={18} className="text-amber-400" />
-              <span>View Certification Exit Exam</span>
+              <GitCompare size={16} /> Compare Roles
+            </button>
+
+            <button
+              onClick={onOpenCertification}
+              className="px-5 py-3.5 rounded-2xl border border-purple-500/30 hover:bg-purple-500/10 text-purple-300 text-sm font-bold transition-all flex items-center justify-center gap-2 shadow-lg backdrop-blur-md"
+            >
+              <Award size={16} className="text-amber-400" /> View Certification Exit Exam
             </button>
           </div>
         </div>
       </div>
+
+      <RoleComparisonModal isOpen={isCompareOpen} onClose={() => setIsCompareOpen(false)} />
 
       {/* ── STATS & PROGRESS CARDS ── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
