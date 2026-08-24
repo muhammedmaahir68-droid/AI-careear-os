@@ -23,6 +23,7 @@ import LearningGamePath from "./components/LearningGamePath";
 import PortfolioCreatorPanel from "./components/PortfolioCreatorPanel";
 import MaahirAIPanel from "./components/MaahirAIPanel";
 import LifeOSPanel from "./components/LifeOSPanel";
+import CoursesHub from "./components/CoursesHub";
 
 function formatEventTime(isoString: string): string {
   const date = new Date(isoString);
@@ -37,7 +38,7 @@ function formatEventTime(isoString: string): string {
   return date.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" }) + `, ${timeStr}`;
 }
 
-type Tab = "home" | "journey" | "community" | "resume" | "portfolio" | "maahir-ai" | "life-os";
+type Tab = "home" | "journey" | "courses" | "community" | "resume" | "portfolio" | "maahir-ai" | "life-os";
 
 interface CompanyDetails {
   name: string;
@@ -555,7 +556,8 @@ export default function Dashboard() {
 
   const tabs = [
     { id: "home", label: "Home", icon: <LayoutDashboard size={18} /> },
-    { id: "journey", label: "My Journey", icon: <Trophy size={18} /> },
+    { id: "journey", label: "Learning", icon: <Trophy size={18} /> },
+    { id: "courses", label: "Courses", icon: <BookOpen size={18} /> },
     { id: "community", label: "Community", icon: <Users size={18} /> },
     { id: "resume", label: "Resume & ATS", icon: <FileText size={18} /> },
     { id: "portfolio", label: "Portfolio Creator", icon: <Palette size={18} /> },
@@ -687,6 +689,13 @@ export default function Dashboard() {
                   updateStreak();
                 }}
               />
+            </motion.div>
+          )}
+
+          {/* ── SEPARATE COURSES HUB ── */}
+          {activeTab === "courses" && (
+            <motion.div key="courses" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+              <CoursesHub userRole={roleId} userBranch={branchId} />
             </motion.div>
           )}
 
