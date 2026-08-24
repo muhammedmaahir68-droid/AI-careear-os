@@ -111,6 +111,32 @@ export const BRANCHES: Branch[] = [
       { id: "mech-iiot", name: "Industrial IoT Engineer", description: "Smart factory, sensor integration" },
     ],
   },
+  {
+    id: "biotech",
+    name: "Bio-Technology",
+    description: "Bioinformatics, genetic engineering, pharma, biomedical devices",
+    icon: "FlaskConical",
+    roles: [
+      { id: "biotech-bioinformatics", name: "Bioinformatics Analyst", description: "Genomics, protein analysis, sequencing" },
+      { id: "biotech-pharma", name: "Pharma R&D Analyst", description: "Drug discovery, clinical trials, FDA compliance" },
+      { id: "biotech-qc", name: "Quality Control Analyst", description: "Lab testing, GMP, regulatory affairs" },
+      { id: "biotech-biomedical", name: "Biomedical Engineer", description: "Medical devices, imaging systems, diagnostics" },
+      { id: "biotech-research", name: "Research Scientist", description: "Wet lab, cell biology, genetic research" },
+    ],
+  },
+  {
+    id: "iot",
+    name: "Internet of Things",
+    description: "Smart devices, edge computing, sensor networks, Industry 4.0",
+    icon: "Wifi",
+    roles: [
+      { id: "iot-developer", name: "IoT Developer", description: "Firmware, cloud connectivity, MQTT/CoAP protocols" },
+      { id: "iot-embedded", name: "Embedded Systems Engineer", description: "Microcontrollers, RTOS, low-power design" },
+      { id: "iot-cloud", name: "IoT Cloud Architect", description: "AWS IoT, Azure IoT Hub, data pipelines" },
+      { id: "iot-security", name: "IoT Security Engineer", description: "Device security, encryption, vulnerability assessment" },
+      { id: "iot-industrial", name: "Industrial IoT Engineer", description: "SCADA, PLC integration, Industry 4.0" },
+    ],
+  },
 ];
 
 export const getBranch = (branchId: string) => BRANCHES.find((b) => b.id === branchId);
