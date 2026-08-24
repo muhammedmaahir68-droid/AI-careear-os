@@ -569,17 +569,19 @@ export default function Dashboard() {
     return <div className="min-h-screen flex items-center justify-center bg-background"><div className="text-muted-foreground">Loading your profile...</div></div>;
   }
 
+  if (!branchId || !roleId) {
+    return <BranchRolePicker onSelect={selectRole} />;
+  }
+
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       {/* Top Header */}
       <header className="sticky top-0 z-30 bg-background/95 backdrop-blur-md border-b border-border px-6 py-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-3">
-            {branchId && roleId && (
-              <button onClick={clearRole} title="Change Department / Role" className="p-2 rounded-full hover:bg-white/10 transition-colors">
-                <ArrowLeft size={18} />
-              </button>
-            )}
+            <button onClick={clearRole} title="Change Department / Role" className="p-2 rounded-full hover:bg-white/10 transition-colors">
+              <ArrowLeft size={18} />
+            </button>
             {/* CARVEX icon mark */}
             <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{background:"linear-gradient(135deg,#7C3AED 0%,#00E5FF 100%)"}}>
               <svg width="17" height="17" viewBox="0 0 22 22" fill="none">
@@ -601,33 +603,16 @@ export default function Dashboard() {
               <span className="text-sm">💎</span>
               <span className="text-sm font-bold text-foreground">{Math.floor((xp ?? 0) * 0.4) + 50} 💎</span>
             </div>
-            <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20">
-              <Flame className="text-foreground" size={16} />
-              <span className="text-sm font-bold text-foreground">{streak} Day Streak</span>
+            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 shadow-sm" title="Placement Streak">
+              <Flame size={16} className="text-amber-400 fill-amber-400" />
+              <span className="text-sm font-bold text-foreground">{streak} Days</span>
             </div>
-            <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-yellow-500/10 border border-yellow-500/20">
-              <Star className="text-foreground" size={16} />
-              <span className="text-sm font-bold text-foreground">{xp} XP</span>
+            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 shadow-sm" title="XP Level">
+              <Zap size={16} className="text-purple-400 fill-purple-400" />
+              <span className="text-sm font-bold text-foreground">{xp} XP (Lvl {level})</span>
             </div>
-            <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20">
-              <Trophy className="text-foreground" size={16} />
-              <span className="text-sm font-bold text-foreground">Level {level}</span>
-            </div>
-            <button
-              onClick={() => setShowCertification(true)}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 font-bold text-xs text-slate-950 shadow-md transition cursor-pointer"
-            >
-              <Award size={15} />
-              <span>Get Certified</span>
-            </button>
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 border-2 border-border flex items-center justify-center text-sm font-bold shrink-0">
-                {avatarInitial}
-              </div>
-              <button onClick={handleSignOut} title="Sign Out"
-                className="p-2 rounded-full hover:bg-white/10 transition-colors text-muted-foreground hover:text-foreground">
-                <LogOut size={16} />
-              </button>
+            <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-cyan-500 to-purple-600 text-white font-bold text-sm flex items-center justify-center border-2 border-white/20 shadow-sm">
+              {avatarInitial}
             </div>
           </div>
         </div>
@@ -657,44 +642,36 @@ export default function Dashboard() {
           {/* ── HOME DASHBOARD ── */}
           {activeTab === "home" && (
             <motion.div key="home" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-              {!branchId || !roleId ? (
-                <BranchRolePicker onSelect={selectRole} />
-              ) : (
-                <HomePanel
-                  userName={profile?.name?.split(" ")[0] || "Student"}
-                  branchId={branchId}
-                  roleId={roleId}
-                  xp={xp}
-                  streak={streak}
-                  diamonds={Math.floor((xp ?? 0) * 0.4) + 50}
-                  level={level}
-                  placementScore={placementScore}
-                  onStartJourney={(phase) => {
-                    setTargetPhase(phase);
-                    setActiveTab("journey");
-                  }}
-                  onOpenCertification={() => setShowCertification(true)}
-                />
-              )}
+              <HomePanel
+                userName={profile?.name?.split(" ")[0] || "Student"}
+                branchId={branchId}
+                roleId={roleId}
+                xp={xp}
+                streak={streak}
+                diamonds={Math.floor((xp ?? 0) * 0.4) + 50}
+                level={level}
+                placementScore={placementScore}
+                onStartJourney={(phase) => {
+                  setTargetPhase(phase);
+                  setActiveTab("journey");
+                }}
+                onOpenCertification={() => setShowCertification(true)}
+              />
             </motion.div>
           )}
 
           {/* ── MY JOURNEY (SINGLE LINEAR PATH) ── */}
           {activeTab === "journey" && (
             <motion.div key="journey" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-              {!branchId || !roleId ? (
-                <BranchRolePicker onSelect={selectRole} />
-              ) : (
-                <LearningGamePath
-                  branchId={branchId}
-                  roleId={roleId}
-                  targetPhase={targetPhase}
-                  onNodeComplete={(xpEarned) => {
-                    updateXP(xpEarned);
-                    updateStreak();
-                  }}
-                />
-              )}
+              <LearningGamePath
+                branchId={branchId}
+                roleId={roleId}
+                targetPhase={targetPhase}
+                onNodeComplete={(xpEarned) => {
+                  updateXP(xpEarned);
+                  updateStreak();
+                }}
+              />
             </motion.div>
           )}
 

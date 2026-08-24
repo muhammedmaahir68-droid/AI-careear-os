@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Code2, Server, BrainCircuit, Database, CircuitBoard, Zap, Cog, ChevronRight, CheckCircle2, ArrowLeft } from "lucide-react";
+import { Code2, Server, BrainCircuit, Database, CircuitBoard, Zap, Cog, ChevronRight, CheckCircle2, ArrowLeft, BookOpen, Compass } from "lucide-react";
 import { BRANCHES, type Branch } from "../data/branches";
+import CoursesHub from "./CoursesHub";
 
 const ICON_MAP: Record<string, React.ReactNode> = {
   Code2: <Code2 size={32} />,
@@ -30,6 +31,7 @@ interface BranchRolePickerProps {
 }
 
 export default function BranchRolePicker({ onSelect, currentBranchId, currentRoleId }: BranchRolePickerProps) {
+  const [pickerMode, setPickerMode] = useState<"career" | "courses">("career");
   const [step, setStep] = useState<"branch" | "role">(currentBranchId ? "role" : "branch");
   const [selectedBranch, setSelectedBranch] = useState<Branch | null>(
     currentBranchId ? BRANCHES.find((b) => b.id === currentBranchId) ?? null : null
@@ -49,9 +51,41 @@ export default function BranchRolePicker({ onSelect, currentBranchId, currentRol
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-6">
-      <div className="w-full max-w-4xl">
-        <AnimatePresence mode="wait">
+    <div className="min-h-screen bg-background flex flex-col items-center justify-start p-6 pt-10">
+      <div className="w-full max-w-5xl">
+
+        {/* Top Module Switcher Bar */}
+        <div className="flex justify-center mb-8">
+          <div className="bg-card border border-border p-1.5 rounded-2xl flex gap-2 shadow-xl backdrop-blur-md">
+            <button
+              onClick={() => setPickerMode("career")}
+              className={`px-6 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
+                pickerMode === "career"
+                  ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md"
+                  : "text-muted-foreground hover:text-foreground hover:bg-white/5"
+              }`}
+            >
+              <Compass size={16} /> Select Department & Career Role
+            </button>
+            <button
+              onClick={() => setPickerMode("courses")}
+              className={`px-6 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
+                pickerMode === "courses"
+                  ? "bg-gradient-to-r from-purple-600 to-cyan-600 text-white shadow-md"
+                  : "text-muted-foreground hover:text-foreground hover:bg-white/5"
+              }`}
+            >
+              <BookOpen size={16} /> Learn Independent Courses
+            </button>
+          </div>
+        </div>
+
+        {pickerMode === "courses" ? (
+          <div className="animate-fade-rise">
+            <CoursesHub userRole={currentRoleId} userBranch={currentBranchId} />
+          </div>
+        ) : (
+          <AnimatePresence mode="wait">
           {step === "branch" ? (
             <motion.div
               key="branch-step"
@@ -158,6 +192,7 @@ export default function BranchRolePicker({ onSelect, currentBranchId, currentRol
             </motion.div>
           )}
         </AnimatePresence>
+        )}
       </div>
     </div>
   );
