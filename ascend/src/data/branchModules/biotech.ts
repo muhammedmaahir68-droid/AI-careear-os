@@ -36,7 +36,7 @@ export const BIOTECH_MODULES: BranchModuleData[] = [
     debug: [
       {
         title: "Fix the reverse complement function",
-        buggy: "def complement(seq):\n    m = {'A':'T','T':'A','G':'C','C':'G'}\n    return ''.join(m[b] for b in seq)  # Missing reversal!",
+        buggy: "def complement(seq):\n    m = {'A':'T','T':'A','G':'C','C':'G'}\n    return ''.join(m[b] for b in seq)  • Missing reversal!",
         fixed: "def reverse_complement(seq):\n    m = {'A':'T','T':'A','G':'C','C':'G'}\n    return ''.join(m[b] for b in reversed(seq))",
         hint: "DNA complement must be reversed — strands run antiparallel in 3 to 5 direction"
       }
@@ -95,7 +95,7 @@ export const BIOTECH_MODULES: BranchModuleData[] = [
     debug: [
       {
         title: "Fix qPCR delta-delta Ct calculation",
-        buggy: "def fold_change(ct_target, ct_ref):\n    return ct_target - ct_ref  # Wrong — missing delta-delta",
+        buggy: "def fold_change(ct_target, ct_ref):\n    return ct_target - ct_ref  • Wrong — missing delta-delta",
         fixed: "def fold_change(ct_tgt_tx, ct_ref_tx, ct_tgt_ctrl, ct_ref_ctrl):\n    dCt_tx = ct_tgt_tx - ct_ref_tx\n    dCt_ctrl = ct_tgt_ctrl - ct_ref_ctrl\n    return 2 ** -(dCt_tx - dCt_ctrl)",
         hint: "Delta-delta Ct requires normalization to reference gene AND comparison to untreated control"
       }
@@ -153,7 +153,7 @@ export const BIOTECH_MODULES: BranchModuleData[] = [
     debug: [
       {
         title: "Fix incomplete restriction digest setup",
-        buggy: "reaction = {'DNA': dna, 'EcoRI': 1, 'Buffer': 'CutSmart'}  # Wrong buffer!",
+        buggy: "reaction = {'DNA': dna, 'EcoRI': 1, 'Buffer': 'CutSmart'}  • Wrong buffer!",
         fixed: "reaction = {'DNA': dna, 'EcoRI': 1, 'Buffer': 'Buffer_3_1', 'BSA': 0.1, 'H2O': 'to_20ul', 'temp': '37C', 'time': '1h'}",
         hint: "NEB EcoRI uses Buffer 3.1 with BSA, not CutSmart. Wrong buffer reduces cutting efficiency significantly."
       }
@@ -211,8 +211,8 @@ export const BIOTECH_MODULES: BranchModuleData[] = [
     debug: [
       {
         title: "Fix specific growth rate calculation",
-        buggy: "def growth_rate(x1, x2, t1, t2):\n    return (x2 - x1) / (t2 - t1)  # This is dX/dt, not specific rate!",
-        fixed: "import math\ndef specific_growth_rate(x1, x2, t1, t2):\n    # mu = ln(X2/X1) / (t2-t1)\n    return math.log(x2/x1) / (t2 - t1)",
+        buggy: "def growth_rate(x1, x2, t1, t2):\n    return (x2 - x1) / (t2 - t1)  • This is dX/dt, not specific rate!",
+        fixed: "import math\ndef specific_growth_rate(x1, x2, t1, t2):\n    • mu = ln(X2/X1) / (t2-t1)\n    return math.log(x2/x1) / (t2 - t1)",
         hint: "Specific growth rate mu uses natural log of biomass ratio divided by time — not absolute change"
       }
     ],

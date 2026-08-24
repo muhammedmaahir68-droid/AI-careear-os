@@ -4,6 +4,9 @@ import { makeVideoLinks } from "./types";
 export const EEE_MODULES: BranchModuleData[] = [
   {
     moduleTitle: "Electric Circuit Theory & Power Systems",
+    roles: ["eee-design", "eee-power", "eee-renewable"],
+    industryUseCase: "Smart Grid Voltage Stability & Microgrid Inverter Control at ABB/Siemens",
+    harvardOxfordRef: "Oxford Power Systems Engineering & High-Voltage Direct Current (HVDC) Transmission",
     level: "Level 1 – Electrical Core",
     branch: ["eee"],
     videos: makeVideoLinks("Electric Circuit Theory KCL KVL Thevenin Transformer"),
@@ -39,7 +42,7 @@ Current in 3Ω resistor = 6 * (6 / 9) = 4A.`,
     debug: [
       {
         title: "Fix Parallel Resistance Calculation Bug",
-        buggy: `def parallel_req(r1, r2):\n    return r1 + r2 / (r1 * r2) # Bug: wrong operator order`,
+        buggy: `def parallel_req(r1, r2):\n    return r1 + r2 / (r1 * r2) • Bug: wrong operator order`,
         fixed: `def parallel_req(r1, r2):\n    return (r1 * r2) / (r1 + r2)`,
         hint: "Parallel resistance formula is (R1 * R2) / (R1 + R2)."
       }
@@ -64,11 +67,14 @@ Current in 3Ω resistor = 6 * (6 / 9) = 4A.`,
       desc: "Calculate equivalent resistance for an array of parallel resistors.",
       input: "resistors = [6, 3]",
       output: "2.0",
-      starter: `def parallel_resistance(resistors):\n    # Return 1 / sum(1/r for r in resistors)\n    pass`
+      starter: `def parallel_resistance(resistors):\n    • Return 1 / sum(1/r for r in resistors)\n    pass`
     }
   },
   {
     moduleTitle: "AC Circuits – Phasors, Impedance & Power Factor",
+    roles: ["eee-design", "eee-power", "eee-renewable"],
+    industryUseCase: "Smart Grid Voltage Stability & Microgrid Inverter Control at ABB/Siemens",
+    harvardOxfordRef: "Oxford Power Systems Engineering & High-Voltage Direct Current (HVDC) Transmission",
     level: "Level 2 – AC Analysis",
     branch: ["eee"],
     videos: makeVideoLinks("AC Circuits Phasors Impedance Power Factor Correction RLC Resonance"),
@@ -95,17 +101,17 @@ Power Triangle:
         "Low power factor increases utility bills and cable heating due to higher total current I = P / (V cos φ).",
         "Quality Factor Q = ω_0 L / R measures resonance selectivity."
       ],
-      example: `# Python Power Factor & Apparent Power Calculator
+      example: `• Python Power Factor & Apparent Power Calculator
 import math
 
 def calculate_ac_power(v, i, pf_angle_deg):
     pf = math.cos(math.radians(pf_angle_deg))
-    p_real = v * i * pf # Watts
-    s_apparent = v * i # VA
-    q_reactive = v * i * math.sin(math.radians(pf_angle_deg)) # VAR
+    p_real = v * i * pf • Watts
+    s_apparent = v * i • VA
+    q_reactive = v * i * math.sin(math.radians(pf_angle_deg)) • VAR
     return p_real, s_apparent, pf
 
-print(calculate_ac_power(230, 10, 36.87)) # Output: (1840W, 2300VA, 0.8 PF)`,
+print(calculate_ac_power(230, 10, 36.87)) • Output: (1840W, 2300VA, 0.8 PF)`,
       complexity: "AC Phasor Matrix Solver: O(N³) with complex numbers"
     },
     aiExplain: {
@@ -121,7 +127,7 @@ print(calculate_ac_power(230, 10, 36.87)) # Output: (1840W, 2300VA, 0.8 PF)`,
     debug: [
       {
         title: "Fix Inductive Reactance Formula",
-        buggy: `# BUG: Forgot 2*pi in frequency formula\ndef xl(freq, L):\n    return freq * L # Missing 2 * math.pi!`,
+        buggy: `• BUG: Forgot 2*pi in frequency formula\ndef xl(freq, L):\n    return freq * L • Missing 2 * math.pi!`,
         fixed: `import math\ndef xl(freq, L):\n    return 2 * math.pi * freq * L`,
         hint: "Inductive reactance X_L = ωL = 2πfL."
       }
@@ -146,11 +152,14 @@ print(calculate_ac_power(230, 10, 36.87)) # Output: (1840W, 2300VA, 0.8 PF)`,
       desc: "Given L in Henrys and C in Farads, calculate the resonance frequency in Hz.",
       input: "L = 0.1, C = 0.00001",
       output: "159.15 Hz",
-      starter: `import math\n\ndef resonance_freq(l, c):\n    # Return 1 / (2 * pi * sqrt(l * c))\n    pass`
+      starter: `import math\n\ndef resonance_freq(l, c):\n    • Return 1 / (2 * pi * sqrt(l * c))\n    pass`
     }
   },
   {
     moduleTitle: "Electrical Machines – Motors & Generators",
+    roles: ["eee-design", "eee-power", "eee-renewable"],
+    industryUseCase: "Smart Grid Voltage Stability & Microgrid Inverter Control at ABB/Siemens",
+    harvardOxfordRef: "Oxford Power Systems Engineering & High-Voltage Direct Current (HVDC) Transmission",
     level: "Level 3 – Electrical Machines",
     branch: ["eee"],
     videos: makeVideoLinks("Electrical Machines DC Motor Induction Motor Synchronous Generator Torque Speed"),
@@ -176,13 +185,13 @@ Synchronous Generators (Alternators):
         "Star-Delta starter reduces starting current to 1/3 of Direct-On-Line value.",
         "VFD (Variable Frequency Drive) controls induction motor speed by varying voltage and frequency (V/f constant)."
       ],
-      example: `# Python Induction Motor Synchronous Speed & Slip
+      example: `• Python Induction Motor Synchronous Speed & Slip
 def motor_specs(freq, poles, actual_rpm):
     ns = (120 * freq) / poles
     slip = (ns - actual_rpm) / ns
     return ns, slip
 
-print("Ns (RPM), Slip:", motor_specs(50, 4, 1440)) # Output: (1500 RPM, 0.04 or 4% slip)`,
+print("Ns (RPM), Slip:", motor_specs(50, 4, 1440)) • Output: (1500 RPM, 0.04 or 4% slip)`,
       complexity: "Torque-Speed Curve: Non-linear polynomial"
     },
     aiExplain: {
@@ -198,7 +207,7 @@ print("Ns (RPM), Slip:", motor_specs(50, 4, 1440)) # Output: (1500 RPM, 0.04 or 
     debug: [
       {
         title: "Fix Synchronous Speed Calculation",
-        buggy: `# BUG: Forgot factor of 120 in Ns formula\ndef ns(f, p):\n    return f / p # Incorrect!`,
+        buggy: `• BUG: Forgot factor of 120 in Ns formula\ndef ns(f, p):\n    return f / p • Incorrect!`,
         fixed: `def ns(f, p):\n    return (120 * f) / p`,
         hint: "Synchronous speed N_s = (120 * f) / P where P is number of poles."
       }
@@ -223,11 +232,14 @@ print("Ns (RPM), Slip:", motor_specs(50, 4, 1440)) # Output: (1500 RPM, 0.04 or 
       desc: "Given frequency f, poles p, and slip percentage, calculate actual motor RPM.",
       input: "f = 50, p = 4, slip_percent = 4.0",
       output: "1440.0",
-      starter: `def motor_rpm(f, p, slip_percent):\n    # Return ns * (1 - slip)\n    pass`
+      starter: `def motor_rpm(f, p, slip_percent):\n    • Return ns * (1 - slip)\n    pass`
     }
   },
   {
     moduleTitle: "Control Systems – Transfer Function, Bode Plot & PID",
+    roles: ["eee-design", "eee-power", "eee-renewable"],
+    industryUseCase: "Smart Grid Voltage Stability & Microgrid Inverter Control at ABB/Siemens",
+    harvardOxfordRef: "Oxford Power Systems Engineering & High-Voltage Direct Current (HVDC) Transmission",
     level: "Level 4 – Control Systems",
     branch: ["eee"],
     videos: makeVideoLinks("Control Systems Transfer Function Bode Plot Root Locus PID Controller"),
@@ -253,12 +265,12 @@ PID Control:
         "Integral (I) controller eliminates steady-state error but reduces stability margin.",
         "Derivative (D) controller improves transient response speed and damps oscillations."
       ],
-      example: `# Python Closed-Loop Transfer Function
+      example: `• Python Closed-Loop Transfer Function
 def closed_loop_gain(g_s, h_s):
-    # T(s) = G(s) / (1 + G(s)*H(s))
+    • T(s) = G(s) / (1 + G(s)*H(s))
     return g_s / (1 + g_s * h_s)
 
-print("T(s) for G=10, H=0.1:", closed_loop_gain(10, 0.1)) # Output: 5.0`,
+print("T(s) for G=10, H=0.1:", closed_loop_gain(10, 0.1)) • Output: 5.0`,
       complexity: "Routh-Hurwitz Array: O(N²) where N is order of characteristic equation"
     },
     aiExplain: {
@@ -274,8 +286,8 @@ print("T(s) for G=10, H=0.1:", closed_loop_gain(10, 0.1)) # Output: 5.0`,
     debug: [
       {
         title: "Fix Unstable Pole Check",
-        buggy: `# BUG: Checking if any pole is negative for stability\ndef is_stable(poles):\n    return any(p < 0 for p in poles) # Bug: should be ALL poles in LHP (real part < 0)`,
-        fixed: `def is_stable(poles):\n    return all(p < 0 for p in poles) # All real parts must be negative`,
+        buggy: `• BUG: Checking if any pole is negative for stability\ndef is_stable(poles):\n    return any(p < 0 for p in poles) • Bug: should be ALL poles in LHP (real part < 0)`,
+        fixed: `def is_stable(poles):\n    return all(p < 0 for p in poles) • All real parts must be negative`,
         hint: "For stability, ALL system poles must lie in Left-Half Plane (LHP, real part < 0)."
       }
     ],
@@ -299,11 +311,14 @@ print("T(s) for G=10, H=0.1:", closed_loop_gain(10, 0.1)) # Output: 5.0`,
       desc: "Calculate response y(t) = K * (1 - exp(-t / tau)) for a 1st order system.",
       input: "k = 5.0, tau = 2.0, t = 2.0",
       output: "3.1606",
-      starter: `import math\n\ndef step_response(k, tau, t):\n    # Return k * (1 - exp(-t / tau))\n    pass`
+      starter: `import math\n\ndef step_response(k, tau, t):\n    • Return k * (1 - exp(-t / tau))\n    pass`
     }
   },
   {
     moduleTitle: "Power Electronics – Converters, Inverters & EV Drives",
+    roles: ["eee-design", "eee-power", "eee-renewable"],
+    industryUseCase: "Smart Grid Voltage Stability & Microgrid Inverter Control at ABB/Siemens",
+    harvardOxfordRef: "Oxford Power Systems Engineering & High-Voltage Direct Current (HVDC) Transmission",
     level: "Level 5 – Power Electronics",
     branch: ["eee"],
     videos: makeVideoLinks("Power Electronics Buck Boost Converter Inverter IGBT EV Drives PWM"),
@@ -330,15 +345,15 @@ EV Drives & Solar Inverters:
         "IGBT combines MOSFET high input impedance gate with BJT low conduction losses.",
         "Freewheeling diode provides path for inductive current during switch OFF time, preventing over-voltage spikes."
       ],
-      example: `# Python Buck & Boost Converter Output Voltage
+      example: `• Python Buck & Boost Converter Output Voltage
 def buck_converter(v_in, duty_cycle):
     return v_in * duty_cycle
 
 def boost_converter(v_in, duty_cycle):
     return v_in / (1.0 - duty_cycle)
 
-print("Buck (V_in=48V, D=0.25):", buck_converter(48, 0.25)) # Output: 12V
-print("Boost (V_in=12V, D=0.75):", boost_converter(12, 0.75)) # Output: 48V`,
+print("Buck (V_in=48V, D=0.25):", buck_converter(48, 0.25)) • Output: 12V
+print("Boost (V_in=12V, D=0.75):", boost_converter(12, 0.75)) • Output: 48V`,
       complexity: "PWM Switching Frequency: 20 kHz - 500 kHz"
     },
     aiExplain: {
@@ -354,8 +369,8 @@ print("Boost (V_in=12V, D=0.75):", boost_converter(12, 0.75)) # Output: 48V`,
     debug: [
       {
         title: "Fix Boost Converter Division by Zero",
-        buggy: `# BUG: Duty cycle D=1.0 causes zero division\ndef boost(v_in, d):\n    return v_in / (1 - d) # Crash when d=1.0!`,
-        fixed: `def boost(v_in, d):\n    d = min(0.95, max(0.0, d)) # Clamp duty cycle < 0.95\n    return v_in / (1 - d)`,
+        buggy: `• BUG: Duty cycle D=1.0 causes zero division\ndef boost(v_in, d):\n    return v_in / (1 - d) • Crash when d=1.0!`,
+        fixed: `def boost(v_in, d):\n    d = min(0.95, max(0.0, d)) • Clamp duty cycle < 0.95\n    return v_in / (1 - d)`,
         hint: "Never allow duty cycle D = 1.0 in Boost converters as theoretical output approaches infinity."
       }
     ],
@@ -379,12 +394,15 @@ print("Boost (V_in=12V, D=0.75):", boost_converter(12, 0.75)) # Output: 48V`,
       desc: "Calculate output voltage magnitude for a Buck-Boost converter given V_in and duty cycle D.",
       input: "v_in = 12.0, d = 0.6",
       output: "18.0",
-      starter: `def buck_boost_voltage(v_in, d):\n    # Return v_in * (d / (1 - d))\n    pass`
+      starter: `def buck_boost_voltage(v_in, d):\n    • Return v_in * (d / (1 - d))\n    pass`
     }
   }
 ,
   {
     moduleTitle: "Circuit Theory – Kirchhoff's Laws",
+    roles: ["eee-design", "eee-power", "eee-renewable"],
+    industryUseCase: "Smart Grid Voltage Stability & Microgrid Inverter Control at ABB/Siemens",
+    harvardOxfordRef: "Oxford Power Systems Engineering & High-Voltage Direct Current (HVDC) Transmission",
     level: "Level 1 – Foundations",
     branch: ["eee"],
     videos: makeVideoLinks("Kirchhoff Laws KVL KCL Circuit Analysis"),
@@ -392,14 +410,14 @@ print("Boost (V_in=12V, D=0.75):", boost_converter(12, 0.75)) # Output: 48V`,
       summary: "Kirchhoff's Current Law (KCL) and Voltage Law (KVL) are the fundamental tools for analyzing electrical circuits. KCL: currents sum to zero at a node. KVL: voltages sum to zero around a loop.",
       deepDiveTextbook: `KIRCHHOFF'S CIRCUIT LAWS\n\nKCL (Current Law): Sum of currents entering a node = Sum leaving. ΣI_in = ΣI_out (or ΣI = 0 at node).\nBased on conservation of charge — charge cannot accumulate at a node.\n\nKVL (Voltage Law): Sum of voltage drops around any closed loop = 0. ΣV = 0 around loop.\nBased on conservation of energy — potential difference is path-independent.\n\nNode Voltage Method:\n1. Select reference node (ground).\n2. Assign voltage variables to each non-reference node.\n3. Write KCL at each non-reference node in terms of node voltages.\n4. Solve system of equations.\nN-1 equations for N nodes.\n\nMesh Current Method:\n1. Identify meshes (inner loops).\n2. Assign mesh current to each loop.\n3. Write KVL for each mesh.\n4. Solve for mesh currents.\nM equations for M meshes.\n\nSuperposition: For linear circuits, total response = sum of responses from each independent source alone.\nThevenin: Any linear 2-terminal network = Vth (open-circuit voltage) + Rth (series resistance).\nNorton: Equivalent to In (short-circuit current) in parallel with Rn = Rth.`,
       keyPoints: ["KCL: ΣI=0 at node (current conservation)","KVL: ΣV=0 around loop (energy conservation)","Node voltage method: N-1 equations for N nodes","Thevenin = Voc + Rth series; Norton = Isc in parallel with Rth"],
-      example: `# Nodal Analysis Example\n# Circuit: V1=10V source, R1=2Ω, R2=4Ω, R3=6Ω\n# Nodes: V1 (known=10V), V2 (unknown)\nimport numpy as np\n\n# KCL at node V2: (V2-10)/2 + V2/4 + V2/6 = 0\n# Multiply by 12: 6(V2-10) + 3V2 + 2V2 = 0\n# 11V2 = 60 → V2 = 60/11 ≈ 5.45V\nA = np.array([[6+3+2]])\nb = np.array([[60]])\nV2 = np.linalg.solve(A, b)\nprint(f"V2 = {V2[0][0]:.2f} V")`,
+      example: `• Nodal Analysis Example\n• Circuit: V1=10V source, R1=2Ω, R2=4Ω, R3=6Ω\n• Nodes: V1 (known=10V), V2 (unknown)\nimport numpy as np\n\n• KCL at node V2: (V2-10)/2 + V2/4 + V2/6 = 0\n• Multiply by 12: 6(V2-10) + 3V2 + 2V2 = 0\n• 11V2 = 60 → V2 = 60/11 ≈ 5.45V\nA = np.array([[6+3+2]])\nb = np.array([[60]])\nV2 = np.linalg.solve(A, b)\nprint(f"V2 = {V2[0][0]:.2f} V")`,
       comparisonTable: { headers: ["Method","Equations","Best For","Variables"], rows: [["Nodal","N-1 KCL","Many parallel branches","Node voltages"],["Mesh","M KVL","Many series elements","Mesh currents"],["Superposition","One source at a time","Understanding contributions","Individual responses"],["Thevenin/Norton","2 calculations","Load analysis","Equivalent circuit"]] },
       flowchartSteps: ["Identify nodes and meshes","Assign node voltages or mesh currents","Apply KCL (nodal) or KVL (mesh)","Write equations in matrix form","Solve using Gaussian elimination or Cramer's rule","Verify with power balance: ΣP_generated = ΣP_absorbed"],
       concept3DSimulation: { title: "Node Voltage Solution", description: "Circuit nodes shown with voltage levels; current arrows indicate KCL balance at each node.", interactiveNodes: [{name:"Node Analyzer",type:"KCL Applier",details:"Writes current balance equation at each node"},{name:"Matrix Solver",type:"Linear System",details:"Solves [G][V]=[I] using linear algebra"},{name:"Power Checker",type:"Verification",details:"Confirms ΣP=0 for energy conservation"}] },
       complexity: "Nodal: O(N³) matrix solve | Thevenin: O(N) calculation"
     },
     aiExplain: { steps: ["Label all node voltages","At each node: currents in = currents out","Write as linear equations","Solve the system"], analogy: "KCL is like water pipes: water flowing into a junction must equal water flowing out. KVL is like a hiking trail: net elevation change for a complete loop is always zero." },
-    debug: [{ title: "Sign error in KVL", buggy: "Going around loop: +V1 - IR1 + IR2 = 0  # wrong sign if current direction assumed wrong", fixed: "Assign consistent current direction. If loop solution gives negative I, actual current flows opposite to assumed direction.", hint: "KVL sign convention: voltage rise (+) when going from - to + terminal. Voltage drop (-) when going from + to -." }],
+    debug: [{ title: "Sign error in KVL", buggy: "Going around loop: +V1 - IR1 + IR2 = 0  • wrong sign if current direction assumed wrong", fixed: "Assign consistent current direction. If loop solution gives negative I, actual current flows opposite to assumed direction.", hint: "KVL sign convention: voltage rise (+) when going from - to + terminal. Voltage drop (-) when going from + to -." }],
     quiz: [
       { q: "KCL is based on conservation of:", options: ["Energy","Charge","Momentum","Flux"], answer: 1 },
       { q: "Thevenin equivalent consists of:", options: ["Current source + parallel R","Voltage source + series R","Two resistors","Current source only"], answer: 1 },
@@ -411,10 +429,13 @@ print("Boost (V_in=12V, D=0.75):", boost_converter(12, 0.75)) # Output: 48V`,
       { company: "ABB", year: "2022", question: "Why is nodal analysis preferred over mesh analysis for op-amp circuits?", answer: "Op-amp circuits have current sources and floating voltage sources easily handled by nodal analysis. Super-node technique handles voltage sources. Mesh requires supermesh. Also, simulation tools (SPICE) use modified nodal analysis (MNA) internally." }
     ],
     mock: [{ type: "Technical", question: "Explain maximum power transfer theorem.", tip: "Maximum power transferred to load when RL = Rth (load resistance equals Thevenin resistance). Maximum power = Vth²/(4Rth). Efficiency = 50% at max power transfer. Used in RF/communication systems. Not used where efficiency matters more (power transmission)." }],
-    coding: { problem: "Solve Nodal Analysis", desc: "Implement nodal analysis solver for resistive circuits.", input: "conductance_matrix G, current_vector I", output: "node_voltages V = G⁻¹ * I", starter: "import numpy as np\n\ndef nodal_analysis(G, I):\n    # Solve [G][V] = [I] using numpy\n    V = np.linalg.solve(G, I)\n    return V\n\n# Example: 2-node circuit\nG = np.array([[0.75, -0.5], [-0.5, 0.75]])\nI = np.array([2.0, -1.0])\nprint(nodal_analysis(G, I))" }
+    coding: { problem: "Solve Nodal Analysis", desc: "Implement nodal analysis solver for resistive circuits.", input: "conductance_matrix G, current_vector I", output: "node_voltages V = G⁻¹ * I", starter: "import numpy as np\n\ndef nodal_analysis(G, I):\n    • Solve [G][V] = [I] using numpy\n    V = np.linalg.solve(G, I)\n    return V\n\n• Example: 2-node circuit\nG = np.array([[0.75, -0.5], [-0.5, 0.75]])\nI = np.array([2.0, -1.0])\nprint(nodal_analysis(G, I))" }
   },
   {
     moduleTitle: "Electrical Machines – DC & AC Motors",
+    roles: ["eee-design", "eee-power", "eee-renewable"],
+    industryUseCase: "Smart Grid Voltage Stability & Microgrid Inverter Control at ABB/Siemens",
+    harvardOxfordRef: "Oxford Power Systems Engineering & High-Voltage Direct Current (HVDC) Transmission",
     level: "Level 2 – Intermediate",
     branch: ["eee"],
     videos: makeVideoLinks("DC Motor AC Induction Motor Electrical Machines"),
@@ -422,7 +443,7 @@ print("Boost (V_in=12V, D=0.75):", boost_converter(12, 0.75)) # Output: 48V`,
       summary: "Electrical machines convert between electrical and mechanical energy. DC motors are speed-controllable; AC induction motors are robust and widely used in industry. Understanding their characteristics is fundamental for drive systems.",
       deepDiveTextbook: `ELECTRICAL MACHINES\n\nDC Motor:\nEquivalent circuit: Vs = Ea + Ia*Ra (Ia = armature current, Ra = armature resistance)\nBack EMF: Ea = KΦω (K = machine constant, Φ = flux, ω = speed)\nTorque: T = KΦIa\nSpeed: N = (Vs - IaRa)/(KΦ) — speed increases as flux decreases, load decreases.\n\nDC Motor Types:\n- Series: Field winding in series with armature. High starting torque. Speed drops with load. Never run unloaded (dangerously high speed). Used in traction, cranes.\n- Shunt: Field winding in parallel. Near-constant speed with load. Used for CNC machines.\n- Compound: Combined. Better characteristics.\n\nAC Induction Motor:\nStator creates rotating magnetic field at synchronous speed: Ns = 120f/P (f=frequency, P=poles)\nRotor runs slightly slower: actual speed Nr = Ns(1-s) where s = slip ratio\nTypical slip: 3-5% at full load.\nTorque-slip characteristic: maximum torque at breakdown slip, starting torque lower.\n\nSpeed Control Methods:\n- DC: Armature voltage, field flux, armature resistance control.\n- AC: Variable frequency drive (VFD) — V/f = constant for constant torque.\n\nEfficiency: Losses = Copper (I²R), Iron (eddy current + hysteresis), Mechanical (friction).\nEfficiency η = Pout/Pin = T*ω/(Vs*Is).`,
       keyPoints: ["DC motor speed ∝ 1/flux — reducing field increases speed","AC induction motor speed = Ns(1-s), slip 3-5% at full load","VFD controls AC motor speed by varying V and f proportionally","Series DC motor must never run unloaded — dangerous overspeed"],
-      example: `# DC Motor Speed Calculation\ndef dc_motor_speed(Vs, Ia, Ra, K, phi):\n    Ea = Vs - Ia * Ra  # Back EMF\n    omega = Ea / (K * phi)  # Angular speed in rad/s\n    N = omega * 60 / (2 * 3.14159)  # Speed in RPM\n    return N, Ea\n\n# AC Induction Motor Slip\ndef induction_motor(f, P, Nr):\n    Ns = 120 * f / P  # Synchronous speed in RPM\n    slip = (Ns - Nr) / Ns\n    return Ns, slip\n\nprint(induction_motor(50, 4, 1450))  # 1500 RPM, 0.033 slip`,
+      example: `• DC Motor Speed Calculation\ndef dc_motor_speed(Vs, Ia, Ra, K, phi):\n    Ea = Vs - Ia * Ra  • Back EMF\n    omega = Ea / (K * phi)  • Angular speed in rad/s\n    N = omega * 60 / (2 * 3.14159)  • Speed in RPM\n    return N, Ea\n\n• AC Induction Motor Slip\ndef induction_motor(f, P, Nr):\n    Ns = 120 * f / P  • Synchronous speed in RPM\n    slip = (Ns - Nr) / Ns\n    return Ns, slip\n\nprint(induction_motor(50, 4, 1450))  • 1500 RPM, 0.033 slip`,
       comparisonTable: { headers: ["Motor Type","Speed Control","Starting Torque","Application","Maintenance"], rows: [["DC Shunt","Easy (armature V)","Medium","CNC, printing","Brushes wear"],["DC Series","Field control","Very High","Traction, cranes","Brushes wear"],["AC Induction","VFD needed","Medium","Industry standard","Almost none"],["BLDC","Electronic","High","EVs, drones","Low (no brushes"]] },
       flowchartSteps: ["Supply voltage applied to motor","Armature current flows (DC) or stator field created (AC)","Magnetic field interacts → torque produced","Rotor accelerates to running speed","Back EMF (DC) or slip (AC) reaches steady state","Load torque balanced by motor torque","Speed stabilizes at operating point"],
       concept3DSimulation: { title: "Motor Torque-Speed Curve", description: "Curve shows how motor torque varies with speed — intersection with load curve = operating point.", interactiveNodes: [{name:"Torque Generator",type:"Electromagnetic Torque",details:"Force on current-carrying conductors in magnetic field"},{name:"Back EMF",type:"Speed Dependent Voltage",details:"Opposes applied voltage, limits current and speed"},{name:"Operating Point",type:"Equilibrium",details:"Where motor torque equals load torque"}] },
@@ -441,10 +462,13 @@ print("Boost (V_in=12V, D=0.75):", boost_converter(12, 0.75)) # Output: 48V`,
       { company: "BHEL", year: "2022", question: "Explain regenerative braking in electric motors.", answer: "Motor operates as generator during braking — mechanical energy converted back to electrical. DC motor: reverse armature current, energy fed back to supply. AC induction: operate above synchronous speed (negative slip). Used in EVs, lifts, trains. Energy returned to grid or stored in batteries/capacitors." }
     ],
     mock: [{ type: "Technical", question: "Compare induction motor and synchronous motor for industrial applications.", tip: "Induction: self-starting, simple, robust, cheaper, slight speed variation with load (slip). Synchronous: runs at exact synchronous speed, can provide power factor correction (leading PF when over-excited), higher efficiency, requires DC excitation or permanent magnets, not self-starting. Use synchronous for precise speed or PF correction; induction for general purpose." }],
-    coding: { problem: "Motor Drive Efficiency Calculator", desc: "Calculate motor drive system efficiency considering all losses.", input: "Vs=415V, Is=10A, pf=0.85, Pout=4000W", output: "Efficiency = 84.3%", starter: "import math\n\ndef motor_efficiency(Vs, Is, pf, Pout):\n    Pin = Vs * Is * pf * math.sqrt(3)  # 3-phase\n    efficiency = (Pout / Pin) * 100\n    losses = Pin - Pout\n    return efficiency, losses\n\nprint(motor_efficiency(415, 10, 0.85, 4000))" }
+    coding: { problem: "Motor Drive Efficiency Calculator", desc: "Calculate motor drive system efficiency considering all losses.", input: "Vs=415V, Is=10A, pf=0.85, Pout=4000W", output: "Efficiency = 84.3%", starter: "import math\n\ndef motor_efficiency(Vs, Is, pf, Pout):\n    Pin = Vs * Is * pf * math.sqrt(3)  • 3-phase\n    efficiency = (Pout / Pin) * 100\n    losses = Pin - Pout\n    return efficiency, losses\n\nprint(motor_efficiency(415, 10, 0.85, 4000))" }
   },
   {
     moduleTitle: "Power Systems – Generation to Distribution",
+    roles: ["eee-design", "eee-power", "eee-renewable"],
+    industryUseCase: "Smart Grid Voltage Stability & Microgrid Inverter Control at ABB/Siemens",
+    harvardOxfordRef: "Oxford Power Systems Engineering & High-Voltage Direct Current (HVDC) Transmission",
     level: "Level 2 – Intermediate",
     branch: ["eee"],
     videos: makeVideoLinks("Power Systems Generation Transmission Distribution Grid"),
@@ -452,7 +476,7 @@ print("Boost (V_in=12V, D=0.75):", boost_converter(12, 0.75)) # Output: 48V`,
       summary: "Electric power systems generate, transmit, and distribute electricity from power plants to consumers. Understanding the grid hierarchy, transformers, and load flow is essential for power engineering careers.",
       deepDiveTextbook: `POWER SYSTEMS FUNDAMENTALS\n\nGrid Hierarchy:\n1. Generation: Power plants (thermal, hydro, nuclear, solar, wind). Generated at 11-33kV.\n2. Transmission: Step-up transformer → 132kV/220kV/400kV/765kV for long-distance low-loss transmission.\n3. Sub-transmission: 33kV/66kV for regional distribution.\n4. Distribution: Step-down to 11kV, then 415V/240V for consumers.\n\nWhy High Voltage Transmission?\nPower loss = I²R. For same power P = VI, higher V → lower I → lower I²R losses.\nExample: Transmitting 100MW at 11kV: I = 5.25kA, losses huge.\nAt 400kV: I = 144A, losses 1370× lower.\n\nTransformer:\nVoltage ratio: V1/V2 = N1/N2 (turns ratio a)\nCurrent ratio: I1/I2 = N2/N1 = 1/a\nPower: P1 = P2 (ideal). Efficiency >99% for large transformers.\nEquivalent circuit: leakage inductance + winding resistance + core loss (eddy + hysteresis).\n\nLoad Flow Analysis (Newton-Raphson):\nFind bus voltages/angles satisfying P and Q injections.\nP = Σ|Vi||Vj||Yij|cos(δi-δj-θij)\nQ = Σ|Vi||Vj||Yij|sin(δi-δj-θij)\n\nFaults: LLL (3-phase symmetric), LLG, LL, LG (most common ~70% of faults).\nProtection: Overcurrent relays, distance relays (21 relay), differential relays.`,
       keyPoints: ["High voltage transmission: P_loss = I²R, higher V → lower I → less loss","Transformer V1/V2 = N1/N2, I1/I2 = N2/N1","Load flow finds bus voltages satisfying power balance","LG fault is most common (70%), LLL is most severe"],
-      example: `# Per Unit System Calculation\ndef per_unit(actual, base):\n    return actual / base\n\n# Example: 132kV system, Sbase=100MVA\nVbase = 132e3  # Volts\nSbase = 100e6  # VA\nZbase = Vbase**2 / Sbase  # 174.24 Ohm\n\nZ_actual = 50  # Ohm\nZ_pu = per_unit(Z_actual, Zbase)  # 0.287 pu\n\nprint(f"Zbase = {Zbase:.2f} Ω")\nprint(f"Z = {Z_pu:.3f} pu")`,
+      example: `• Per Unit System Calculation\ndef per_unit(actual, base):\n    return actual / base\n\n• Example: 132kV system, Sbase=100MVA\nVbase = 132e3  • Volts\nSbase = 100e6  • VA\nZbase = Vbase**2 / Sbase  • 174.24 Ohm\n\nZ_actual = 50  • Ohm\nZ_pu = per_unit(Z_actual, Zbase)  • 0.287 pu\n\nprint(f"Zbase = {Zbase:.2f} Ω")\nprint(f"Z = {Z_pu:.3f} pu")`,
       comparisonTable: { headers: ["Fault Type","Frequency","Severity","Symmetry"], rows: [["Single Line-Ground (LG)","~70%","Low","Unsymmetrical"],["Line-Line (LL)","~15%","Medium","Unsymmetrical"],["Double Line-Ground (LLG)","~10%","High","Unsymmetrical"],["3-Phase (LLL)","~5%","Highest","Symmetrical"]] },
       flowchartSteps: ["Power generated at plant (11-33kV)","Step-up transformer (400kV for long distance)","Transmission lines (towers, conductors)","Step-down at grid substation (132kV)","Regional distribution (33kV/11kV)","Distribution transformers (415V/240V)","Consumer connection"],
       concept3DSimulation: { title: "Power Grid Voltage Profile", description: "Voltage steps shown: generation → step-up → transmission → step-down → distribution → consumer.", interactiveNodes: [{name:"Step-Up Transformer",type:"Voltage Amplifier",details:"Boosts voltage for low-loss long-distance transmission"},{name:"Transmission Line",type:"High-V Conductor",details:"Carries power with minimal I²R losses at high voltage"},{name:"Step-Down Substation",type:"Load Center",details:"Reduces voltage for safe consumer delivery"}] },
@@ -471,10 +495,13 @@ print("Boost (V_in=12V, D=0.75):", boost_converter(12, 0.75)) # Output: 48V`,
       { company: "PGCIL", year: "2022", question: "Explain voltage stability and what causes voltage collapse.", answer: "Voltage stability: system maintains acceptable voltages after disturbance. Voltage collapse: cascade failure where load demands more reactive power than available, voltage drops, more reactive needed, unstable. Triggered by heavy loading, contingencies, insufficient reactive sources. Prevention: reactive compensation, SVCs, FACTS devices, load shedding schemes." }
     ],
     mock: [{ type: "Technical", question: "What is the purpose of SCADA in power systems?", tip: "SCADA (Supervisory Control and Data Acquisition): monitors and controls entire power grid remotely. RTUs at substations measure V, I, breaker status, send to control center via communication. Operators can remotely open/close breakers, change tap settings. Energy Management System (EMS) runs load flow, state estimation. Critical infrastructure — cybersecurity essential." }],
-    coding: { problem: "3-Phase Power Calculator", desc: "Calculate 3-phase real, reactive, and apparent power from measurements.", input: "V_line=415V, I_line=50A, pf=0.8", output: "P=24.2kW, Q=18.1kVAR, S=30.3kVA", starter: "import math\n\ndef three_phase_power(V_line, I_line, pf):\n    S = math.sqrt(3) * V_line * I_line  # Apparent power VA\n    P = S * pf  # Real power W\n    Q = S * math.sqrt(1 - pf**2)  # Reactive power VAR\n    return P/1000, Q/1000, S/1000  # kW, kVAR, kVA\n\nprint(three_phase_power(415, 50, 0.8))" }
+    coding: { problem: "3-Phase Power Calculator", desc: "Calculate 3-phase real, reactive, and apparent power from measurements.", input: "V_line=415V, I_line=50A, pf=0.8", output: "P=24.2kW, Q=18.1kVAR, S=30.3kVA", starter: "import math\n\ndef three_phase_power(V_line, I_line, pf):\n    S = math.sqrt(3) * V_line * I_line  • Apparent power VA\n    P = S * pf  • Real power W\n    Q = S * math.sqrt(1 - pf**2)  • Reactive power VAR\n    return P/1000, Q/1000, S/1000  • kW, kVAR, kVA\n\nprint(three_phase_power(415, 50, 0.8))" }
   },
   {
     moduleTitle: "Renewable Energy – Solar & Wind",
+    roles: ["eee-design", "eee-power", "eee-renewable"],
+    industryUseCase: "Smart Grid Voltage Stability & Microgrid Inverter Control at ABB/Siemens",
+    harvardOxfordRef: "Oxford Power Systems Engineering & High-Voltage Direct Current (HVDC) Transmission",
     level: "Level 2 – Intermediate",
     branch: ["eee"],
     videos: makeVideoLinks("Solar PV Wind Energy Renewable Power Systems"),
@@ -482,7 +509,7 @@ print("Boost (V_in=12V, D=0.75):", boost_converter(12, 0.75)) # Output: 48V`,
       summary: "Solar PV and wind energy are the fastest-growing electricity sources globally. Understanding solar cell physics, maximum power point tracking (MPPT), and wind turbine aerodynamics is essential for modern power engineers.",
       deepDiveTextbook: `RENEWABLE ENERGY SYSTEMS\n\nSolar PV:\nPhotovoltaic effect: photons with energy > Eg excite electrons across p-n junction → voltage and current.\nSolar cell equivalent circuit: Current source Iph in parallel with diode + series resistance Rs.\nI-V characteristic: I = Iph - I0(e^(qV/nkT) - 1)\nKey parameters:\n- Isc (short-circuit current): maximum current at V=0\n- Voc (open-circuit voltage): maximum voltage at I=0\n- MPP (Maximum Power Point): Pmax = Vmp × Imp ≈ 0.8 × Isc × Voc\n- Fill Factor FF = Pmax/(Voc × Isc). Good cells: FF > 0.75\n- Efficiency η = Pmax/(Pin * Area). Commercial silicon: 18-22%.\n\nMPPT (Maximum Power Point Tracking):\nP&O (Perturb and Observe): Perturb duty cycle, measure dP/dV, move toward MPP.\nIncrementalConductance: Track when dI/dV = -I/V (at MPP).\n\nWind Energy:\nBetz limit: Maximum power extraction = 59.3% of wind kinetic energy.\nTurbine power: P = 0.5 × Cp × ρ × A × v³\n(Cp = power coefficient ≤0.593, ρ = air density, A = swept area, v = wind speed)\nCut-in speed ~3m/s, rated speed ~12m/s, cut-out ~25m/s.\n\nGrid Integration:\nInverters convert DC (solar) to AC. Grid-tied inverters synchronize to grid frequency/phase.\nBattery storage (Li-ion) buffers intermittency. Smart grid manages variable generation.`,
       keyPoints: ["Solar MPP ≈ 0.8 × Isc × Voc; MPPT maximizes power extraction","Betz limit: max 59.3% wind energy extractable","Wind power ∝ v³ — doubling wind speed = 8× more power","Grid-tied inverter must synchronize frequency and phase to grid"],
-      example: `# Solar PV System Sizing\ndef pv_system_size(daily_load_kWh, peak_sun_hours, panel_W, efficiency):\n    daily_generation = panel_W/1000 * peak_sun_hours * efficiency\n    panels_needed = math.ceil(daily_load_kWh / daily_generation)\n    system_kWp = panels_needed * panel_W / 1000\n    return panels_needed, system_kWp\n\nimport math\n# 20 kWh/day load, 5 peak sun hours, 400W panels, 80% system efficiency\npanels, kWp = pv_system_size(20, 5, 400, 0.80)\nprint(f"Panels: {panels}, System: {kWp:.1f} kWp")`,
+      example: `• Solar PV System Sizing\ndef pv_system_size(daily_load_kWh, peak_sun_hours, panel_W, efficiency):\n    daily_generation = panel_W/1000 * peak_sun_hours * efficiency\n    panels_needed = math.ceil(daily_load_kWh / daily_generation)\n    system_kWp = panels_needed * panel_W / 1000\n    return panels_needed, system_kWp\n\nimport math\n• 20 kWh/day load, 5 peak sun hours, 400W panels, 80% system efficiency\npanels, kWp = pv_system_size(20, 5, 400, 0.80)\nprint(f"Panels: {panels}, System: {kWp:.1f} kWp")`,
       comparisonTable: { headers: ["Technology","Capacity Factor","Land Use","Grid Dispatchable","Cost Trend"], rows: [["Solar PV","15-25%","Medium","No (storage needed)","Falling fast"],["Wind Onshore","25-40%","Low (shared)","No (storage needed)","Falling"],["Hydro","40-60%","High (reservoir)","Yes (dispatchable)","Stable"],["Nuclear","85-95%","Very Low","Yes (baseload)","High, stable"]] },
       flowchartSteps: ["Solar: sunlight → PV panel (DC output)","DC to MPPT charge controller","Battery storage or direct to inverter","DC to AC inverter (grid-synchronized)","Net metering or off-grid load","Wind: wind → turbine rotation → generator → inverter → grid"],
       concept3DSimulation: { title: "Solar I-V and P-V Curves", description: "I-V curve shows operating points; P-V curve shows MPP as peak. Temperature and irradiance effects shown.", interactiveNodes: [{name:"PV Cell Model",type:"Diode Circuit",details:"Current source Iph with diode and series resistance"},{name:"MPPT Tracker",type:"DC-DC Converter",details:"Adjusts duty cycle to keep operating at maximum power point"},{name:"Grid Inverter",type:"AC Synchronizer",details:"Converts DC to AC at grid frequency and phase"}] },

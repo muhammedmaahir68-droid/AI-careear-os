@@ -4,6 +4,9 @@ import { makeVideoLinks } from "./types";
 export const ECE_MODULES: BranchModuleData[] = [
   {
     moduleTitle: "Embedded Systems & Communication Protocols",
+    roles: ["ece-iot", "ece-vlsi", "ece-embedded"],
+    industryUseCase: "Autonomous Vehicle Sensor Fusion Control Unit at Tesla/Bosch",
+    harvardOxfordRef: "MIT 6.004 Computation Structures & Real-Time Embedded Microarchitectures",
     level: "Level 1 – Hardware Core",
     branch: ["ece"],
     videos: makeVideoLinks("I2C SPI UART Protocols Embedded Systems"),
@@ -69,11 +72,14 @@ void I2C_Write(uint8_t dev_addr, uint8_t reg, uint8_t data) {
       desc: "Convert a 7-bit I2C address and read/write bit into an 8-bit control byte.",
       input: "address = 0x3C, is_read = True",
       output: "0x79",
-      starter: `def get_i2c_control_byte(addr_7bit, is_read):\n    # Return 8-bit control byte\n    pass`
+      starter: `def get_i2c_control_byte(addr_7bit, is_read):\n    • Return 8-bit control byte\n    pass`
     }
   },
   {
     moduleTitle: "Basic Electronics – Diodes, Transistors, Op-Amps",
+    roles: ["ece-iot", "ece-vlsi", "ece-embedded"],
+    industryUseCase: "Autonomous Vehicle Sensor Fusion Control Unit at Tesla/Bosch",
+    harvardOxfordRef: "MIT 6.004 Computation Structures & Real-Time Embedded Microarchitectures",
     level: "Level 1 – Fundamentals",
     branch: ["ece"],
     videos: makeVideoLinks("Basic Electronics Diodes BJT MOSFET Op-Amps"),
@@ -101,11 +107,11 @@ Operational Amplifiers (Op-Amps):
         "Virtual Short Concept in Op-Amps: V+ = V- under negative feedback.",
         "Op-Amp Closed-Loop Gain (Inverting): A_v = -R_f / R_in."
       ],
-      example: `# Python Op-Amp Gain Calculator
+      example: `• Python Op-Amp Gain Calculator
 def inverting_opamp_gain(r_in, r_feedback):
     return - (r_feedback / r_in)
 
-print("Closed Loop Gain:", inverting_opamp_gain(1000, 10000)) # Output: -10.0`,
+print("Closed Loop Gain:", inverting_opamp_gain(1000, 10000)) • Output: -10.0`,
       complexity: "Op-Amp GBWP (Gain-Bandwidth Product) = Constant"
     },
     aiExplain: {
@@ -121,7 +127,7 @@ print("Closed Loop Gain:", inverting_opamp_gain(1000, 10000)) # Output: -10.0`,
     debug: [
       {
         title: "Fix Op-Amp Gain Formula Sign Bug",
-        buggy: `def gain(rf, rin):\n    return rf / rin # Bug: Inverting amplifier missing minus sign!`,
+        buggy: `def gain(rf, rin):\n    return rf / rin • Bug: Inverting amplifier missing minus sign!`,
         fixed: `def gain(rf, rin):\n    return - (rf / rin)`,
         hint: "Inverting Op-Amp configuration produces a 180° phase inversion (negative sign)."
       }
@@ -146,11 +152,14 @@ print("Closed Loop Gain:", inverting_opamp_gain(1000, 10000)) # Output: -10.0`,
       desc: "Calculate output voltage for a non-inverting op-amp given Vin, R1, and R2.",
       input: "vin = 0.5, r1 = 1000, r2 = 4000",
       output: "2.5",
-      starter: `def opamp_non_inverting(vin, r1, r2):\n    # Return vin * (1 + r2/r1)\n    pass`
+      starter: `def opamp_non_inverting(vin, r1, r2):\n    • Return vin * (1 + r2/r1)\n    pass`
     }
   },
   {
     moduleTitle: "Digital Logic – Boolean Algebra, Logic Gates, K-Map",
+    roles: ["ece-iot", "ece-vlsi", "ece-embedded"],
+    industryUseCase: "Autonomous Vehicle Sensor Fusion Control Unit at Tesla/Bosch",
+    harvardOxfordRef: "MIT 6.004 Computation Structures & Real-Time Embedded Microarchitectures",
     level: "Level 2 – Digital Design",
     branch: ["ece"],
     videos: makeVideoLinks("Digital Logic Boolean Algebra K Map Flip Flops Multiplexer"),
@@ -172,12 +181,12 @@ Sequential Logic:
         "JK Flip-Flop race-around condition occurs when J=1, K=1 and clock pulse width > propagation delay; fixed using Master-Slave or Edge-Triggering.",
         "Multiplexers act as universal combinational logic selectors (N select lines select 2^N inputs)."
       ],
-      example: `# De Morgan's Law Verification in Python
+      example: `• De Morgan's Law Verification in Python
 def de_morgan_1(A, B):
-    # NOT (A AND B) == (NOT A) OR (NOT B)
+    • NOT (A AND B) == (NOT A) OR (NOT B)
     return not (A and B) == ((not A) or (not B))
 
-print("Verified:", de_morgan_1(True, False)) # Output: True`,
+print("Verified:", de_morgan_1(True, False)) • Output: True`,
       complexity: "K-Map Reduction: O(2^N) space table"
     },
     aiExplain: {
@@ -193,8 +202,8 @@ print("Verified:", de_morgan_1(True, False)) # Output: True`,
     debug: [
       {
         title: "Fix Gray Code Order in K-Map Indexing",
-        buggy: `# BUG: Using binary count instead of Gray Code\n# 00, 01, 10, 11  (Incorrect for K-Map neighbor grouping!)`,
-        fixed: `# Correct K-Map Gray Code sequence (only 1 bit changes per step):\n# 00, 01, 11, 10`,
+        buggy: `• BUG: Using binary count instead of Gray Code\n• 00, 01, 10, 11  (Incorrect for K-Map neighbor grouping!)`,
+        fixed: `• Correct K-Map Gray Code sequence (only 1 bit changes per step):\n• 00, 01, 11, 10`,
         hint: "K-Map columns/rows MUST use Gray Code (00, 01, 11, 10) so adjacent cells differ by exactly 1 bit."
       }
     ],
@@ -218,11 +227,14 @@ print("Verified:", de_morgan_1(True, False)) # Output: True`,
       desc: "Implement Full Adder logic returning (sum, carry_out) given inputs A, B, and Cin.",
       input: "a = 1, b = 1, cin = 1",
       output: "(1, 1)",
-      starter: `def full_adder(a, b, cin):\n    # Return (sum_bit, carry_bit)\n    pass`
+      starter: `def full_adder(a, b, cin):\n    • Return (sum_bit, carry_bit)\n    pass`
     }
   },
   {
     moduleTitle: "Signal Processing & Communication Systems",
+    roles: ["ece-iot", "ece-vlsi", "ece-embedded"],
+    industryUseCase: "Autonomous Vehicle Sensor Fusion Control Unit at Tesla/Bosch",
+    harvardOxfordRef: "MIT 6.004 Computation Structures & Real-Time Embedded Microarchitectures",
     level: "Level 3 – DSP & Telecom",
     branch: ["ece"],
     videos: makeVideoLinks("Digital Signal Processing Fourier Transform Sampling Theorem Nyquist AM FM"),
@@ -246,11 +258,11 @@ Digital Signal Processing (DSP):
         "FFT reduces Discrete Fourier Transform computation from O(N²) to O(N log N) via Cooley-Tukey divide-and-conquer.",
         "FIR filters are inherently stable (all zeros in z-plane); IIR filters have feedback (poles can cause instability)."
       ],
-      example: `# Python Sampling Theorem Verification
+      example: `• Python Sampling Theorem Verification
 import numpy as np
 
-f_signal = 100 # 100 Hz signal
-f_sampling = 250 # 250 Hz > 200 Hz Nyquist rate -> NO Aliasing!
+f_signal = 100 • 100 Hz signal
+f_sampling = 250 • 250 Hz > 200 Hz Nyquist rate -> NO Aliasing!
 is_valid_sampling = f_sampling >= 2 * f_signal
 print("Sampling Valid:", is_valid_sampling)`,
       complexity: "FFT Time Complexity: O(N log N)"
@@ -268,8 +280,8 @@ print("Sampling Valid:", is_valid_sampling)`,
     debug: [
       {
         title: "Fix Aliasing Frequency Calculation",
-        buggy: `# BUG: Sampling 1000 Hz signal at 1500 Hz (Below 2000 Hz Nyquist rate)\n# Alias frequency formula mistake`,
-        fixed: `f_signal = 1000\nf_s = 1500\n# Alias frequency appears at |f_signal - f_s| = 500 Hz\nf_alias = abs(f_signal - f_s)`,
+        buggy: `• BUG: Sampling 1000 Hz signal at 1500 Hz (Below 2000 Hz Nyquist rate)\n• Alias frequency formula mistake`,
+        fixed: `f_signal = 1000\nf_s = 1500\n• Alias frequency appears at |f_signal - f_s| = 500 Hz\nf_alias = abs(f_signal - f_s)`,
         hint: "Sampling below Nyquist rate causes high frequency f to fold back as alias at |f - f_s|."
       }
     ],
@@ -293,11 +305,14 @@ print("Sampling Valid:", is_valid_sampling)`,
       desc: "Given max signal frequency in Hz, return minimum required sampling rate and whether a given sampling rate causes aliasing.",
       input: "f_max = 5000, f_sample = 12000",
       output: "(10000, False)",
-      starter: `def check_nyquist(f_max, f_sample):\n    # Return (nyquist_rate, is_aliased)\n    pass`
+      starter: `def check_nyquist(f_max, f_sample):\n    • Return (nyquist_rate, is_aliased)\n    pass`
     }
   },
   {
     moduleTitle: "VLSI Design & Hardware Description Languages (Verilog)",
+    roles: ["ece-iot", "ece-vlsi", "ece-embedded"],
+    industryUseCase: "Autonomous Vehicle Sensor Fusion Control Unit at Tesla/Bosch",
+    harvardOxfordRef: "MIT 6.004 Computation Structures & Real-Time Embedded Microarchitectures",
     level: "Level 4 – Chip Design",
     branch: ["ece"],
     videos: makeVideoLinks("VLSI Design CMOS Verilog FPGA Setup Hold Time Static Timing Analysis"),
@@ -376,12 +391,15 @@ endmodule`,
       desc: "Given T_cq, T_comb, T_setup, and clock_skew, calculate minimum valid clock period and maximum frequency.",
       input: "t_cq = 1.0, t_comb = 4.0, t_setup = 1.5, skew = 0.5",
       output: "(6.0, 166.67)",
-      starter: `def min_clock_period(t_cq, t_comb, t_setup, skew):\n    # Return (min_period, max_freq_mhz)\n    pass`
+      starter: `def min_clock_period(t_cq, t_comb, t_setup, skew):\n    • Return (min_period, max_freq_mhz)\n    pass`
     }
   }
 ,
   {
     moduleTitle: "Digital Logic – Boolean Algebra & K-Maps",
+    roles: ["ece-iot", "ece-vlsi", "ece-embedded"],
+    industryUseCase: "Autonomous Vehicle Sensor Fusion Control Unit at Tesla/Bosch",
+    harvardOxfordRef: "MIT 6.004 Computation Structures & Real-Time Embedded Microarchitectures",
     level: "Level 1 – Foundations",
     branch: ["ece"],
     videos: makeVideoLinks("Boolean Algebra Karnaugh Map Digital Logic"),
@@ -389,7 +407,7 @@ endmodule`,
       summary: "Boolean algebra provides the mathematical foundation for digital circuits. Karnaugh Maps (K-Maps) provide a graphical method to minimize Boolean expressions, reducing gate count in hardware implementations.",
       deepDiveTextbook: `BOOLEAN ALGEBRA & K-MAP MINIMIZATION\n\nBoolean Laws:\n- Identity: A+0=A, A·1=A\n- Complement: A+A'=1, A·A'=0\n- DeMorgan's Theorem: (AB)' = A'+B', (A+B)' = A'B'\n- Absorption: A+AB=A, A(A+B)=A\n\nMinimization Methods:\n1. Algebraic Simplification: Apply Boolean identities manually.\n2. K-Map: Arrange minterms in Gray code order. Group adjacent 1s in powers of 2 (1,2,4,8). Larger group = simpler expression.\n\nK-Map Rules:\n- Groups must be rectangular, powers of 2 size.\n- Wrap around allowed (top-bottom, left-right edges are adjacent).\n- Maximize group sizes, minimize number of groups.\n- Don't-care conditions (X) can be included in groups if beneficial.\n\nSum of Products (SOP): OR of AND gates. Implement with NAND-NAND.\nProduct of Sums (POS): AND of OR gates. Implement with NOR-NOR.\n\nUniversal Gates: NAND and NOR gates can implement any Boolean function, making them preferred in VLSI design for cost efficiency.`,
       keyPoints: ["DeMorgan's theorem: complement a function by swapping AND/OR and complementing all terms","K-Map groups must be rectangular powers of 2","NAND and NOR are universal gates","Larger K-Map groups yield simpler Boolean expressions"],
-      example: `# K-Map minimization for F(A,B,C,D) = Σm(0,1,2,4,5,6,8,10)\n# 4-variable K-Map:\n#     CD: 00  01  11  10\n# AB 00:  1   1   0   1\n#    01:  1   1   0   1\n#    11:  0   0   0   0\n#    10:  1   0   0   1\n# Groups: {0,1,4,5} = A'C', {0,2,8,10} = B'D'\n# Minimized: F = A'C' + B'D'`,
+      example: `• K-Map minimization for F(A,B,C,D) = Σm(0,1,2,4,5,6,8,10)\n• 4-variable K-Map:\n• CD: 00  01  11  10\n• AB 00:  1   1   0   1\n• 01:  1   1   0   1\n• 11:  0   0   0   0\n• 10:  1   0   0   1\n• Groups: {0,1,4,5} = A'C', {0,2,8,10} = B'D'\n• Minimized: F = A'C' + B'D'`,
       comparisonTable: { headers: ["Method","Complexity","Suitable For","Handles Don't-Cares"], rows: [["Algebraic","High manual effort","Simple expressions","Yes"],["K-Map","Medium (visual)","Up to 6 variables","Yes (X = optional 1)"],["Quine-McCluskey","Algorithmic","Any number of variables","Yes"],["ESPRESSO","Software","Very large functions","Yes"]] },
       flowchartSteps: ["Write truth table for function","Identify minterms (where F=1)","Draw K-Map with Gray code ordering","Group adjacent 1s in powers of 2","Largest groups first, maximize group size","Read simplified expression from each group","Combine groups with OR"],
       concept3DSimulation: { title: "K-Map Grouping Visualization", description: "4-variable K-Map shows adjacent cells highlighted as groups are formed.", interactiveNodes: [{name:"Minterm Placer",type:"Truth Table Parser",details:"Maps truth table 1s onto K-Map grid"},{name:"Group Finder",type:"Adjacency Detector",details:"Identifies largest valid rectangular groupings"},{name:"Expression Generator",type:"Simplifier",details:"Reads Boolean terms from each group's fixed variables"}] },
@@ -408,10 +426,13 @@ endmodule`,
       { company: "Intel", year: "2022", question: "Why are NAND gates preferred in CMOS VLSI over AND gates?", answer: "CMOS NAND gates use 4 transistors (2 PMOS parallel, 2 NMOS series). AND gate requires NAND + NOT = 6 transistors. NAND is inherently faster and smaller. All standard cells are built from NAND/NOR primitives." }
     ],
     mock: [{ type: "Technical", question: "How would you implement a 4-to-1 MUX using logic gates?", tip: "4:1 MUX: F = S1'S0'I0 + S1'S0 I1 + S1 S0'I2 + S1 S0 I3. Need 4 AND gates (3-input), 1 OR gate (4-input). Or use 2:1 MUX tree: 2 MUXes select among pairs, 1 MUX selects between results." }],
-    coding: { problem: "Boolean Expression Evaluator", desc: "Parse and evaluate Boolean expressions with AND, OR, NOT operators.", input: "'A AND (B OR NOT C)', {A:1, B:0, C:1}", output: "0", starter: "def evaluate(expr, vals):\n    # Tokenize and parse Boolean expression\n    # Handle precedence: NOT > AND > OR\n    pass" }
+    coding: { problem: "Boolean Expression Evaluator", desc: "Parse and evaluate Boolean expressions with AND, OR, NOT operators.", input: "'A AND (B OR NOT C)', {A:1, B:0, C:1}", output: "0", starter: "def evaluate(expr, vals):\n    • Tokenize and parse Boolean expression\n    • Handle precedence: NOT > AND > OR\n    pass" }
   },
   {
     moduleTitle: "Communication Systems – AM/FM & Digital Modulation",
+    roles: ["ece-iot", "ece-vlsi", "ece-embedded"],
+    industryUseCase: "Autonomous Vehicle Sensor Fusion Control Unit at Tesla/Bosch",
+    harvardOxfordRef: "MIT 6.004 Computation Structures & Real-Time Embedded Microarchitectures",
     level: "Level 2 – Intermediate",
     branch: ["ece"],
     videos: makeVideoLinks("Amplitude Frequency Modulation digital communication"),
@@ -419,14 +440,14 @@ endmodule`,
       summary: "Modulation impresses information onto a carrier signal for transmission. Analog: AM/FM. Digital: ASK, FSK, PSK, QAM. Higher-order modulation (64-QAM) carries more bits per symbol but requires better SNR.",
       deepDiveTextbook: `MODULATION TECHNIQUES\n\nAnalog Modulation:\nAM (Amplitude Modulation): s(t) = [Ac + m(t)] cos(2πfct)\nModulation index μ = Am/Ac. μ > 1 causes overmodulation and distortion.\nBandwidth = 2*W where W = message bandwidth.\n\nFM (Frequency Modulation): Instantaneous frequency fi = fc + kf*m(t)\nModulation index β = Δf/W = kf*Am/W\nBandwidth (Carson's Rule): B = 2(Δf + W) = 2W(β+1)\nFM superior noise performance (captures effect), more bandwidth but better SNR.\n\nDigital Modulation:\nASK: Amplitude varies with bit. Simple but noise-sensitive.\nFSK: Frequency varies with bit. More robust, used in Bluetooth.\nBPSK: Phase 0° = bit 0, 180° = bit 1. BER = Q(√(2Eb/N0)).\nQPSK: 4 phase states, 2 bits/symbol. Bandwidth efficient.\nQAM (Quadrature Amplitude Modulation): Varies both amplitude and phase.\n16-QAM: 4 bits/symbol. 64-QAM: 6 bits/symbol (used in LTE, WiFi).\n\nSNR vs BER: Higher QAM requires better SNR. 64-QAM needs ~5dB more SNR than QPSK for same BER.\n\nOFDM: Multiple subcarriers, each QPSK/QAM modulated. Used in LTE, WiFi (802.11), DVB.`,
       keyPoints: ["AM bandwidth = 2W; FM bandwidth = 2(Δf+W) via Carson's rule","Higher QAM order: more bits/symbol but needs better SNR","OFDM splits channel into many narrow subcarriers — robust to multipath","BPSK BER = Q(√(2Eb/N0)) — fundamental wireless metric"],
-      example: `import numpy as np\nimport matplotlib.pyplot as plt\n\n# BPSK modulation\nbits = np.array([1, 0, 1, 1, 0])\nsymbols = 2*bits - 1  # 1→+1, 0→-1\nt = np.linspace(0, 5, 500)\nfc = 10  # carrier frequency\ncarrier = np.cos(2*np.pi*fc*np.repeat(t.reshape(5,-1),1,axis=0))\n# Each bit modulates carrier phase`,
+      example: `import numpy as np\nimport matplotlib.pyplot as plt\n\n• BPSK modulation\nbits = np.array([1, 0, 1, 1, 0])\nsymbols = 2*bits - 1  • 1→+1, 0→-1\nt = np.linspace(0, 5, 500)\nfc = 10  • carrier frequency\ncarrier = np.cos(2*np.pi*fc*np.repeat(t.reshape(5,-1),1,axis=0))\n• Each bit modulates carrier phase`,
       comparisonTable: { headers: ["Modulation","Bits/Symbol","SNR Required","Application"], rows: [["BPSK","1","Low","Deep space comms"],["QPSK","2","Medium","LTE uplink"],["16-QAM","4","Medium-High","LTE, WiFi"],["64-QAM","6","High","LTE Advanced, WiFi 6"],["256-QAM","8","Very High","WiFi 6, cable TV"]] },
       flowchartSteps: ["Source data bits → bit stream","Modulator: map bits to symbols","Upconvert to carrier frequency","Transmit through channel (add noise)","Receiver: downconvert, match filter","Demodulate: detect symbols","Decode bits → data"],
       concept3DSimulation: { title: "QAM Constellation Diagram", description: "I-Q plane shows symbol points. Higher SNR = tighter clustering. Noise rotates/moves points.", interactiveNodes: [{name:"Modulator",type:"Symbol Mapper",details:"Maps bit groups to constellation points (I,Q values)"},{name:"Channel",type:"AWGN Noise Adder",details:"Adds Gaussian noise to transmitted symbols"},{name:"Detector",type:"Maximum Likelihood",details:"Finds nearest constellation point to received signal"}] },
       complexity: "OFDM FFT: O(N log N) | QAM detection: O(constellation_size)"
     },
     aiExplain: { steps: ["Encode bits into symbols","Modulate onto carrier","Channel adds noise","Receiver detects closest symbol","Decode back to bits"], analogy: "Like Morse code on radio waves — different beep patterns (symbols) encode different messages, and the receiver decodes the pattern despite static (noise)" },
-    debug: [{ title: "Overmodulation in AM", buggy: "μ = Am/Ac = 1.5  # > 1, causes distortion", fixed: "μ = Am/Ac ≤ 1  # keep within 0-1 range", hint: "AM modulation index must be ≤ 1. μ > 1 causes carrier phase reversal and envelope distortion." }],
+    debug: [{ title: "Overmodulation in AM", buggy: "μ = Am/Ac = 1.5  • > 1, causes distortion", fixed: "μ = Am/Ac ≤ 1  • keep within 0-1 range", hint: "AM modulation index must be ≤ 1. μ > 1 causes carrier phase reversal and envelope distortion." }],
     quiz: [
       { q: "AM bandwidth formula:", options: ["W","2W","2(Δf+W)","4W"], answer: 1 },
       { q: "64-QAM carries how many bits per symbol?", options: ["4","6","8","16"], answer: 1 },
@@ -438,10 +459,13 @@ endmodule`,
       { company: "Texas Instruments", year: "2022", question: "Calculate AM bandwidth for voice signal 0-4kHz", answer: "AM bandwidth = 2 × message bandwidth = 2 × 4kHz = 8kHz. DSB-AM: 8kHz. SSB-AM (single sideband): 4kHz (half bandwidth). SSB preferred for voice radio to conserve spectrum." }
     ],
     mock: [{ type: "Technical", question: "Explain how OFDM handles multipath interference.", tip: "Multipath causes ISI. OFDM adds cyclic prefix (copy of end of symbol) before each symbol. Guard interval longer than max multipath delay. Receiver discards cyclic prefix, does FFT. Each subcarrier sees flat (not frequency-selective) fading. No ISI if CP > delay spread." }],
-    coding: { problem: "QAM Symbol Mapper", desc: "Implement 16-QAM modulator mapping 4-bit groups to constellation points.", input: "bits = [1,0,1,1,0,1,0,0]  # 2 symbols", output: "symbols = [(1+1j), (-1-3j)]", starter: "def qam16_modulate(bits):\n    # Gray coded 16-QAM: I,Q ∈ {-3,-1,+1,+3}\n    mapping = {}\n    # Build constellation mapping\n    symbols = []\n    for i in range(0, len(bits), 4):\n        group = bits[i:i+4]\n        # Map to I and Q values\n    return symbols" }
+    coding: { problem: "QAM Symbol Mapper", desc: "Implement 16-QAM modulator mapping 4-bit groups to constellation points.", input: "bits = [1,0,1,1,0,1,0,0]  • 2 symbols", output: "symbols = [(1+1j), (-1-3j)]", starter: "def qam16_modulate(bits):\n    • Gray coded 16-QAM: I,Q ∈ {-3,-1,+1,+3}\n    mapping = {}\n    • Build constellation mapping\n    symbols = []\n    for i in range(0, len(bits), 4):\n        group = bits[i:i+4]\n        • Map to I and Q values\n    return symbols" }
   },
   {
     moduleTitle: "VLSI Design – CMOS & Logic Families",
+    roles: ["ece-iot", "ece-vlsi", "ece-embedded"],
+    industryUseCase: "Autonomous Vehicle Sensor Fusion Control Unit at Tesla/Bosch",
+    harvardOxfordRef: "MIT 6.004 Computation Structures & Real-Time Embedded Microarchitectures",
     level: "Level 3 – Advanced",
     branch: ["ece"],
     videos: makeVideoLinks("VLSI CMOS Design Logic Families Fabrication"),
@@ -449,7 +473,7 @@ endmodule`,
       summary: "VLSI (Very Large Scale Integration) packs billions of transistors on a chip. CMOS (Complementary MOS) uses paired PMOS and NMOS transistors for low static power dissipation, making it the dominant technology for modern chips.",
       deepDiveTextbook: `CMOS VLSI FUNDAMENTALS\n\nMOSFET Operation:\nNMOS: On when Vgs > Vth (positive). Conducts current from drain to source.\nPMOS: On when Vgs < -Vth (negative). Conducts current from source to drain.\n\nCMOS Inverter:\nWhen Vin = LOW: PMOS ON, NMOS OFF → Vout = VDD\nWhen Vin = HIGH: PMOS OFF, NMOS ON → Vout = GND\nStatic power dissipation ≈ 0 (no direct path from VDD to GND in static state).\n\nCMOS NAND Gate: PMOS in parallel (pull-up), NMOS in series (pull-down).\nCMOS NOR Gate: PMOS in series (pull-up), NMOS in parallel (pull-down).\n\nDesign Rule: NMOS in series → PMOS in parallel. NMOS in parallel → PMOS in series.\n\nFabrication Process (Simplified 6-step):\n1. Silicon wafer oxidation (SiO₂ layer)\n2. Photolithography (UV exposure through mask)\n3. Etching (pattern transfer)\n4. Dopant implantation (P or N type)\n5. Metal deposition (interconnects)\n6. Chemical Mechanical Planarization (CMP)\n\nTechnology Nodes: 28nm, 7nm, 3nm — smaller = faster, lower power, higher density.\nMoore's Law: Transistor count doubles every ~2 years (slowing down beyond 5nm).`,
       keyPoints: ["CMOS: PMOS+NMOS pair, near-zero static power","NAND: PMOS parallel/NMOS series. NOR: PMOS series/NMOS parallel","Technology node = gate length (smaller = faster, denser)","Dynamic power P = αCV²f (dominant power in modern chips"],
-      example: `# CMOS Propagation Delay Analysis\n# tpHL = 0.69 * Rn * CL  (discharge time, NMOS dominant)\n# tpLH = 0.69 * Rp * CL  (charge time, PMOS dominant)\n# tp = (tpHL + tpLH) / 2  (average propagation delay)\n\ndef propagation_delay(Rn, Rp, CL):\n    tpHL = 0.69 * Rn * CL\n    tpLH = 0.69 * Rp * CL\n    return (tpHL + tpLH) / 2\n\n# For 7nm node: Rn≈1kΩ, Rp≈2kΩ, CL=1fF\nprint(propagation_delay(1e3, 2e3, 1e-15))  # ~1.04 ps`,
+      example: `• CMOS Propagation Delay Analysis\n• tpHL = 0.69 * Rn * CL  (discharge time, NMOS dominant)\n• tpLH = 0.69 * Rp * CL  (charge time, PMOS dominant)\n• tp = (tpHL + tpLH) / 2  (average propagation delay)\n\ndef propagation_delay(Rn, Rp, CL):\n    tpHL = 0.69 * Rn * CL\n    tpLH = 0.69 * Rp * CL\n    return (tpHL + tpLH) / 2\n\n• For 7nm node: Rn≈1kΩ, Rp≈2kΩ, CL=1fF\nprint(propagation_delay(1e3, 2e3, 1e-15))  • ~1.04 ps`,
       comparisonTable: { headers: ["Family","VDD","Power","Speed","Use Case"], rows: [["CMOS","1.8-5V","Very Low","Medium","Most digital ICs"],["TTL","5V","Medium","Fast","Legacy systems"],["ECL","5V","High","Very Fast","High-speed comms"],["BiCMOS","3.3-5V","Medium","Fast","Mixed signal ICs"]] },
       flowchartSteps: ["Define circuit specification","Draw transistor-level schematic","Size transistors for drive strength","Simulate with SPICE","Physical layout (place and route)","Design Rule Check (DRC)","Tape-out to fabrication"],
       concept3DSimulation: { title: "CMOS Gate Transistor Stack", description: "3D view of PMOS pull-up network above NMOS pull-down network with VDD/GND rails.", interactiveNodes: [{name:"PMOS Network",type:"Pull-Up",details:"Conducts when output needs to go HIGH (pulls to VDD)"},{name:"NMOS Network",type:"Pull-Down",details:"Conducts when output needs to go LOW (pulls to GND)"},{name:"Switching Node",type:"Output",details:"Voltage switches between VDD and GND with near-zero static power"}] },
@@ -468,10 +492,13 @@ endmodule`,
       { company: "TSMC", year: "2022", question: "Explain the difference between FinFET and planar MOSFET", answer: "Planar: gate controls channel from one side. FinFET: 3D fin-shaped channel, gate wraps 3 sides → better electrostatic control, less leakage, lower threshold voltage variation. FinFET used from 16nm node onward. GAA (nanosheet) further wraps all 4 sides (3nm+)." }
     ],
     mock: [{ type: "Technical", question: "How would you reduce power consumption in a digital chip?", tip: "1) Clock gating: disable clock to idle blocks. 2) Power gating: power-off unused domains. 3) Dynamic voltage and frequency scaling (DVFS). 4) Multiple Vth: use high-Vth cells for non-critical paths (less leakage). 5) Reduce switching activity (fewer transitions). 6) Move to smaller technology node." }],
-    coding: { problem: "Gate Sizing for Minimum Delay", desc: "Given a logic chain, find optimal transistor sizing to minimize propagation delay.", input: "Chain of 5 inverters, target load CL=100fF, Cin of min inverter=1fF", output: "Optimal sizing ratio h = (CL/Cin)^(1/5)", starter: "import math\n\ndef optimal_sizing(CL, Cin_min, n_stages):\n    # Optimal stage ratio = (CL/Cin)^(1/n)\n    h = (CL/Cin_min) ** (1/n_stages)\n    return h\n\nprint(optimal_sizing(100e-15, 1e-15, 5))  # ≈2.51" }
+    coding: { problem: "Gate Sizing for Minimum Delay", desc: "Given a logic chain, find optimal transistor sizing to minimize propagation delay.", input: "Chain of 5 inverters, target load CL=100fF, Cin of min inverter=1fF", output: "Optimal sizing ratio h = (CL/Cin)^(1/5)", starter: "import math\n\ndef optimal_sizing(CL, Cin_min, n_stages):\n    • Optimal stage ratio = (CL/Cin)^(1/n)\n    h = (CL/Cin_min) ** (1/n_stages)\n    return h\n\nprint(optimal_sizing(100e-15, 1e-15, 5))  • ≈2.51" }
   },
   {
     moduleTitle: "Control Systems – PID & Transfer Functions",
+    roles: ["ece-iot", "ece-vlsi", "ece-embedded"],
+    industryUseCase: "Autonomous Vehicle Sensor Fusion Control Unit at Tesla/Bosch",
+    harvardOxfordRef: "MIT 6.004 Computation Structures & Real-Time Embedded Microarchitectures",
     level: "Level 3 – Advanced",
     branch: ["ece"],
     videos: makeVideoLinks("PID Controller Transfer Function Control Systems"),
@@ -479,7 +506,7 @@ endmodule`,
       summary: "Control systems regulate plant behavior using feedback. Transfer functions in Laplace domain simplify analysis. PID controllers are the most widely deployed control algorithm in industry, used in everything from thermostats to robotics.",
       deepDiveTextbook: `CONTROL SYSTEMS – FEEDBACK & PID\n\nOpen-Loop vs Closed-Loop:\nOpen-loop: No feedback, sensitive to disturbances.\nClosed-loop: Error = Setpoint - Output. Controller adjusts input based on error.\n\nTransfer Function: G(s) = Y(s)/U(s) in Laplace domain. Represents system in frequency domain.\n\nClosed-loop TF = G(s)/(1 + G(s)H(s)) where H(s) is sensor TF.\n\nPID Controller:\nU(t) = Kp*e(t) + Ki*∫e(t)dt + Kd*de/dt\nIn s-domain: C(s) = Kp + Ki/s + Kd*s\n\n- Kp (Proportional): Reduce steady-state error. Too high → oscillation.\n- Ki (Integral): Eliminate steady-state error. Too high → overshoot/wind-up.\n- Kd (Derivative): Dampen oscillations, predict error trend. Sensitive to noise.\n\nTuning Methods:\n1. Ziegler-Nichols: Increase Kp until oscillation (ultimate gain Ku). Use Ku and period Tu to set Kp, Ki, Kd.\n2. Manual Tuning: Start P-only, then add I to eliminate offset, add D to reduce overshoot.\n3. Auto-tuning: Built into modern PLCs.\n\nStability Analysis:\n- Routh-Hurwitz: Algebraic test for closed-loop pole locations.\n- Root Locus: Graphical pole locations as gain K varies.\n- Bode Plot: Gain and phase margins from frequency response.\n- Gain Margin > 6dB, Phase Margin > 45° for stable systems.`,
       keyPoints: ["PID: P reduces error, I eliminates steady-state offset, D dampens oscillations","Closed-loop TF = G/(1+GH) — denominator determines stability","Gain margin > 6dB, phase margin > 45° for robust stability","Ziegler-Nichols provides starting point for PID tuning"],
-      example: `# Discrete PID Controller Implementation\nclass PID:\n    def __init__(self, Kp, Ki, Kd, dt):\n        self.Kp, self.Ki, self.Kd, self.dt = Kp, Ki, Kd, dt\n        self.integral = 0\n        self.prev_error = 0\n    \n    def compute(self, setpoint, measurement):\n        error = setpoint - measurement\n        self.integral += error * self.dt\n        derivative = (error - self.prev_error) / self.dt\n        output = self.Kp*error + self.Ki*self.integral + self.Kd*derivative\n        self.prev_error = error\n        return output`,
+      example: `• Discrete PID Controller Implementation\nclass PID:\n    def __init__(self, Kp, Ki, Kd, dt):\n        self.Kp, self.Ki, self.Kd, self.dt = Kp, Ki, Kd, dt\n        self.integral = 0\n        self.prev_error = 0\n    \n    def compute(self, setpoint, measurement):\n        error = setpoint - measurement\n        self.integral += error * self.dt\n        derivative = (error - self.prev_error) / self.dt\n        output = self.Kp*error + self.Ki*self.integral + self.Kd*derivative\n        self.prev_error = error\n        return output`,
       comparisonTable: { headers: ["Controller","Steady-State Error","Transient Response","Noise Sensitivity"], rows: [["P only","Non-zero","Fast","Low"],["PI","Zero","Slower, possible overshoot","Low"],["PD","Non-zero","Fast, well-damped","High"],["PID","Zero","Good balance","Medium"]] },
       flowchartSteps: ["Define reference setpoint r(t)","Measure plant output y(t)","Compute error e(t) = r(t) - y(t)","PID: compute P+I+D terms","Apply control signal u(t) to plant","Plant produces new output","Repeat at each sample time"],
       concept3DSimulation: { title: "PID Control Loop", description: "Block diagram animates error → PID → plant → sensor → feedback path.", interactiveNodes: [{name:"Error Summator",type:"Difference Junction",details:"Computes e(t) = setpoint - measured output"},{name:"PID Controller",type:"3-Term Compensator",details:"Generates control signal from P, I, D terms"},{name:"Plant + Sensor",type:"Physical System",details:"Responds to control input, sensor measures output"}] },
@@ -498,10 +525,13 @@ endmodule`,
       { company: "Siemens", year: "2022", question: "Design a speed controller for a DC motor.", answer: "Plant: G(s) = K/(s(Ts+1)) — integrating plant with time constant T. Use PI controller (no D needed — plant already has derivative action). Set Ki to cancel plant pole (pole-zero cancellation). Choose Kp for desired bandwidth. Simulate step response, verify settling time and overshoot." }
     ],
     mock: [{ type: "Technical", question: "What are the advantages of cascade control over single-loop PID?", tip: "Cascade: outer loop (primary) controls main variable, inner loop (secondary) controls intermediate. Inner loop is faster — rejects disturbances before they reach outer loop. Example: temperature control outer loop, heat output inner loop. Better disturbance rejection at cost of complexity." }],
-    coding: { problem: "Simulate PID Step Response", desc: "Simulate a first-order plant with PID controller and plot step response.", input: "Kp=1.5, Ki=0.5, Kd=0.1, plant G=1/(s+1), setpoint=1.0", output: "Output reaches 1.0 with < 5% overshoot", starter: "def simulate_pid(Kp, Ki, Kd, dt=0.01, T=10):\n    pid = PID(Kp, Ki, Kd, dt)\n    # First-order plant: y' = -y + u\n    y, outputs = 0, []\n    for t in range(int(T/dt)):\n        u = pid.compute(1.0, y)  # setpoint=1.0\n        y += dt * (-y + u)  # Euler integration\n        outputs.append(y)\n    return outputs" }
+    coding: { problem: "Simulate PID Step Response", desc: "Simulate a first-order plant with PID controller and plot step response.", input: "Kp=1.5, Ki=0.5, Kd=0.1, plant G=1/(s+1), setpoint=1.0", output: "Output reaches 1.0 with < 5% overshoot", starter: "def simulate_pid(Kp, Ki, Kd, dt=0.01, T=10):\n    pid = PID(Kp, Ki, Kd, dt)\n    • First-order plant: y' = -y + u\n    y, outputs = 0, []\n    for t in range(int(T/dt)):\n        u = pid.compute(1.0, y)  • setpoint=1.0\n        y += dt * (-y + u)  • Euler integration\n        outputs.append(y)\n    return outputs" }
   },
   {
     moduleTitle: "Embedded Systems – RTOS & Interrupts",
+    roles: ["ece-iot", "ece-vlsi", "ece-embedded"],
+    industryUseCase: "Autonomous Vehicle Sensor Fusion Control Unit at Tesla/Bosch",
+    harvardOxfordRef: "MIT 6.004 Computation Structures & Real-Time Embedded Microarchitectures",
     level: "Level 2 – Intermediate",
     branch: ["ece"],
     videos: makeVideoLinks("Embedded Systems RTOS Interrupts Microcontroller"),
@@ -509,7 +539,7 @@ endmodule`,
       summary: "Real-Time Operating Systems (RTOS) manage task scheduling in embedded systems with strict timing requirements. Interrupts allow immediate response to hardware events without polling, enabling efficient real-time control.",
       deepDiveTextbook: `RTOS & INTERRUPT-DRIVEN DESIGN\n\nRTOS vs General OS:\nGeneral OS: Optimize for throughput and fairness.\nRTOS: Deterministic response time (worst-case execution time matters). Hard real-time: missing deadline = system failure. Soft real-time: occasional misses acceptable.\n\nRTOS Tasks:\nEach task: function + stack + priority. States: Ready, Running, Blocked, Suspended.\nScheduling: Preemptive priority scheduling. Highest priority ready task always runs.\n\nFreeRTOS (Industry Standard):\n- xTaskCreate(): Create task with priority.\n- vTaskDelay(): Block for N ticks.\n- xQueueSend/Receive(): Inter-task communication.\n- xSemaphoreTake/Give(): Synchronization, mutual exclusion.\n- xEventGroupSetBits(): Signal multiple tasks.\n\nInterrupt Handling:\nISR (Interrupt Service Routine): Executes in interrupt context (not task context).\nRules: Keep ISR short (no blocking, no FreeRTOS API with blocking). Use xQueueSendFromISR(), xSemaphoreGiveFromISR().\n\nPriority Inversion: Low-priority task holds mutex, high-priority task waits. Solution: Priority Inheritance Protocol (raise mutex holder's priority temporarily).\n\nWatchdog Timer: Hardware timer that resets MCU if not kicked periodically. Prevents system lockups.`,
       keyPoints: ["Hard real-time: deadline miss = failure (automotive, avionics)","ISRs must be short — use queues to defer processing to tasks","Priority inversion solved by priority inheritance in RTOS","Watchdog timer detects software lockups and triggers reset"],
-      example: `#include "FreeRTOS.h"\n#include "task.h"\n#include "queue.h"\n\nQueueHandle_t xQueue;\n\nvoid vSensorISR(void) {\n    uint16_t data = ADC_Read();\n    xQueueSendFromISR(xQueue, &data, NULL);  // defer processing\n}\n\nvoid vProcessingTask(void *pvParam) {\n    uint16_t received;\n    while(1) {\n        if(xQueueReceive(xQueue, &received, portMAX_DELAY)) {\n            process_sensor_data(received);  // heavy processing here\n        }\n    }\n}`,
+      example: `• include "FreeRTOS.h"\n• include "task.h"\n• include "queue.h"\n\nQueueHandle_t xQueue;\n\nvoid vSensorISR(void) {\n    uint16_t data = ADC_Read();\n    xQueueSendFromISR(xQueue, &data, NULL);  // defer processing\n}\n\nvoid vProcessingTask(void *pvParam) {\n    uint16_t received;\n    while(1) {\n        if(xQueueReceive(xQueue, &received, portMAX_DELAY)) {\n            process_sensor_data(received);  // heavy processing here\n        }\n    }\n}`,
       comparisonTable: { headers: ["RTOS","Latency","Priority","Footprint","Use Case"], rows: [["FreeRTOS","<10μs","Preemptive","4-16KB","IoT, MCUs"],["Zephyr","<5μs","Preemptive","8-512KB","Wearables, industrial"],["VxWorks","<1μs","Preemptive","1MB+","Avionics, defense"],["Linux+PREEMPT_RT","<100μs","Soft RT",">10MB","Gateways, HMI"]] },
       flowchartSteps: ["Hardware event triggers interrupt","CPU saves context, jumps to ISR","ISR reads data, signals task via queue/semaphore","ISR returns, CPU restores context","RTOS scheduler wakes signaled task","Task processes data, sleeps on next event","Watchdog kicked at end of main loop"],
       concept3DSimulation: { title: "RTOS Task State Machine", description: "Tasks cycle between Ready, Running, Blocked states as scheduler preempts and queues signal.", interactiveNodes: [{name:"Task Scheduler",type:"Priority Dispatcher",details:"Always runs highest priority ready task"},{name:"Queue Manager",type:"IPC Buffer",details:"Safely passes data between ISR and tasks"},{name:"Semaphore",type:"Synchronization Primitive",details:"Prevents race conditions on shared resources"}] },
@@ -528,6 +558,6 @@ endmodule`,
       { company: "STMicroelectronics", year: "2022", question: "Design a sensor reading system using interrupts instead of polling.", answer: "Configure ADC in DMA mode + interrupt on conversion complete. ISR: xQueueSendFromISR(). Processing task: xQueueReceive(portMAX_DELAY), process data, send to UART. Advantages: CPU free between conversions, deterministic response, no wasted CPU cycles polling." }
     ],
     mock: [{ type: "Technical", question: "Explain the difference between binary semaphore and mutex in FreeRTOS.", tip: "Binary semaphore: signaling mechanism (ISR gives, task takes). No ownership. Mutex: mutual exclusion, has ownership (same task must give). Mutex has priority inheritance to prevent priority inversion. Binary semaphore doesn't. Use mutex for shared resource protection, binary semaphore for ISR→task signaling." }],
-    coding: { problem: "LED Blink with RTOS Tasks", desc: "Create 2 FreeRTOS tasks: LED1 blinks at 500ms, LED2 blinks at 200ms.", input: "FreeRTOS + STM32 GPIO", output: "Both LEDs blink at independent rates simultaneously", starter: "#include 'FreeRTOS.h'\n#include 'task.h'\n\nvoid vLED1Task(void *pv) {\n    while(1) {\n        // Toggle LED1\n        vTaskDelay(pdMS_TO_TICKS(500));\n    }\n}\nvoid vLED2Task(void *pv) {\n    while(1) {\n        // Toggle LED2\n        vTaskDelay(pdMS_TO_TICKS(200));\n    }\n}" }
+    coding: { problem: "LED Blink with RTOS Tasks", desc: "Create 2 FreeRTOS tasks: LED1 blinks at 500ms, LED2 blinks at 200ms.", input: "FreeRTOS + STM32 GPIO", output: "Both LEDs blink at independent rates simultaneously", starter: "• include 'FreeRTOS.h'\n• include 'task.h'\n\nvoid vLED1Task(void *pv) {\n    while(1) {\n        // Toggle LED1\n        vTaskDelay(pdMS_TO_TICKS(500));\n    }\n}\nvoid vLED2Task(void *pv) {\n    while(1) {\n        // Toggle LED2\n        vTaskDelay(pdMS_TO_TICKS(200));\n    }\n}" }
   }
 ];

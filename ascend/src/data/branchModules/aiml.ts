@@ -4,6 +4,9 @@ import { makeVideoLinks } from "./types";
 export const AIML_AIDS_MODULES: BranchModuleData[] = [
   {
     moduleTitle: "Supervised Learning & Regression Metrics",
+    roles: ["aiml-ml-engineer", "aiml-data-scientist", "aiml-dl-engineer"],
+    industryUseCase: "Algorithmic Pricing & Demand Forecasting at Airbnb/Uber",
+    harvardOxfordRef: "Harvard STAT 110 Probability & Applied Statistical Learning",
     level: "Level 1 – AI/DS Core",
     branch: ["aiml", "aids"],
     videos: makeVideoLinks("Supervised Learning Linear Regression MSE R2 Score"),
@@ -45,7 +48,7 @@ print("R2:", r2_score(y, preds))`,
     debug: [
       {
         title: "Fix MSE Formula Scaling Error",
-        buggy: `def mse(y_true, y_pred):\n    return sum((y_true - y_pred)) ** 2 / len(y_true) # Bug: squaring sum instead of sum of squares`,
+        buggy: `def mse(y_true, y_pred):\n    return sum((y_true - y_pred)) ** 2 / len(y_true) • Bug: squaring sum instead of sum of squares`,
         fixed: `import numpy as np\ndef mse(y_true, y_pred):\n    return np.mean((y_true - y_pred) ** 2)`,
         hint: "Square the error differences FIRST, then take the mean average."
       }
@@ -70,11 +73,14 @@ print("R2:", r2_score(y, preds))`,
       desc: "Implement MSE function for two numeric arrays.",
       input: "y_true = [3, -0.5, 2, 7], y_pred = [2.5, 0.0, 2, 8]",
       output: "0.375",
-      starter: `def compute_mse(y_true, y_pred):\n    # Return mean squared difference\n    pass`
+      starter: `def compute_mse(y_true, y_pred):\n    • Return mean squared difference\n    pass`
     }
   },
   {
     moduleTitle: "Neural Networks & Backpropagation",
+    roles: ["aiml-ml-engineer", "aiml-data-scientist", "aiml-dl-engineer"],
+    industryUseCase: "Algorithmic Pricing & Demand Forecasting at Airbnb/Uber",
+    harvardOxfordRef: "Harvard STAT 110 Probability & Applied Statistical Learning",
     level: "Level 2 – Deep Learning",
     branch: ["aiml", "aids"],
     videos: makeVideoLinks("Neural Networks Backpropagation Vanishing Gradient Activation Functions"),
@@ -112,7 +118,7 @@ def softmax(z):
     debug: [
       {
         title: "Fix Softmax Numerical Overflow",
-        buggy: `def softmax(x):\n    return np.exp(x) / np.sum(np.exp(x)) # Bug: np.exp(large_val) causes overflow inf`,
+        buggy: `def softmax(x):\n    return np.exp(x) / np.sum(np.exp(x)) • Bug: np.exp(large_val) causes overflow inf`,
         fixed: `def softmax(x):\n    e_x = np.exp(x - np.max(x))\n    return e_x / e_x.sum(axis=0)`,
         hint: "Subtract max(x) before exponentiation to prevent numerical overflow in float32/64."
       }
@@ -142,6 +148,9 @@ def softmax(z):
   },
   {
     moduleTitle: "Python Fundamentals & Data Wrangling for ML",
+    roles: ["aiml-ml-engineer", "aiml-data-scientist", "aiml-dl-engineer"],
+    industryUseCase: "Algorithmic Pricing & Demand Forecasting at Airbnb/Uber",
+    harvardOxfordRef: "Harvard STAT 110 Probability & Applied Statistical Learning",
     level: "Level 1 – ML Foundations",
     branch: ["aiml", "aids"],
     videos: makeVideoLinks("Python Data Wrangling NumPy Pandas Scikit-Learn"),
@@ -181,8 +190,8 @@ print(df)`,
     debug: [
       {
         title: "Fix Data Leakage in Scaling",
-        buggy: `# BUG: Scaling entire dataset before splitting\nscaler = StandardScaler()\nX_scaled = scaler.fit_transform(X)\nX_train, X_test = train_test_split(X_scaled)`,
-        fixed: `X_train, X_test = train_test_split(X)\nscaler = StandardScaler()\nX_train = scaler.fit_transform(X_train)\nX_test = scaler.transform(X_test) # Transform test only!`,
+        buggy: `• BUG: Scaling entire dataset before splitting\nscaler = StandardScaler()\nX_scaled = scaler.fit_transform(X)\nX_train, X_test = train_test_split(X_scaled)`,
+        fixed: `X_train, X_test = train_test_split(X)\nscaler = StandardScaler()\nX_train = scaler.fit_transform(X_train)\nX_test = scaler.transform(X_test) • Transform test only!`,
         hint: "Never call fit() or fit_transform() on test data! Only fit on train to avoid data leakage."
       }
     ],
@@ -206,11 +215,14 @@ print(df)`,
       desc: "Implement a simple z-score normalization function for a list of numbers.",
       input: "data = [10, 20, 30, 40, 50]",
       output: "[-1.414, -0.707, 0.0, 0.707, 1.414]",
-      starter: `import math\n\ndef z_score_normalize(arr):\n    # Return [(x - mean) / std for x in arr]\n    pass`
+      starter: `import math\n\ndef z_score_normalize(arr):\n    • Return [(x - mean) / std for x in arr]\n    pass`
     }
   },
   {
     moduleTitle: "Classification – Decision Trees, Random Forest, SVM",
+    roles: ["aiml-ml-engineer", "aiml-data-scientist", "aiml-dl-engineer"],
+    industryUseCase: "Algorithmic Pricing & Demand Forecasting at Airbnb/Uber",
+    harvardOxfordRef: "Harvard STAT 110 Probability & Applied Statistical Learning",
     level: "Level 3 – Machine Learning",
     branch: ["aiml", "aids"],
     videos: makeVideoLinks("Decision Trees Random Forest SVM Classification ML"),
@@ -250,7 +262,7 @@ svm = SVC(kernel='rbf', C=1.0)`,
     debug: [
       {
         title: "Fix Overfitting in Decision Tree",
-        buggy: `tree = DecisionTreeClassifier() # Bug: no max_depth limit leads to infinite depth and overfitting`,
+        buggy: `tree = DecisionTreeClassifier() • Bug: no max_depth limit leads to infinite depth and overfitting`,
         fixed: `tree = DecisionTreeClassifier(max_depth=5, min_samples_split=10)`,
         hint: "Always restrict max_depth or set min_samples_split to prevent decision trees from over-fitting."
       }
@@ -275,11 +287,14 @@ svm = SVC(kernel='rbf', C=1.0)`,
       desc: "Write a function to calculate Gini Impurity for a list of class labels.",
       input: "labels = [1, 1, 0, 1, 0, 0]",
       output: "0.5",
-      starter: `def compute_gini(labels):\n    # Return 1 - sum(p_i^2)\n    pass`
+      starter: `def compute_gini(labels):\n    • Return 1 - sum(p_i^2)\n    pass`
     }
   },
   {
     moduleTitle: "Deep Learning – CNN, RNN, LSTM & Transformers",
+    roles: ["aiml-ml-engineer", "aiml-data-scientist", "aiml-dl-engineer"],
+    industryUseCase: "Algorithmic Pricing & Demand Forecasting at Airbnb/Uber",
+    harvardOxfordRef: "Harvard STAT 110 Probability & Applied Statistical Learning",
     level: "Level 4 – Deep Learning",
     branch: ["aiml", "aids"],
     videos: makeVideoLinks("Convolutional Neural Networks CNN RNN LSTM Transformers Deep Learning"),
@@ -317,7 +332,7 @@ class ResidualBlock(nn.Module):
             nn.Conv2d(channels, channels, 3, padding=1)
         )
     def forward(self, x):
-        return torch.relu(x + self.conv(x)) # Residual Skip Connection!`,
+        return torch.relu(x + self.conv(x)) • Residual Skip Connection!`,
       complexity: "CNN Conv Layer: O(K² * C_in * C_out * H * W) | Self-Attention: O(N² * d)"
     },
     aiExplain: {
@@ -333,7 +348,7 @@ class ResidualBlock(nn.Module):
     debug: [
       {
         title: "Fix Input Dimension Mismatch in Conv2D",
-        buggy: `conv = nn.Conv2d(in_channels=3, out_channels=16, kernel_size=3)\n# Input tensor passed as (16, 3, 32, 32) -> Incorrect batch formatting!`,
+        buggy: `conv = nn.Conv2d(in_channels=3, out_channels=16, kernel_size=3)\n• Input tensor passed as (16, 3, 32, 32) -> Incorrect batch formatting!`,
         fixed: `x = torch.randn(8, 3, 32, 32)\nout = conv(x)`,
         hint: "PyTorch Conv2D expects tensor shape (N, C, H, W) where N is Batch Size."
       }
@@ -358,11 +373,14 @@ class ResidualBlock(nn.Module):
       desc: "Implement scaled dot-product attention calculation in NumPy.",
       input: "Q, K, V matrices of shape (seq_len, d_k)",
       output: "Context matrix of shape (seq_len, d_k)",
-      starter: `import numpy as np\n\ndef scaled_dot_product_attention(Q, K, V):\n    # Return Softmax(Q @ K.T / sqrt(d_k)) @ V\n    pass`
+      starter: `import numpy as np\n\ndef scaled_dot_product_attention(Q, K, V):\n    • Return Softmax(Q @ K.T / sqrt(d_k)) @ V\n    pass`
     }
   },
   {
     moduleTitle: "Generative AI & LLMs – GPT, RAG, Prompt Engineering",
+    roles: ["aiml-ml-engineer", "aiml-data-scientist", "aiml-dl-engineer"],
+    industryUseCase: "Algorithmic Pricing & Demand Forecasting at Airbnb/Uber",
+    harvardOxfordRef: "Harvard STAT 110 Probability & Applied Statistical Learning",
     level: "Level 6 – Cutting-Edge AI",
     branch: ["aiml", "aids"],
     videos: makeVideoLinks("Generative AI LLM GPT RAG Vector Databases Pinecone LangChain Prompt Engineering"),
@@ -388,7 +406,7 @@ Vector Databases & Indexing:
       ],
       example: `import numpy as np
 
-# Cosine Similarity Search
+• Cosine Similarity Search
 def cosine_sim(v1, v2):
     return np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))`,
       complexity: "Exact Vector Search: O(N * D) | HNSW Vector Search: O(log N * D)"
@@ -406,8 +424,8 @@ def cosine_sim(v1, v2):
     debug: [
       {
         title: "Fix RAG Context Overflow Error",
-        buggy: `# BUG: Passing all 100 retrieved documents directly into LLM prompt\ncontext = "\\n".join(all_100_docs) # Causes Context Window Overflow`,
-        fixed: `context = "\\n".join(retrieved_docs[:3]) # Limit to top-3`,
+        buggy: `• BUG: Passing all 100 retrieved documents directly into LLM prompt\ncontext = "\\n".join(all_100_docs) • Causes Context Window Overflow`,
+        fixed: `context = "\\n".join(retrieved_docs[:3]) • Limit to top-3`,
         hint: "Limit retrieved document count (top-k) to stay within the model's context window limit."
       }
     ],
@@ -431,12 +449,15 @@ def cosine_sim(v1, v2):
       desc: "Implement cosine similarity between two 1D numeric vectors in Python.",
       input: "vec1 = [1, 2, 3], vec2 = [4, 5, 6]",
       output: "0.9746318",
-      starter: `import math\n\ndef cosine_similarity(v1, v2):\n    # Return dot(v1, v2) / (norm(v1) * norm(v2))\n    pass`
+      starter: `import math\n\ndef cosine_similarity(v1, v2):\n    • Return dot(v1, v2) / (norm(v1) * norm(v2))\n    pass`
     }
   }
 ,
   {
     moduleTitle: "Linear & Logistic Regression",
+    roles: ["aiml-ml-engineer", "aiml-data-scientist", "aiml-dl-engineer"],
+    industryUseCase: "Algorithmic Pricing & Demand Forecasting at Airbnb/Uber",
+    harvardOxfordRef: "Harvard STAT 110 Probability & Applied Statistical Learning",
     level: "Level 1 – Foundations",
     branch: ["aiml", "aids"],
     videos: makeVideoLinks("Linear Logistic Regression Machine Learning"),
@@ -444,14 +465,14 @@ def cosine_sim(v1, v2):
       summary: "Linear Regression predicts continuous values by fitting y = mx + b. Logistic Regression predicts binary class probabilities using the sigmoid function σ(z) = 1/(1+e^-z).",
       deepDiveTextbook: `REGRESSION ALGORITHMS\n\nLinear Regression:\nObjective: minimize MSE = (1/N)Σ(y - ŷ)². Uses Gradient Descent: w = w - α * ∂Loss/∂w.\nNormal Equation: w = (XᵀX)⁻¹Xᵀy gives closed-form solution but O(N³) complexity.\n\nLogistic Regression:\nUsed for binary classification. Output: P(y=1|x) = σ(wᵀx + b) where σ(z) = 1/(1+e^-z).\nLoss: Binary Cross Entropy = -[y log(ŷ) + (1-y) log(1-ŷ)].\nDecision boundary: predict 1 if P > 0.5, else 0.\n\nRegularization:\n- L1 (Lasso): Adds λΣ|w| to loss. Drives some weights to zero (feature selection).\n- L2 (Ridge): Adds λΣw² to loss. Shrinks weights uniformly.\n- ElasticNet: Combination of L1 and L2.\n\nMulticlass: Softmax regression generalizes logistic for K classes. Output = e^(wᵢx) / Σe^(wⱼx).`,
       keyPoints: ["Sigmoid maps any value to (0,1) for probability output","Binary cross-entropy is convex loss for logistic regression","L1 regularization creates sparse models (feature selection)","Multiclass uses Softmax function"],
-      example: `from sklearn.linear_model import LogisticRegression\nfrom sklearn.datasets import load_iris\nfrom sklearn.model_selection import train_test_split\n\nX, y = load_iris(return_X_y=True)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)\nmodel = LogisticRegression(max_iter=200, C=1.0)  # C=1/lambda\nmodel.fit(X_train, y_train)\nprint(model.score(X_test, y_test))`,
+      example: `from sklearn.linear_model import LogisticRegression\nfrom sklearn.datasets import load_iris\nfrom sklearn.model_selection import train_test_split\n\nX, y = load_iris(return_X_y=True)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)\nmodel = LogisticRegression(max_iter=200, C=1.0)  • C=1/lambda\nmodel.fit(X_train, y_train)\nprint(model.score(X_test, y_test))`,
       comparisonTable: { headers: ["Algorithm","Output","Loss","Use Case"], rows: [["Linear Regression","Continuous","MSE","House price prediction"],["Logistic Regression","Probability 0-1","Binary Cross-Entropy","Spam classification"],["Ridge (L2 Reg)","Continuous","MSE + λΣw²","Correlated features"],["Lasso (L1 Reg)","Continuous","MSE + λΣ|w|","Feature selection"]] },
       flowchartSteps: ["Initialize weights w=0","Forward pass: ŷ = σ(wᵀx+b)","Compute loss: BCE(y, ŷ)","Backprop: ∂Loss/∂w = xᵀ(ŷ-y)/N","Update: w = w - α*gradient","Repeat until convergence"],
       concept3DSimulation: { title: "Gradient Descent Loss Landscape", description: "Loss surface shown as bowl — gradient descent steps descend toward minimum.", interactiveNodes: [{name:"Weight Space",type:"Parameter Landscape",details:"Each point represents a set of weights"},{name:"Gradient Vector",type:"Direction of Steepest Descent",details:"Points toward minimum MSE/BCE"},{name:"Learning Rate",type:"Step Size Controller",details:"Controls how far each gradient step moves"}] },
       complexity: "Training O(N*D) per epoch | Inference O(D)"
     },
     aiExplain: { steps: ["Initialize weights","Predict using current weights","Compute error","Update weights via gradient descent","Repeat"], analogy: "Like adjusting a recipe iteratively — each batch tells you to add more salt or less sugar until the taste is perfect" },
-    debug: [{ title: "Underfitting", buggy: "model = LogisticRegression(C=0.001)  # too much regularization", fixed: "model = LogisticRegression(C=1.0)  # balanced regularization", hint: "Very low C means very high regularization → model too simple → underfitting" }],
+    debug: [{ title: "Underfitting", buggy: "model = LogisticRegression(C=0.001)  • too much regularization", fixed: "model = LogisticRegression(C=1.0)  • balanced regularization", hint: "Very low C means very high regularization → model too simple → underfitting" }],
     quiz: [
       { q: "Sigmoid function output range:", options: ["(-∞, +∞)","(0, 1)","(-1, 1)","(0, ∞)"], answer: 1 },
       { q: "L1 regularization effect:", options: ["Increases model complexity","Drives weights to zero (sparse)","Only affects bias","Prevents gradient descent"], answer: 1 },
@@ -467,12 +488,15 @@ def cosine_sim(v1, v2):
   },
   {
     moduleTitle: "Decision Trees & Random Forests",
+    roles: ["aiml-ml-engineer", "aiml-data-scientist", "aiml-dl-engineer"],
+    industryUseCase: "Algorithmic Pricing & Demand Forecasting at Airbnb/Uber",
+    harvardOxfordRef: "Harvard STAT 110 Probability & Applied Statistical Learning",
     level: "Level 2 – Intermediate",
     branch: ["aiml", "aids"],
     videos: makeVideoLinks("Decision Trees Random Forest Ensemble"),
     studyMaterial: {
       summary: "Decision Trees split data using information gain or Gini impurity. Random Forests ensemble hundreds of trees using bagging and random feature selection to reduce variance and prevent overfitting.",
-      deepDiveTextbook: `DECISION TREES & ENSEMBLE METHODS\n\nDecision Tree Splitting Criteria:\n- Gini Impurity: G = 1 - Σpᵢ². Lower = purer split.\n- Information Gain: IG = H(parent) - Σ(|child|/|parent|)H(child). H = entropy = -Σp log₂p.\n- Choose split that maximizes IG or minimizes Gini.\n\nPruning: Trees overfit without pruning. Pre-pruning: stop when depth > max_depth or samples < min_samples_split. Post-pruning: build full tree, then remove branches that don't improve validation.\n\nRandom Forest:\n1. Bootstrap sampling: each tree trained on random subset of data (bagging).\n2. Random features: at each split, only √D features considered (reduces correlation between trees).\n3. Majority vote (classification) or average (regression) for final prediction.\n\nFeature Importance: Based on total impurity reduction across all splits for that feature.\n\nGradient Boosting (XGBoost/LightGBM): Trees built sequentially — each corrects errors of previous. Uses gradient of loss function. Often outperforms Random Forest on structured data.\n\nKey Hyperparameters: n_estimators (# trees), max_depth, min_samples_split, max_features.`,
+      deepDiveTextbook: `DECISION TREES & ENSEMBLE METHODS\n\nDecision Tree Splitting Criteria:\n- Gini Impurity: G = 1 - Σpᵢ². Lower = purer split.\n- Information Gain: IG = H(parent) - Σ(|child|/|parent|)H(child). H = entropy = -Σp log₂p.\n- Choose split that maximizes IG or minimizes Gini.\n\nPruning: Trees overfit without pruning. Pre-pruning: stop when depth > max_depth or samples < min_samples_split. Post-pruning: build full tree, then remove branches that don't improve validation.\n\nRandom Forest:\n1. Bootstrap sampling: each tree trained on random subset of data (bagging).\n2. Random features: at each split, only √D features considered (reduces correlation between trees).\n3. Majority vote (classification) or average (regression) for final prediction.\n\nFeature Importance: Based on total impurity reduction across all splits for that feature.\n\nGradient Boosting (XGBoost/LightGBM): Trees built sequentially — each corrects errors of previous. Uses gradient of loss function. Often outperforms Random Forest on structured data.\n\nKey Hyperparameters: n_estimators (• trees), max_depth, min_samples_split, max_features.`,
       keyPoints: ["Information Gain = entropy reduction at each split","Random Forest: bagging + random features reduces overfitting","Feature importance = total impurity reduction for each feature","Gradient Boosting builds trees sequentially correcting errors"],
       example: `from sklearn.ensemble import RandomForestClassifier\nfrom sklearn.datasets import load_breast_cancer\nfrom sklearn.model_selection import cross_val_score\n\nX, y = load_breast_cancer(return_X_y=True)\nrf = RandomForestClassifier(n_estimators=100, max_depth=5, random_state=42)\nscores = cross_val_score(rf, X, y, cv=5, scoring='f1')\nprint(f"F1: {scores.mean():.3f} ± {scores.std():.3f}")\nprint(sorted(zip(rf.fit(X,y).feature_importances_, load_breast_cancer().feature_names), reverse=True)[:5])`,
       comparisonTable: { headers: ["Model","Bias","Variance","Interpretable","Best For"], rows: [["Single Decision Tree","Low","High","Yes","Small datasets"],["Random Forest","Medium","Low","Partial","Tabular data"],["XGBoost","Low","Low","No","Competitions, structured data"],["Logistic Reg","High","Low","Yes","Linear problems"]] },
@@ -481,7 +505,7 @@ def cosine_sim(v1, v2):
       complexity: "Training O(N*D*log N * n_trees) | Inference O(depth * n_trees)"
     },
     aiExplain: { steps: ["Sample N trees from bootstrapped data","Each tree votes on class","Majority vote wins","Variance reduced because trees are decorrelated"], analogy: "Like asking 100 different doctors for a diagnosis — each has slightly different training, but their combined vote is more reliable than any single opinion" },
-    debug: [{ title: "Overfitting single tree", buggy: "tree = DecisionTreeClassifier()  # no depth limit → memorizes training", fixed: "tree = DecisionTreeClassifier(max_depth=5, min_samples_split=10)", hint: "Unlimited depth trees memorize training data. Always set max_depth or min_samples." }],
+    debug: [{ title: "Overfitting single tree", buggy: "tree = DecisionTreeClassifier()  • no depth limit → memorizes training", fixed: "tree = DecisionTreeClassifier(max_depth=5, min_samples_split=10)", hint: "Unlimited depth trees memorize training data. Always set max_depth or min_samples." }],
     quiz: [
       { q: "Random Forest uses which sampling technique?", options: ["Cross-validation","Bootstrapping","Stratified sampling","Cluster sampling"], answer: 1 },
       { q: "At each split, Random Forest considers:", options: ["All features","√D features","1 feature","D/2 features"], answer: 1 },
@@ -493,10 +517,13 @@ def cosine_sim(v1, v2):
       { company: "Google", year: "2022", question: "How would you handle missing values in a tree-based model?", answer: "Decision Trees can handle missing values natively using surrogate splits. XGBoost learns default directions for missing values during training. Or: impute with median/mode before training." }
     ],
     mock: [{ type: "Technical", question: "When would Random Forest fail and what would you use instead?", tip: "Fails: high-dimensional sparse data (NLP), sequential data (use LSTM/Transformer), when interpretability is critical (use single tree or linear model). Use XGBoost for better accuracy on tabular data, Neural Networks for images/text." }],
-    coding: { problem: "Feature Importance Analysis", desc: "Train Random Forest and identify top 3 most important features.", input: "sklearn breast_cancer dataset", output: "Top 3 feature names + importance scores", starter: "from sklearn.ensemble import RandomForestClassifier\nfrom sklearn.datasets import load_breast_cancer\nX, y = load_breast_cancer(return_X_y=True)\nnames = load_breast_cancer().feature_names\nrf = RandomForestClassifier(n_estimators=100).fit(X, y)\n# Print top 3 features by importance" }
+    coding: { problem: "Feature Importance Analysis", desc: "Train Random Forest and identify top 3 most important features.", input: "sklearn breast_cancer dataset", output: "Top 3 feature names + importance scores", starter: "from sklearn.ensemble import RandomForestClassifier\nfrom sklearn.datasets import load_breast_cancer\nX, y = load_breast_cancer(return_X_y=True)\nnames = load_breast_cancer().feature_names\nrf = RandomForestClassifier(n_estimators=100).fit(X, y)\n• Print top 3 features by importance" }
   },
   {
     moduleTitle: "Neural Networks & Backpropagation",
+    roles: ["aiml-ml-engineer", "aiml-data-scientist", "aiml-dl-engineer"],
+    industryUseCase: "Algorithmic Pricing & Demand Forecasting at Airbnb/Uber",
+    harvardOxfordRef: "Harvard STAT 110 Probability & Applied Statistical Learning",
     level: "Level 2 – Intermediate",
     branch: ["aiml", "aids"],
     videos: makeVideoLinks("Neural Networks Backpropagation Deep Learning"),
@@ -504,7 +531,7 @@ def cosine_sim(v1, v2):
       summary: "Neural Networks learn by forward-passing input through layers of neurons, computing loss, then backpropagating gradients to update weights via chain rule. They are the foundation of all deep learning.",
       deepDiveTextbook: `NEURAL NETWORKS & BACKPROPAGATION\n\nForward Pass:\nLayer l: aˡ = f(Wˡ * aˡ⁻¹ + bˡ) where f is activation function.\nActivations: ReLU(x)=max(0,x) [hidden layers], Sigmoid [binary output], Softmax [multiclass output].\n\nLoss Functions:\n- Regression: MSE\n- Binary Classification: Binary Cross-Entropy\n- Multiclass: Categorical Cross-Entropy\n\nBackpropagation (Chain Rule):\n∂Loss/∂W = ∂Loss/∂a * ∂a/∂z * ∂z/∂W\n\nGradient Descent Variants:\n- SGD: Update with one sample. Noisy but fast.\n- Mini-batch: Update with batch of 32-256. Best of both worlds.\n- Adam: Adaptive learning rates per parameter. Most popular. Combines momentum + RMSProp.\n\nRegularization:\n- Dropout: Randomly zero out neurons during training (probability p). Forces redundant representations.\n- Batch Normalization: Normalizes layer inputs. Reduces internal covariate shift, allows higher learning rates.\n- Weight Decay: L2 regularization on weights.\n\nVanishing Gradients: Deep networks with sigmoid lose gradient magnitude in early layers. Solved by ReLU, residual connections (ResNet), gradient clipping.`,
       keyPoints: ["Backprop uses chain rule to compute gradients layer by layer","ReLU solves vanishing gradient better than sigmoid/tanh","Adam optimizer adapts learning rate per parameter","Dropout and BatchNorm are key regularization techniques"],
-      example: `import torch\nimport torch.nn as nn\n\nclass MLP(nn.Module):\n    def __init__(self):\n        super().__init__()\n        self.net = nn.Sequential(\n            nn.Linear(784, 256), nn.ReLU(), nn.Dropout(0.3),\n            nn.Linear(256, 128), nn.ReLU(), nn.BatchNorm1d(128),\n            nn.Linear(128, 10)  # Softmax in loss function\n        )\n    def forward(self, x): return self.net(x)\n\nmodel = MLP()\noptimizer = torch.optim.Adam(model.parameters(), lr=1e-3)\nloss_fn = nn.CrossEntropyLoss()`,
+      example: `import torch\nimport torch.nn as nn\n\nclass MLP(nn.Module):\n    def __init__(self):\n        super().__init__()\n        self.net = nn.Sequential(\n            nn.Linear(784, 256), nn.ReLU(), nn.Dropout(0.3),\n            nn.Linear(256, 128), nn.ReLU(), nn.BatchNorm1d(128),\n            nn.Linear(128, 10)  • Softmax in loss function\n        )\n    def forward(self, x): return self.net(x)\n\nmodel = MLP()\noptimizer = torch.optim.Adam(model.parameters(), lr=1e-3)\nloss_fn = nn.CrossEntropyLoss()`,
       comparisonTable: { headers: ["Optimizer","Adaptive LR","Momentum","Best For"], rows: [["SGD","No","Optional","Fine-tuning"],["Adam","Yes","Yes","Most tasks"],["RMSProp","Yes","No","RNNs"],["AdaGrad","Yes","No","Sparse data"]] },
       flowchartSteps: ["Forward pass through all layers","Compute loss","Compute output layer gradient","Backpropagate via chain rule","Update all weights with optimizer","Repeat for all mini-batches (epoch)"],
       concept3DSimulation: { title: "Backpropagation Flow", description: "Gradients flow backward from loss through each layer, updating weights proportionally.", interactiveNodes: [{name:"Loss Compute",type:"Output Layer",details:"Computes scalar loss from predictions and labels"},{name:"Chain Rule Engine",type:"Gradient Multiplier",details:"Multiplies local gradients backward through network"},{name:"Weight Updater",type:"Optimizer",details:"Updates parameters using computed gradients"}] },
@@ -523,10 +550,13 @@ def cosine_sim(v1, v2):
       { company: "OpenAI", year: "2022", question: "What causes vanishing gradients and how is it solved?", answer: "Sigmoid/tanh saturate → gradients near zero for extreme inputs → early layers learn very slowly. Solutions: ReLU activation, residual connections (skip connections), careful weight initialization (Xavier/He), gradient clipping." }
     ],
     mock: [{ type: "Technical", question: "Explain the Universal Approximation Theorem.", tip: "A neural network with one hidden layer and enough neurons can approximate any continuous function to arbitrary precision. This doesn't mean it can learn it easily — depth helps with representational efficiency and generalization." }],
-    coding: { problem: "Train MNIST Classifier", desc: "Build and train a neural network achieving >97% on MNIST.", input: "60000 28x28 grayscale images", output: "Test accuracy > 97%", starter: "import torch, torch.nn as nn\nfrom torchvision import datasets, transforms\n# Define model with 2 hidden layers\n# Use Adam optimizer, CrossEntropyLoss\n# Train for 5 epochs\n# Report test accuracy" }
+    coding: { problem: "Train MNIST Classifier", desc: "Build and train a neural network achieving >97% on MNIST.", input: "60000 28x28 grayscale images", output: "Test accuracy > 97%", starter: "import torch, torch.nn as nn\nfrom torchvision import datasets, transforms\n• Define model with 2 hidden layers\n• Use Adam optimizer, CrossEntropyLoss\n• Train for 5 epochs\n• Report test accuracy" }
   },
   {
     moduleTitle: "Transformers & Attention Mechanism",
+    roles: ["aiml-ml-engineer", "aiml-data-scientist", "aiml-dl-engineer"],
+    industryUseCase: "Algorithmic Pricing & Demand Forecasting at Airbnb/Uber",
+    harvardOxfordRef: "Harvard STAT 110 Probability & Applied Statistical Learning",
     level: "Level 3 – Advanced",
     branch: ["aiml", "aids"],
     videos: makeVideoLinks("Transformer Architecture Self Attention BERT GPT"),
@@ -541,7 +571,7 @@ def cosine_sim(v1, v2):
       complexity: "Attention O(N²*D) | Full Transformer O(N²*D*L)"
     },
     aiExplain: { steps: ["Each token creates Query (what I want), Key (what I am), Value (what I provide)","Compute similarity of my Query with all Keys","Soft-select Values proportional to similarity","Aggregate into context-aware representation"], analogy: "Like a library search — Query is your search term, Keys are book titles, Values are book content. Attention score decides how relevant each book is to your query." },
-    debug: [{ title: "Attention score explosion", buggy: "scores = Q @ K.T  # not scaled → softmax becomes one-hot", fixed: "scores = Q @ K.T / math.sqrt(d_k)  # scale by sqrt(d_k)", hint: "Without scaling, dot products grow large in high dimensions, making softmax output near-deterministic (one token gets all attention)" }],
+    debug: [{ title: "Attention score explosion", buggy: "scores = Q @ K.T  • not scaled → softmax becomes one-hot", fixed: "scores = Q @ K.T / math.sqrt(d_k)  • scale by sqrt(d_k)", hint: "Without scaling, dot products grow large in high dimensions, making softmax output near-deterministic (one token gets all attention)" }],
     quiz: [
       { q: "Attention formula denominator uses:", options: ["dₖ","√dₖ","log(dₖ)","dₖ²"], answer: 1 },
       { q: "BERT uses which type of attention?", options: ["Masked (causal)","Bidirectional","Cross-attention only","Sparse attention"], answer: 1 },
@@ -553,10 +583,13 @@ def cosine_sim(v1, v2):
       { company: "OpenAI", year: "2022", question: "What is the difference between RLHF and standard fine-tuning?", answer: "Standard fine-tuning: supervised on labeled examples. RLHF (Reinforcement Learning from Human Feedback): 1) Fine-tune on demonstrations, 2) Train reward model from human comparisons, 3) Use PPO to optimize policy against reward model. Used in ChatGPT to align with human preferences." }
     ],
     mock: [{ type: "Technical", question: "Explain how Transformer handles variable-length sequences.", tip: "Tokenize input, pad to fixed max length (or use dynamic batching). Attention mask prevents attending to padding tokens. Positional encoding is added up to max_length. Output is same length as input; use [CLS] token pooling or average pooling for classification." }],
-    coding: { problem: "Implement Scaled Dot-Product Attention", desc: "Implement the attention function from scratch in PyTorch.", input: "Q, K, V tensors of shape (batch, seq_len, d_k)", output: "Context vectors of shape (batch, seq_len, d_k)", starter: "import torch\nimport torch.nn.functional as F\n\ndef attention(Q, K, V, mask=None):\n    d_k = Q.shape[-1]\n    # Compute scaled attention scores\n    # Apply optional mask\n    # Return weighted sum of V" }
+    coding: { problem: "Implement Scaled Dot-Product Attention", desc: "Implement the attention function from scratch in PyTorch.", input: "Q, K, V tensors of shape (batch, seq_len, d_k)", output: "Context vectors of shape (batch, seq_len, d_k)", starter: "import torch\nimport torch.nn.functional as F\n\ndef attention(Q, K, V, mask=None):\n    d_k = Q.shape[-1]\n    • Compute scaled attention scores\n    • Apply optional mask\n    • Return weighted sum of V" }
   },
   {
     moduleTitle: "Model Evaluation & Cross-Validation",
+    roles: ["aiml-ml-engineer", "aiml-data-scientist", "aiml-dl-engineer"],
+    industryUseCase: "Algorithmic Pricing & Demand Forecasting at Airbnb/Uber",
+    harvardOxfordRef: "Harvard STAT 110 Probability & Applied Statistical Learning",
     level: "Level 2 – Intermediate",
     branch: ["aiml", "aids"],
     videos: makeVideoLinks("Model Evaluation Cross Validation Hyperparameter Tuning"),
@@ -571,7 +604,7 @@ def cosine_sim(v1, v2):
       complexity: "K-Fold: O(K * training_time) | Grid Search: O(|grid| * K * training_time)"
     },
     aiExplain: { steps: ["Split data into folds","Train on K-1 folds","Test on remaining fold","Repeat K times, average results","Select model with best CV score"], analogy: "Like a tournament where each team plays every other team once — gives fairer ranking than single elimination" },
-    debug: [{ title: "Data leakage in cross-validation", buggy: "scaler.fit(X)  # fitted on entire data before CV\nX_scaled = scaler.transform(X)\ncross_val_score(model, X_scaled, y)", fixed: "pipeline = Pipeline([('scaler', StandardScaler()), ('model', model)])\ncross_val_score(pipeline, X, y)", hint: "Fitting scaler before CV leaks test data statistics into training. Always use Pipeline to fit preprocessing inside each fold." }],
+    debug: [{ title: "Data leakage in cross-validation", buggy: "scaler.fit(X)  • fitted on entire data before CV\nX_scaled = scaler.transform(X)\ncross_val_score(model, X_scaled, y)", fixed: "pipeline = Pipeline([('scaler', StandardScaler()), ('model', model)])\ncross_val_score(pipeline, X, y)", hint: "Fitting scaler before CV leaks test data statistics into training. Always use Pipeline to fit preprocessing inside each fold." }],
     quiz: [
       { q: "F1 score is:", options: ["Accuracy on test set","Harmonic mean of precision and recall","Area under ROC curve","Mean squared error"], answer: 1 },
       { q: "AUC-ROC of 0.5 means:", options: ["Perfect classifier","50% accuracy","Random classifier","50% precision"], answer: 2 },

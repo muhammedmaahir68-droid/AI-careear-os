@@ -23,7 +23,10 @@ export interface AuthorReference {
 export interface BranchModuleData {
   moduleTitle: string;
   level: string;
-  branch: string[]; // ["cse", "it"] etc. or ["all"]
+  branch: string[];
+  roles?: string[];
+  industryUseCase?: string;
+  harvardOxfordRef?: string; // ["cse", "it"] etc. or ["all"]
   videos: VideoLink[];
   studyMaterial: {
     summary: string;

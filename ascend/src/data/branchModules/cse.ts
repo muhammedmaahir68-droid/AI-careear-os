@@ -4,6 +4,9 @@ import { makeVideoLinks } from "./types";
 export const CSE_IT_MODULES: BranchModuleData[] = [
   {
     moduleTitle: "Arrays & Two Sum Pattern",
+    roles: ["cse-data-engineer", "cse-devops", "cse-sde", "cse-backend", "cse-fullstack", "cse-frontend"],
+    industryUseCase: "Zero-Downtime Multi-Region Kubernetes Deployment at Spotify",
+    harvardOxfordRef: "Harvard CS109 Cloud Infrastructure & Site Reliability Engineering",
     level: "Level 1 – Foundations",
     branch: ["cse", "it"],
     videos: makeVideoLinks("Arrays and Two Sum Pattern"),
@@ -73,7 +76,7 @@ The Hash Table maps Value -> Index. When examining element A[i], we perform an O
         "Space-Time trade-off: Trade O(n) memory to drop execution time from O(n²) to O(n)."
       ],
       example: `def two_sum(nums, target):
-    seen = {} # Value -> Index mapping
+    seen = {} • Value -> Index mapping
     for i, num in enumerate(nums):
         diff = target - num
         if diff in seen:
@@ -95,7 +98,7 @@ The Hash Table maps Value -> Index. When examining element A[i], we perform an O
     debug: [
       {
         title: "Fix Two Sum HashMap Key Error",
-        buggy: `def two_sum(nums, target):\n    seen = {}\n    for i, num in enumerate(nums):\n        if target - num in seen:\n            return [seen[num], i] # Bug: storing num instead of complement index\n        seen[num] = i`,
+        buggy: `def two_sum(nums, target):\n    seen = {}\n    for i, num in enumerate(nums):\n        if target - num in seen:\n            return [seen[num], i] • Bug: storing num instead of complement index\n        seen[num] = i`,
         fixed: `def two_sum(nums, target):\n    seen = {}\n    for i, num in enumerate(nums):\n        diff = target - num\n        if diff in seen:\n            return [seen[diff], i]\n        seen[num] = i`,
         hint: "Return seen[diff] (the complement's index), not seen[num]."
       }
@@ -120,11 +123,14 @@ The Hash Table maps Value -> Index. When examining element A[i], we perform an O
       desc: "Find indices of the two numbers such that they add up to target.",
       input: "nums = [2, 7, 11, 15], target = 9",
       output: "[0, 1]",
-      starter: `def two_sum(nums, target):\n    seen = {}\n    for i, num in enumerate(nums):\n        # Fill complement logic here\n        pass\n    return []`
+      starter: `def two_sum(nums, target):\n    seen = {}\n    for i, num in enumerate(nums):\n        • Fill complement logic here\n        pass\n    return []`
     }
   },
   {
     moduleTitle: "Linked Lists & Cycle Detection",
+    roles: ["cse-data-engineer", "cse-devops", "cse-sde", "cse-backend", "cse-fullstack", "cse-frontend"],
+    industryUseCase: "Zero-Downtime Multi-Region Kubernetes Deployment at Spotify",
+    harvardOxfordRef: "Harvard CS109 Cloud Infrastructure & Site Reliability Engineering",
     level: "Level 2 – Data Structures",
     branch: ["cse", "it"],
     videos: makeVideoLinks("Linked List and Floyd Cycle Detection Algorithm"),
@@ -162,7 +168,7 @@ If a cycle exists, Fast and Slow pointers will eventually meet.`,
     debug: [
       {
         title: "Fix Null Pointer Exception in Cycle Check",
-        buggy: `def has_cycle(head):\n    slow = head\n    fast = head\n    while fast.next: # Bug: fast itself could be None\n        slow = slow.next\n        fast = fast.next.next\n        if slow == fast: return True\n    return False`,
+        buggy: `def has_cycle(head):\n    slow = head\n    fast = head\n    while fast.next: • Bug: fast itself could be None\n        slow = slow.next\n        fast = fast.next.next\n        if slow == fast: return True\n    return False`,
         fixed: `def has_cycle(head):\n    slow = head\n    fast = head\n    while fast and fast.next:\n        slow = slow.next\n        fast = fast.next.next\n        if slow == fast: return True\n    return False`,
         hint: "Always check `while fast and fast.next:` to avoid reading `.next` on a `None` object."
       }
@@ -187,11 +193,14 @@ If a cycle exists, Fast and Slow pointers will eventually meet.`,
       desc: "Implement Floyd's Tortoise and Hare algorithm.",
       input: "head = [3, 2, 0, -4], pos = 1 (tail connects to node index 1)",
       output: "True",
-      starter: `def has_cycle(head):\n    # Return True if cycle exists, else False\n    pass`
+      starter: `def has_cycle(head):\n    • Return True if cycle exists, else False\n    pass`
     }
   },
   {
     moduleTitle: "Binary Trees & BST Traversals",
+    roles: ["cse-data-engineer", "cse-devops", "cse-sde", "cse-backend", "cse-fullstack", "cse-frontend"],
+    industryUseCase: "Zero-Downtime Multi-Region Kubernetes Deployment at Spotify",
+    harvardOxfordRef: "Harvard CS109 Cloud Infrastructure & Site Reliability Engineering",
     level: "Level 4 – Advanced Data Structures",
     branch: ["cse", "it"],
     videos: makeVideoLinks("Binary Tree BST Traversal Inorder Preorder Postorder Levelorder"),
@@ -262,7 +271,7 @@ A Tree is a set of nodes connected by directed edges starting from a root node.
     debug: [
       {
         title: "Fix BST Inorder Traversal Recursion Base Case",
-        buggy: `def inorder(root):\n    # Missing base case if root is None!\n    return inorder(root.left) + [root.val] + inorder(root.right)`,
+        buggy: `def inorder(root):\n    • Missing base case if root is None!\n    return inorder(root.left) + [root.val] + inorder(root.right)`,
         fixed: `def inorder(root):\n    if not root:\n        return []\n    return inorder(root.left) + [root.val] + inorder(root.right)`,
         hint: "Add `if not root: return []` base case to stop infinite recursion."
       }
@@ -277,7 +286,7 @@ A Tree is a set of nodes connected by directed edges starting from a root node.
     mnc: [
       { company: "Amazon", year: "2023", question: "Validate Binary Search Tree", answer: "Perform inorder traversal and verify strictly increasing values or pass lower/upper bounds." },
       { company: "Google", year: "2023", question: "Lowest Common Ancestor in BST", answer: "If both p and q < root, go left; if both > root, go right; else root is LCA." },
-      { company: "Microsoft", year: "2022", question: "Serialize and Deserialize Binary Tree", answer: "Use Preorder traversal with marker '#' for null pointers." }
+      { company: "Microsoft", year: "2022", question: "Serialize and Deserialize Binary Tree", answer: "Use Preorder traversal with marker '• ' for null pointers." }
     ],
     mock: [
       { type: "Technical", question: "Explain AVL Tree rotations during insertion.", tip: "Left-Left (Single Right), Right-Right (Single Left), Left-Right (Double), Right-Left (Double) rotations balance height." }
@@ -287,11 +296,14 @@ A Tree is a set of nodes connected by directed edges starting from a root node.
       desc: "Return inorder traversal array for a given binary tree root.",
       input: "root = [1, null, 2, 3]",
       output: "[1, 3, 2]",
-      starter: `def inorderTraversal(root):\n    # Return list of values in inorder\n    pass`
+      starter: `def inorderTraversal(root):\n    • Return list of values in inorder\n    pass`
     }
   },
   {
     moduleTitle: "Graphs – BFS, DFS & Shortest Path",
+    roles: ["cse-data-engineer", "cse-devops", "cse-sde", "cse-backend", "cse-fullstack", "cse-frontend"],
+    industryUseCase: "Zero-Downtime Multi-Region Kubernetes Deployment at Spotify",
+    harvardOxfordRef: "Harvard CS109 Cloud Infrastructure & Site Reliability Engineering",
     level: "Level 4 – Advanced Algorithms",
     branch: ["cse", "it"],
     videos: makeVideoLinks("Graph Algorithms BFS DFS Dijkstra Shortest Path"),
@@ -373,8 +385,8 @@ def dijkstra(graph, start):
     debug: [
       {
         title: "Fix Dijkstra Infinite Loop on Stale Heap Pop",
-        buggy: `while pq:\n    d, u = heapq.heappop(pq)\n    # Missing check: if d > dist[u]: continue\n    for v, w in graph[u]:...`,
-        fixed: `while pq:\n    d, u = heapq.heappop(pq)\n    if d > dist[u]: continue # Skip stale entries\n    for v, w in graph[u]:...`,
+        buggy: `while pq:\n    d, u = heapq.heappop(pq)\n    • Missing check: if d > dist[u]: continue\n    for v, w in graph[u]:...`,
+        fixed: `while pq:\n    d, u = heapq.heappop(pq)\n    if d > dist[u]: continue • Skip stale entries\n    for v, w in graph[u]:...`,
         hint: "Skip outdated node entries popped from heap using `if d > dist[u]: continue`."
       }
     ],
@@ -398,11 +410,14 @@ def dijkstra(graph, start):
       desc: "Compute shortest distances from start node to all nodes.",
       input: "graph = {0: [(1, 4), (2, 1)], 1: [(3, 1)], 2: [(1, 2), (3, 5)], 3: []}, start = 0",
       output: "{0: 0, 1: 3, 2: 1, 3: 4}",
-      starter: `def shortest_path(graph, start):\n    # Return dictionary of shortest distance from start\n    pass`
+      starter: `def shortest_path(graph, start):\n    • Return dictionary of shortest distance from start\n    pass`
     }
   },
   {
     moduleTitle: "Dynamic Programming – Memoization & Tabulation",
+    roles: ["cse-data-engineer", "cse-devops", "cse-sde", "cse-backend", "cse-fullstack", "cse-frontend"],
+    industryUseCase: "Zero-Downtime Multi-Region Kubernetes Deployment at Spotify",
+    harvardOxfordRef: "Harvard CS109 Cloud Infrastructure & Site Reliability Engineering",
     level: "Level 5 – Master Algorithms",
     branch: ["cse", "it"],
     videos: makeVideoLinks("Dynamic Programming Memoization Tabulation 01 Knapsack LCS"),
@@ -474,8 +489,8 @@ def dijkstra(graph, start):
     debug: [
       {
         title: "Fix 0/1 Knapsack 1D Array Forward Iteration Bug",
-        buggy: `for w in range(wt, W + 1): # Bug: forward loop allows SAME item to be picked multiple times! (Unbounded knapsack)`,
-        fixed: `for w in range(W, wt - 1, -1): # Fixed: reverse loop ensures each item used AT MOST ONCE`,
+        buggy: `for w in range(wt, W + 1): • Bug: forward loop allows SAME item to be picked multiple times! (Unbounded knapsack)`,
+        fixed: `for w in range(W, wt - 1, -1): • Fixed: reverse loop ensures each item used AT MOST ONCE`,
         hint: "Iterate backwards `range(W, wt - 1, -1)` when using 1D array for 0/1 Knapsack to prevent re-using same item."
       }
     ],
@@ -499,11 +514,14 @@ def dijkstra(graph, start):
       desc: "Find maximum total value in knapsack of capacity W.",
       input: "weights = [2, 3, 4, 5], values = [3, 4, 5, 6], W = 5",
       output: "7",
-      starter: `def solve_knapsack(weights, values, W):\n    # Return maximum achievable value\n    pass`
+      starter: `def solve_knapsack(weights, values, W):\n    • Return maximum achievable value\n    pass`
     }
   },
   {
     moduleTitle: "System Design – Load Balancing, Caching & Scaling",
+    roles: ["cse-data-engineer", "cse-devops", "cse-sde", "cse-backend", "cse-fullstack", "cse-frontend"],
+    industryUseCase: "Zero-Downtime Multi-Region Kubernetes Deployment at Spotify",
+    harvardOxfordRef: "Harvard CS109 Cloud Infrastructure & Site Reliability Engineering",
     level: "Level 6 – Enterprise Architecture",
     branch: ["cse", "it"],
     videos: makeVideoLinks("System Design Load Balancing Caching Microservices Sharding"),
@@ -566,7 +584,7 @@ def dijkstra(graph, start):
         "Database Sharding partitions table rows across multiple DB instances.",
         "Message Queues (Kafka, RabbitMQ) decouple synchronous API bottlenecks."
       ],
-      example: `# Consistent Hashing Ring Node Selector
+      example: `• Consistent Hashing Ring Node Selector
 import hashlib
 
 class ConsistentHashRing:
@@ -609,8 +627,8 @@ class ConsistentHashRing:
     debug: [
       {
         title: "Fix Cache Stampede (Thundering Herd Problem)",
-        buggy: `# Bug: Unprotected cache lookup causes 1000 DB queries simultaneously on cache expiration\nval = redis.get(key)\nif not val:\n    val = db.query(key)\n    redis.set(key, val)`,
-        fixed: `# Fixed: Use Distributed Lock (Redlock) or Mutex so only ONE thread queries DB on cache miss\nval = redis.get(key)\nif not val:\n    if acquire_lock(key):\n        val = db.query(key)\n        redis.set(key, val)\n        release_lock(key)\n    else:\n        sleep_and_retry()`,
+        buggy: `• Bug: Unprotected cache lookup causes 1000 DB queries simultaneously on cache expiration\nval = redis.get(key)\nif not val:\n    val = db.query(key)\n    redis.set(key, val)`,
+        fixed: `• Fixed: Use Distributed Lock (Redlock) or Mutex so only ONE thread queries DB on cache miss\nval = redis.get(key)\nif not val:\n    if acquire_lock(key):\n        val = db.query(key)\n        redis.set(key, val)\n        release_lock(key)\n    else:\n        sleep_and_retry()`,
         hint: "Use Distributed Locks (Redlock) to ensure only ONE worker recomputes cached values during expiration."
       }
     ],
@@ -634,7 +652,7 @@ class ConsistentHashRing:
       desc: "Implement node lookup in a consistent hash ring.",
       input: "nodes = ['NodeA', 'NodeB'], key = 'user_12345'",
       output: "Assigned node name",
-      starter: `def lookup_node(nodes, key):\n    # Return server name assigned to key\n    pass`
+      starter: `def lookup_node(nodes, key):\n    • Return server name assigned to key\n    pass`
     }
   },
 
@@ -643,6 +661,9 @@ class ConsistentHashRing:
   // ═══════════════════════════════════════════════════════════════
   {
     moduleTitle: "DBMS & SQL – Joins, Normalization, ACID",
+    roles: ["cse-data-engineer", "cse-devops", "cse-sde", "cse-backend", "cse-fullstack", "cse-frontend"],
+    industryUseCase: "Zero-Downtime Multi-Region Kubernetes Deployment at Spotify",
+    harvardOxfordRef: "Harvard CS109 Cloud Infrastructure & Site Reliability Engineering",
     level: "Level 4 – Database Systems",
     branch: ["cse", "it"],
     videos: makeVideoLinks("DBMS SQL Joins Normalization ACID Transactions"),
@@ -769,6 +790,9 @@ FROM employees;`,
   // ═══════════════════════════════════════════════════════════════
   {
     moduleTitle: "Operating Systems – Processes, Deadlocks, Scheduling",
+    roles: ["cse-data-engineer", "cse-devops", "cse-sde", "cse-backend", "cse-fullstack", "cse-frontend"],
+    industryUseCase: "Zero-Downtime Multi-Region Kubernetes Deployment at Spotify",
+    harvardOxfordRef: "Harvard CS109 Cloud Infrastructure & Site Reliability Engineering",
     level: "Level 4 – Systems",
     branch: ["cse", "it"],
     videos: makeVideoLinks("Operating Systems Process Scheduling Deadlock Memory Management"),
@@ -804,7 +828,7 @@ Memory Management includes Contiguous Allocation, Paging (fixed-size pages mappe
         "Page Fault: When accessed page is not in RAM, OS loads it from disk (demand paging).",
         "Belady's Anomaly: FIFO page replacement can have MORE faults with MORE frames. LRU does not suffer from this."
       ],
-      example: `# Round Robin Scheduling Simulation
+      example: `• Round Robin Scheduling Simulation
 def round_robin(processes, burst_times, quantum):
     n = len(processes)
     remaining = list(burst_times)
@@ -823,7 +847,7 @@ def round_robin(processes, burst_times, quantum):
     avg_wait = sum(waiting_time) / n
     return waiting_time, avg_wait
 
-# Example: processes P1(10), P2(5), P3(8) with quantum=3
+• Example: processes P1(10), P2(5), P3(8) with quantum=3
 wt, avg = round_robin(['P1','P2','P3'], [10,5,8], 3)
 print(f"Waiting times: {wt}, Average: {avg}")`,
       complexity: "Context Switch: ~1-10μs | Page Table Lookup: O(1) with TLB | Banker's Algorithm: O(n*m²)"
@@ -841,8 +865,8 @@ print(f"Waiting times: {wt}, Average: {avg}")`,
     debug: [
       {
         title: "Fix Deadlock in Thread Synchronization",
-        buggy: `# Thread 1: lock_A -> lock_B\n# Thread 2: lock_B -> lock_A  (DEADLOCK!)\nimport threading\nlock_a = threading.Lock()\nlock_b = threading.Lock()\ndef thread1():\n    lock_a.acquire()\n    lock_b.acquire()  # Waits for lock_b held by thread2\ndef thread2():\n    lock_b.acquire()\n    lock_a.acquire()  # Waits for lock_a held by thread1`,
-        fixed: `# Fix: Always acquire locks in the SAME order\nimport threading\nlock_a = threading.Lock()\nlock_b = threading.Lock()\ndef thread1():\n    lock_a.acquire()\n    lock_b.acquire()\n    lock_b.release()\n    lock_a.release()\ndef thread2():\n    lock_a.acquire()  # Same order as thread1\n    lock_b.acquire()\n    lock_b.release()\n    lock_a.release()`,
+        buggy: `• Thread 1: lock_A -> lock_B\n• Thread 2: lock_B -> lock_A  (DEADLOCK!)\nimport threading\nlock_a = threading.Lock()\nlock_b = threading.Lock()\ndef thread1():\n    lock_a.acquire()\n    lock_b.acquire()  • Waits for lock_b held by thread2\ndef thread2():\n    lock_b.acquire()\n    lock_a.acquire()  • Waits for lock_a held by thread1`,
+        fixed: `• Fix: Always acquire locks in the SAME order\nimport threading\nlock_a = threading.Lock()\nlock_b = threading.Lock()\ndef thread1():\n    lock_a.acquire()\n    lock_b.acquire()\n    lock_b.release()\n    lock_a.release()\ndef thread2():\n    lock_a.acquire()  • Same order as thread1\n    lock_b.acquire()\n    lock_b.release()\n    lock_a.release()`,
         hint: "Deadlock prevention: enforce a global ordering on lock acquisition. All threads must acquire locks in the same order to break circular wait."
       }
     ],
@@ -866,7 +890,7 @@ print(f"Waiting times: {wt}, Average: {avg}")`,
       desc: "Given a sequence of page references and number of frames, simulate LRU page replacement and count page faults.",
       input: "pages = [7, 0, 1, 2, 0, 3, 0, 4, 2, 3], frames = 3",
       output: "Page faults: 8",
-      starter: `def lru_page_faults(pages, num_frames):\n    # Return total number of page faults\n    pass`
+      starter: `def lru_page_faults(pages, num_frames):\n    • Return total number of page faults\n    pass`
     }
   },
 
@@ -875,6 +899,9 @@ print(f"Waiting times: {wt}, Average: {avg}")`,
   // ═══════════════════════════════════════════════════════════════
   {
     moduleTitle: "Computer Networks – OSI, TCP/IP, HTTP",
+    roles: ["cse-data-engineer", "cse-devops", "cse-sde", "cse-backend", "cse-fullstack", "cse-frontend"],
+    industryUseCase: "Zero-Downtime Multi-Region Kubernetes Deployment at Spotify",
+    harvardOxfordRef: "Harvard CS109 Cloud Infrastructure & Site Reliability Engineering",
     level: "Level 3 – Networking",
     branch: ["cse", "it"],
     videos: makeVideoLinks("Computer Networks OSI Model TCP IP HTTP DNS"),
@@ -911,10 +938,10 @@ DNS (Domain Name System) resolves domain names to IP addresses through recursive
         "ARP resolves IP addresses to MAC addresses within a local network.",
         "HTTPS = HTTP + TLS/SSL encryption. TLS handshake establishes symmetric session keys using asymmetric key exchange."
       ],
-      example: `# Python: Simple TCP Server and Client
+      example: `• Python: Simple TCP Server and Client
 import socket
 
-# SERVER
+• SERVER
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind(('localhost', 8080))
 server.listen(1)
@@ -923,7 +950,7 @@ data = conn.recv(1024)
 conn.send(b"Hello from server!")
 conn.close()
 
-# CLIENT
+• CLIENT
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect(('localhost', 8080))
 client.send(b"Hello from client!")
@@ -945,8 +972,8 @@ client.close()`,
     debug: [
       {
         title: "Fix TCP Socket Connection Refused Error",
-        buggy: `# Client connects before server starts listening\nclient = socket.socket(socket.AF_INET, socket.SOCK_STREAM)\nclient.connect(('localhost', 9999))  # ConnectionRefusedError!\nclient.send(b"data")`,
-        fixed: `# Ensure server is listening BEFORE client connects\n# Add retry logic with exponential backoff\nimport time\nclient = socket.socket(socket.AF_INET, socket.SOCK_STREAM)\nfor attempt in range(5):\n    try:\n        client.connect(('localhost', 9999))\n        break\n    except ConnectionRefusedError:\n        time.sleep(2 ** attempt)  # Exponential backoff`,
+        buggy: `• Client connects before server starts listening\nclient = socket.socket(socket.AF_INET, socket.SOCK_STREAM)\nclient.connect(('localhost', 9999))  • ConnectionRefusedError!\nclient.send(b"data")`,
+        fixed: `• Ensure server is listening BEFORE client connects\n• Add retry logic with exponential backoff\nimport time\nclient = socket.socket(socket.AF_INET, socket.SOCK_STREAM)\nfor attempt in range(5):\n    try:\n        client.connect(('localhost', 9999))\n        break\n    except ConnectionRefusedError:\n        time.sleep(2 ** attempt)  • Exponential backoff`,
         hint: "Always ensure the server socket is bound and listening before clients attempt to connect. Implement retry with exponential backoff for resilience."
       }
     ],
@@ -970,7 +997,7 @@ client.close()`,
       desc: "Given an IP address and CIDR prefix length, calculate the network address, broadcast address, and number of usable hosts.",
       input: "ip = '192.168.1.100', prefix = 24",
       output: "Network: 192.168.1.0, Broadcast: 192.168.1.255, Hosts: 254",
-      starter: `def subnet_calc(ip, prefix):\n    # Return dict with network, broadcast, num_hosts\n    pass`
+      starter: `def subnet_calc(ip, prefix):\n    • Return dict with network, broadcast, num_hosts\n    pass`
     }
   },
 
@@ -979,6 +1006,9 @@ client.close()`,
   // ═══════════════════════════════════════════════════════════════
   {
     moduleTitle: "OOP Concepts – Inheritance, Polymorphism, SOLID",
+    roles: ["cse-data-engineer", "cse-devops", "cse-sde", "cse-backend", "cse-fullstack", "cse-frontend"],
+    industryUseCase: "Zero-Downtime Multi-Region Kubernetes Deployment at Spotify",
+    harvardOxfordRef: "Harvard CS109 Cloud Infrastructure & Site Reliability Engineering",
     level: "Level 3 – Software Engineering",
     branch: ["cse", "it"],
     videos: makeVideoLinks("OOP Inheritance Polymorphism SOLID Principles Design Patterns"),
@@ -989,7 +1019,7 @@ client.close()`,
 
 2. Encapsulation: Bundling data and methods together, controlling access via access modifiers (public, private, protected). Getters/setters provide controlled access to private fields.
 
-3. Inheritance: A child class inherits properties and methods from a parent class, enabling code reuse. Types: Single, Multiple (via interfaces in Java/C#), Multilevel, Hierarchical, Hybrid.
+3. Inheritance: A child class inherits properties and methods from a parent class, enabling code reuse. Types: Single, Multiple (via interfaces in Java/C• ), Multilevel, Hierarchical, Hybrid.
 
 4. Polymorphism: Same interface, different implementations.
    - Compile-time (Static): Method overloading — same method name, different parameter types/counts.
@@ -1017,10 +1047,10 @@ D – Dependency Inversion: Depend on abstractions, not concrete implementations
         "Design Patterns: Singleton (one instance), Factory (create without specifying class), Observer (pub-sub), Strategy (interchangeable algorithms).",
         "Composition over Inheritance: Prefer 'has-a' relationships over deep inheritance hierarchies to reduce coupling."
       ],
-      example: `# Python: OOP with SOLID principles
+      example: `• Python: OOP with SOLID principles
 from abc import ABC, abstractmethod
 
-# Interface Segregation: Small, focused interfaces
+• Interface Segregation: Small, focused interfaces
 class Drawable(ABC):
     @abstractmethod
     def draw(self): pass
@@ -1029,16 +1059,16 @@ class Resizable(ABC):
     @abstractmethod
     def resize(self, factor): pass
 
-# Open/Closed: Extend via new classes, don't modify existing
+• Open/Closed: Extend via new classes, don't modify existing
 class Shape(Drawable):
     @abstractmethod
     def area(self) -> float: pass
 
 class Circle(Shape, Resizable):
     def __init__(self, radius):
-        self._radius = radius  # Encapsulation
+        self._radius = radius  • Encapsulation
     
-    def area(self) -> float:  # Runtime Polymorphism
+    def area(self) -> float:  • Runtime Polymorphism
         return 3.14159 * self._radius ** 2
     
     def draw(self):
@@ -1062,12 +1092,12 @@ class Rectangle(Shape, Resizable):
         self._width *= factor
         self._height *= factor
 
-# Liskov Substitution: Any Shape works here
+• Liskov Substitution: Any Shape works here
 def print_area(shape: Shape):
     print(f"Area: {shape.area()}")
 
-print_area(Circle(5))       # Area: 78.53975
-print_area(Rectangle(4, 6)) # Area: 24`,
+print_area(Circle(5))       • Area: 78.53975
+print_area(Rectangle(4, 6)) • Area: 24`,
       complexity: "Virtual dispatch (vtable): O(1) | Interface lookup: O(1)"
     },
     aiExplain: {
@@ -1083,8 +1113,8 @@ print_area(Rectangle(4, 6)) # Area: 24`,
     debug: [
       {
         title: "Fix Liskov Substitution Principle Violation",
-        buggy: `class Bird:\n    def fly(self):\n        return "Flying!"\n\nclass Penguin(Bird):  # LSP Violation!\n    def fly(self):\n        raise Exception("Penguins can't fly!")  # Breaks substitutability`,
-        fixed: `from abc import ABC, abstractmethod\n\nclass Bird(ABC):\n    @abstractmethod\n    def move(self): pass\n\nclass FlyingBird(Bird):\n    def move(self):\n        return "Flying!"\n\nclass Penguin(Bird):  # LSP Compliant\n    def move(self):\n        return "Swimming!"`,
+        buggy: `class Bird:\n    def fly(self):\n        return "Flying!"\n\nclass Penguin(Bird):  • LSP Violation!\n    def fly(self):\n        raise Exception("Penguins can't fly!")  • Breaks substitutability`,
+        fixed: `from abc import ABC, abstractmethod\n\nclass Bird(ABC):\n    @abstractmethod\n    def move(self): pass\n\nclass FlyingBird(Bird):\n    def move(self):\n        return "Flying!"\n\nclass Penguin(Bird):  • LSP Compliant\n    def move(self):\n        return "Swimming!"`,
         hint: "If a subclass can't honor the parent's contract (Penguin can't fly), refactor the hierarchy. Use more specific base classes that correctly model the domain."
       }
     ],
@@ -1096,7 +1126,7 @@ print_area(Rectangle(4, 6)) # Area: 24`,
       { q: "What is the principle 'Depend on abstractions, not concretions'?", options: ["SRP", "OCP", "ISP", "DIP"], answer: 3 }
     ],
     mnc: [
-      { company: "Google", year: "2023", question: "Explain the difference between abstract class and interface", answer: "Abstract class can have implemented methods and state (fields); Interface (in Java/C#) only declares method signatures (Java 8+ allows default methods). A class can implement multiple interfaces but extend only one abstract class." },
+      { company: "Google", year: "2023", question: "Explain the difference between abstract class and interface", answer: "Abstract class can have implemented methods and state (fields); Interface (in Java/C• ) only declares method signatures (Java 8+ allows default methods). A class can implement multiple interfaces but extend only one abstract class." },
       { company: "Microsoft", year: "2023", question: "What is the Dependency Inversion Principle and why is it important?", answer: "High-level modules should not depend on low-level modules; both should depend on abstractions. This enables unit testing with mocks, loose coupling, and easy swapping of implementations." },
       { company: "Infosys", year: "2022", question: "Explain the Factory Design Pattern with a real-world example", answer: "Factory creates objects without exposing instantiation logic. Example: a NotificationFactory.create('email') returns EmailNotification, while create('sms') returns SMSNotification. Client code depends on the Notification interface, not concrete classes." }
     ],
@@ -1108,12 +1138,15 @@ print_area(Rectangle(4, 6)) # Area: 24`,
       desc: "Create a payment system using the Strategy pattern where different payment methods (CreditCard, PayPal, UPI) implement the same PaymentStrategy interface.",
       input: "amount = 100, method = 'upi'",
       output: "Paid ₹100 via UPI",
-      starter: `from abc import ABC, abstractmethod\n\nclass PaymentStrategy(ABC):\n    @abstractmethod\n    def pay(self, amount): pass\n\n# Implement CreditCard, PayPal, UPI strategies\n# Implement PaymentContext class`
+      starter: `from abc import ABC, abstractmethod\n\nclass PaymentStrategy(ABC):\n    @abstractmethod\n    def pay(self, amount): pass\n\n• Implement CreditCard, PayPal, UPI strategies\n• Implement PaymentContext class`
     }
   }
 ,
   {
     moduleTitle: "Linked Lists & Reversal",
+    roles: ["cse-data-engineer", "cse-devops", "cse-sde", "cse-backend", "cse-fullstack", "cse-frontend"],
+    industryUseCase: "Zero-Downtime Multi-Region Kubernetes Deployment at Spotify",
+    harvardOxfordRef: "Harvard CS109 Cloud Infrastructure & Site Reliability Engineering",
     level: "Level 1 – Foundations",
     branch: ["cse", "it"],
     videos: makeVideoLinks("Linked List Reversal"),
@@ -1128,7 +1161,7 @@ print_area(Rectangle(4, 6)) # Area: 24`,
       complexity: "Time O(N) | Space O(1)"
     },
     aiExplain: { steps: ["Initialize prev=None","Loop: save next, flip pointer, advance both","Return prev"], analogy: "Like reversing a chain of paper clips — detach one at a time from front, attach to new chain" },
-    debug: [{ title: "Missing next save", buggy: "curr.next = prev\nnxt = curr.next  # bug: already overwritten", fixed: "nxt = curr.next\ncurr.next = prev", hint: "Always save next BEFORE overwriting curr.next" }],
+    debug: [{ title: "Missing next save", buggy: "curr.next = prev\nnxt = curr.next  • bug: already overwritten", fixed: "nxt = curr.next\ncurr.next = prev", hint: "Always save next BEFORE overwriting curr.next" }],
     quiz: [
       { q: "What is time complexity of linked list reversal?", options: ["O(1)","O(log N)","O(N)","O(N²)"], answer: 2 },
       { q: "Floyd's cycle detection uses:", options: ["Two stacks","Slow and fast pointers","Hash set","Recursion"], answer: 1 },
@@ -1140,10 +1173,13 @@ print_area(Rectangle(4, 6)) # Area: 24`,
       { company: "Microsoft", year: "2022", question: "Detect and remove cycle in linked list", answer: "Use Floyd's algorithm to detect. Then reset slow to head, advance both at same speed — they meet at cycle start. Set that node's next to None." }
     ],
     mock: [{ type: "Technical", question: "Design an LRU Cache using O(1) get and put.", tip: "Use HashMap for O(1) lookup + Doubly Linked List for O(1) insertion/deletion. Tail = most recent, head = least recent." }],
-    coding: { problem: "Reverse Linked List", desc: "Reverse a singly linked list iteratively.", input: "1->2->3->4->5", output: "5->4->3->2->1", starter: "def reverse(head):\n    prev, curr = None, head\n    # complete the loop\n    return prev" }
+    coding: { problem: "Reverse Linked List", desc: "Reverse a singly linked list iteratively.", input: "1->2->3->4->5", output: "5->4->3->2->1", starter: "def reverse(head):\n    prev, curr = None, head\n    • complete the loop\n    return prev" }
   },
   {
     moduleTitle: "Stack & Monotonic Stack",
+    roles: ["cse-data-engineer", "cse-devops", "cse-sde", "cse-backend", "cse-fullstack", "cse-frontend"],
+    industryUseCase: "Zero-Downtime Multi-Region Kubernetes Deployment at Spotify",
+    harvardOxfordRef: "Harvard CS109 Cloud Infrastructure & Site Reliability Engineering",
     level: "Level 2 – Intermediate",
     branch: ["cse", "it"],
     videos: makeVideoLinks("Monotonic Stack Pattern"),
@@ -1158,7 +1194,7 @@ print_area(Rectangle(4, 6)) # Area: 24`,
       complexity: "Time O(N) | Space O(N)"
     },
     aiExplain: { steps: ["Push indices onto stack","When current > stack top, pop and record answer","Continue until stack empty or current is smaller","Push current index"], analogy: "Like a queue of people waiting to be taller than the next person — shorter ones get eliminated when a taller person arrives" },
-    debug: [{ title: "Wrong condition", buggy: "while stack and nums[stack[-1]] > n:  # decreasing instead of increasing", fixed: "while stack and nums[stack[-1]] < n:", hint: "For next GREATER element, pop when current is GREATER than top" }],
+    debug: [{ title: "Wrong condition", buggy: "while stack and nums[stack[-1]] > n:  • decreasing instead of increasing", fixed: "while stack and nums[stack[-1]] < n:", hint: "For next GREATER element, pop when current is GREATER than top" }],
     quiz: [
       { q: "Monotonic stack solves Next Greater Element in:", options: ["O(N²)","O(N log N)","O(N)","O(log N)"], answer: 2 },
       { q: "Largest Rectangle in Histogram uses:", options: ["Queue","Monotonic Increasing Stack","Min-Heap","Segment Tree"], answer: 1 },
@@ -1170,10 +1206,13 @@ print_area(Rectangle(4, 6)) # Area: 24`,
       { company: "Amazon", year: "2022", question: "Trapping Rain Water", answer: "Use two-pointer or stack approach. Stack stores indices; when taller bar found, pop and calculate trapped water between left boundary and current bar." }
     ],
     mock: [{ type: "Technical", question: "Design a stack with getMin() in O(1).", tip: "Use auxiliary min-stack. On push, also push to min-stack if value <= current min. On pop, if popped value == min-stack top, pop from min-stack too." }],
-    coding: { problem: "Daily Temperatures", desc: "Given temperatures array, return days until warmer temperature for each day.", input: "[73,74,75,71,69,72,76,73]", output: "[1,1,4,2,1,1,0,0]", starter: "def dailyTemperatures(temps):\n    result = [0]*len(temps)\n    stack = []\n    # use monotonic decreasing stack" }
+    coding: { problem: "Daily Temperatures", desc: "Given temperatures array, return days until warmer temperature for each day.", input: "[73,74,75,71,69,72,76,73]", output: "[1,1,4,2,1,1,0,0]", starter: "def dailyTemperatures(temps):\n    result = [0]*len(temps)\n    stack = []\n    • use monotonic decreasing stack" }
   },
   {
     moduleTitle: "Binary Trees – DFS & BFS",
+    roles: ["cse-data-engineer", "cse-devops", "cse-sde", "cse-backend", "cse-fullstack", "cse-frontend"],
+    industryUseCase: "Zero-Downtime Multi-Region Kubernetes Deployment at Spotify",
+    harvardOxfordRef: "Harvard CS109 Cloud Infrastructure & Site Reliability Engineering",
     level: "Level 2 – Intermediate",
     branch: ["cse", "it"],
     videos: makeVideoLinks("Binary Tree DFS BFS traversal"),
@@ -1188,7 +1227,7 @@ print_area(Rectangle(4, 6)) # Area: 24`,
       complexity: "Time O(N) | Space O(W) BFS, O(H) DFS"
     },
     aiExplain: { steps: ["For DFS: recurse left, process node, recurse right","For BFS: add root to queue, process level by level","Track depth with queue size at each level"], analogy: "DFS is like exploring a maze going as deep as possible; BFS is like expanding outward in ripples from a stone dropped in water" },
-    debug: [{ title: "Missing base case", buggy: "def inorder(node):\n    inorder(node.left)  # crashes if node is None", fixed: "def inorder(node):\n    if not node: return\n    inorder(node.left)", hint: "Always check if node is None before recursing" }],
+    debug: [{ title: "Missing base case", buggy: "def inorder(node):\n    inorder(node.left)  • crashes if node is None", fixed: "def inorder(node):\n    if not node: return\n    inorder(node.left)", hint: "Always check if node is None before recursing" }],
     quiz: [
       { q: "Inorder traversal of BST gives:", options: ["Random order","Reverse sorted","Sorted ascending","Level order"], answer: 2 },
       { q: "BFS uses which data structure?", options: ["Stack","Queue","Heap","Deque"], answer: 1 },
@@ -1200,10 +1239,13 @@ print_area(Rectangle(4, 6)) # Area: 24`,
       { company: "Google", year: "2022", question: "Serialize and deserialize binary tree", answer: "Preorder DFS serialization with 'null' markers. Deserialization uses a queue of tokens, reconstructing left then right subtrees recursively." }
     ],
     mock: [{ type: "Technical", question: "Find the lowest common ancestor of two nodes in a BST.", tip: "In BST: if both nodes < root, LCA is in left. If both > root, LCA is in right. Else root is LCA. O(H) time." }],
-    coding: { problem: "Maximum Depth of Binary Tree", desc: "Return the maximum depth (height) of a binary tree.", input: "root = [3,9,20,null,null,15,7]", output: "3", starter: "def maxDepth(root):\n    if not root: return 0\n    # return max of left and right depths + 1" }
+    coding: { problem: "Maximum Depth of Binary Tree", desc: "Return the maximum depth (height) of a binary tree.", input: "root = [3,9,20,null,null,15,7]", output: "3", starter: "def maxDepth(root):\n    if not root: return 0\n    • return max of left and right depths + 1" }
   },
   {
     moduleTitle: "Binary Search – Templates & Variants",
+    roles: ["cse-data-engineer", "cse-devops", "cse-sde", "cse-backend", "cse-fullstack", "cse-frontend"],
+    industryUseCase: "Zero-Downtime Multi-Region Kubernetes Deployment at Spotify",
+    harvardOxfordRef: "Harvard CS109 Cloud Infrastructure & Site Reliability Engineering",
     level: "Level 2 – Intermediate",
     branch: ["cse", "it"],
     videos: makeVideoLinks("Binary Search template variants"),
@@ -1218,7 +1260,7 @@ print_area(Rectangle(4, 6)) # Area: 24`,
       complexity: "Time O(log N) | Space O(1)"
     },
     aiExplain: { steps: ["Define search space with left/right","Compute mid","Compare and eliminate half","Repeat until found or space exhausted"], analogy: "Like guessing a number 1-100: always guess the middle, told higher/lower, halving possibilities each time" },
-    debug: [{ title: "Infinite loop bug", buggy: "while left < right:\n    mid = (left+right)//2\n    if arr[mid] < target: left = mid  # never advances", fixed: "left = mid + 1", hint: "Always advance by mid+1 or mid-1 to avoid infinite loops" }],
+    debug: [{ title: "Infinite loop bug", buggy: "while left < right:\n    mid = (left+right)//2\n    if arr[mid] < target: left = mid  • never advances", fixed: "left = mid + 1", hint: "Always advance by mid+1 or mid-1 to avoid infinite loops" }],
     quiz: [
       { q: "Binary search time complexity:", options: ["O(N)","O(log N)","O(N log N)","O(1)"], answer: 1 },
       { q: "Safe midpoint formula is:", options: ["(left+right)/2","left+(right-left)/2","right-(right-left)/2","left*right/2"], answer: 1 },
@@ -1230,10 +1272,13 @@ print_area(Rectangle(4, 6)) # Area: 24`,
       { company: "Amazon", year: "2022", question: "Koko Eating Bananas — find minimum eating speed", answer: "Binary search on speed from 1 to max(piles). For each speed, check if all bananas can be eaten in H hours. Return minimum valid speed." }
     ],
     mock: [{ type: "Technical", question: "How would you find the square root of N without using sqrt()?", tip: "Binary search on answer space 1..N. Find largest integer mid where mid*mid <= N. Use long to avoid overflow." }],
-    coding: { problem: "Search in Rotated Sorted Array", desc: "Find target in a rotated sorted array with no duplicates.", input: "nums=[4,5,6,7,0,1,2], target=0", output: "4 (index)", starter: "def search(nums, target):\n    left, right = 0, len(nums)-1\n    while left <= right:\n        mid = (left+right)//2\n        # determine which half is sorted" }
+    coding: { problem: "Search in Rotated Sorted Array", desc: "Find target in a rotated sorted array with no duplicates.", input: "nums=[4,5,6,7,0,1,2], target=0", output: "4 (index)", starter: "def search(nums, target):\n    left, right = 0, len(nums)-1\n    while left <= right:\n        mid = (left+right)//2\n        • determine which half is sorted" }
   },
   {
     moduleTitle: "Dynamic Programming – Knapsack",
+    roles: ["cse-data-engineer", "cse-devops", "cse-sde", "cse-backend", "cse-fullstack", "cse-frontend"],
+    industryUseCase: "Zero-Downtime Multi-Region Kubernetes Deployment at Spotify",
+    harvardOxfordRef: "Harvard CS109 Cloud Infrastructure & Site Reliability Engineering",
     level: "Level 3 – Advanced",
     branch: ["cse", "it"],
     videos: makeVideoLinks("0/1 Knapsack Dynamic Programming"),
@@ -1248,7 +1293,7 @@ print_area(Rectangle(4, 6)) # Area: 24`,
       complexity: "Time O(N*W) | Space O(W)"
     },
     aiExplain: { steps: ["For each item decide: include or exclude","If included: add value, reduce remaining capacity","Take max of both choices","Store in dp table to avoid recomputation"], analogy: "Like packing a travel bag: for each item you decide take it or leave it, choosing what maximizes value within weight limit" },
-    debug: [{ title: "Wrong iteration order", buggy: "for w in range(weights[i], W+1):  # allows reuse", fixed: "for w in range(W, weights[i]-1, -1):", hint: "0/1 knapsack requires reverse iteration to prevent reusing same item" }],
+    debug: [{ title: "Wrong iteration order", buggy: "for w in range(weights[i], W+1):  • allows reuse", fixed: "for w in range(W, weights[i]-1, -1):", hint: "0/1 knapsack requires reverse iteration to prevent reusing same item" }],
     quiz: [
       { q: "0/1 Knapsack time complexity:", options: ["O(N)","O(N²)","O(N*W)","O(2^N)"], answer: 2 },
       { q: "To prevent item reuse in 0/1 knapsack, iterate:", options: ["Forward","Backward","Randomly","Level order"], answer: 1 },
@@ -1264,6 +1309,9 @@ print_area(Rectangle(4, 6)) # Area: 24`,
   },
   {
     moduleTitle: "Graph BFS – Shortest Path",
+    roles: ["cse-data-engineer", "cse-devops", "cse-sde", "cse-backend", "cse-fullstack", "cse-frontend"],
+    industryUseCase: "Zero-Downtime Multi-Region Kubernetes Deployment at Spotify",
+    harvardOxfordRef: "Harvard CS109 Cloud Infrastructure & Site Reliability Engineering",
     level: "Level 3 – Advanced",
     branch: ["cse", "it"],
     videos: makeVideoLinks("Graph BFS Shortest Path"),
@@ -1278,7 +1326,7 @@ print_area(Rectangle(4, 6)) # Area: 24`,
       complexity: "Time O(V+E) | Space O(V)"
     },
     aiExplain: { steps: ["Add source to queue","Process each node's neighbors","Track visited to avoid cycles","First arrival = shortest path"], analogy: "Like ripples on water — spreading outward equally in all directions from where you drop a stone" },
-    debug: [{ title: "Missing visited check", buggy: "for neighbor in graph[node]:\n    queue.append((neighbor, dist+1))  # infinite loop", fixed: "if neighbor not in visited:\n    visited.add(neighbor)\n    queue.append((neighbor, dist+1))", hint: "Without visited tracking, BFS revisits nodes infinitely in cyclic graphs" }],
+    debug: [{ title: "Missing visited check", buggy: "for neighbor in graph[node]:\n    queue.append((neighbor, dist+1))  • infinite loop", fixed: "if neighbor not in visited:\n    visited.add(neighbor)\n    queue.append((neighbor, dist+1))", hint: "Without visited tracking, BFS revisits nodes infinitely in cyclic graphs" }],
     quiz: [
       { q: "BFS guarantees shortest path in:", options: ["Weighted graphs","Unweighted graphs","Negative weight graphs","Directed acyclic graphs"], answer: 1 },
       { q: "BFS time complexity:", options: ["O(V)","O(E)","O(V+E)","O(V²)"], answer: 2 },
@@ -1290,10 +1338,13 @@ print_area(Rectangle(4, 6)) # Area: 24`,
       { company: "Uber", year: "2022", question: "Rotting Oranges — minimum time for all oranges to rot", answer: "Multi-source BFS starting from all rotten oranges simultaneously. Each minute = one BFS level. Count fresh oranges remaining after BFS completes." }
     ],
     mock: [{ type: "Technical", question: "When would you use Dijkstra over BFS?", tip: "Use BFS when all edge weights are equal (unweighted). Use Dijkstra when edges have different positive weights. Dijkstra uses priority queue for minimum distance selection." }],
-    coding: { problem: "Word Ladder", desc: "Find shortest transformation sequence from beginWord to endWord changing one letter at a time.", input: "begin='hit', end='cog', wordList=['hot','dot','dog','lot','log','cog']", output: "5", starter: "from collections import deque\ndef ladderLength(begin, end, wordList):\n    word_set = set(wordList)\n    queue = deque([(begin, 1)])\n    # BFS: try changing each character a-z" }
+    coding: { problem: "Word Ladder", desc: "Find shortest transformation sequence from beginWord to endWord changing one letter at a time.", input: "begin='hit', end='cog', wordList=['hot','dot','dog','lot','log','cog']", output: "5", starter: "from collections import deque\ndef ladderLength(begin, end, wordList):\n    word_set = set(wordList)\n    queue = deque([(begin, 1)])\n    • BFS: try changing each character a-z" }
   },
   {
     moduleTitle: "Dijkstra's Algorithm",
+    roles: ["cse-data-engineer", "cse-devops", "cse-sde", "cse-backend", "cse-fullstack", "cse-frontend"],
+    industryUseCase: "Zero-Downtime Multi-Region Kubernetes Deployment at Spotify",
+    harvardOxfordRef: "Harvard CS109 Cloud Infrastructure & Site Reliability Engineering",
     level: "Level 3 – Advanced",
     branch: ["cse", "it"],
     videos: makeVideoLinks("Dijkstra Algorithm shortest path"),
@@ -1308,7 +1359,7 @@ print_area(Rectangle(4, 6)) # Area: 24`,
       complexity: "Time O((V+E)logV) | Space O(V)"
     },
     aiExplain: { steps: ["Start at source with distance 0","Always process the nearest unvisited node","Relax (update) all its neighbors","Repeat — nearest unvisited node is always correct"], analogy: "Like spreading water on a tilted surface — water always flows to the lowest point first, covering shortest paths naturally" },
-    debug: [{ title: "Missing stale entry check", buggy: "d, u = heapq.heappop(heap)\nfor v, w in graph[u]:  # processes outdated entries", fixed: "d, u = heapq.heappop(heap)\nif d > dist[u]: continue  # skip stale", hint: "Heap may contain outdated entries. Always skip if popped distance > recorded shortest." }],
+    debug: [{ title: "Missing stale entry check", buggy: "d, u = heapq.heappop(heap)\nfor v, w in graph[u]:  • processes outdated entries", fixed: "d, u = heapq.heappop(heap)\nif d > dist[u]: continue  • skip stale", hint: "Heap may contain outdated entries. Always skip if popped distance > recorded shortest." }],
     quiz: [
       { q: "Dijkstra fails with:", options: ["Large graphs","Disconnected graphs","Negative edge weights","Directed graphs"], answer: 2 },
       { q: "Dijkstra time complexity with min-heap:", options: ["O(V²)","O(E log V)","O((V+E)log V)","O(V log E)"], answer: 2 },
@@ -1320,10 +1371,13 @@ print_area(Rectangle(4, 6)) # Area: 24`,
       { company: "Microsoft", year: "2022", question: "Network Delay Time — find time for all nodes to receive signal", answer: "Dijkstra from source node. Return max(dist.values()). If any node unreachable (dist = infinity), return -1." }
     ],
     mock: [{ type: "Technical", question: "Explain when to use Bellman-Ford over Dijkstra.", tip: "Bellman-Ford handles negative edge weights and can detect negative cycles (if distance still decreases after V-1 iterations). Dijkstra is faster but only works for non-negative weights." }],
-    coding: { problem: "Cheapest Flights Within K Stops", desc: "Find cheapest price from src to dst with at most k stops.", input: "n=3, flights=[[0,1,100],[1,2,100],[0,2,500]], src=0, dst=2, k=1", output: "200", starter: "import heapq\ndef findCheapestPrice(n, flights, src, dst, k):\n    graph = {i:[] for i in range(n)}\n    for u,v,w in flights:\n        graph[u].append((v,w))\n    # Dijkstra with stops constraint" }
+    coding: { problem: "Cheapest Flights Within K Stops", desc: "Find cheapest price from src to dst with at most k stops.", input: "n=3, flights=[[0,1,100],[1,2,100],[0,2,500]], src=0, dst=2, k=1", output: "200", starter: "import heapq\ndef findCheapestPrice(n, flights, src, dst, k):\n    graph = {i:[] for i in range(n)}\n    for u,v,w in flights:\n        graph[u].append((v,w))\n    • Dijkstra with stops constraint" }
   },
   {
     moduleTitle: "SQL – Joins & Query Optimization",
+    roles: ["cse-data-engineer", "cse-devops", "cse-sde", "cse-backend", "cse-fullstack", "cse-frontend"],
+    industryUseCase: "Zero-Downtime Multi-Region Kubernetes Deployment at Spotify",
+    harvardOxfordRef: "Harvard CS109 Cloud Infrastructure & Site Reliability Engineering",
     level: "Level 2 – Intermediate",
     branch: ["cse", "it"],
     videos: makeVideoLinks("SQL Joins Query Optimization"),
@@ -1354,6 +1408,9 @@ print_area(Rectangle(4, 6)) # Area: 24`,
   },
   {
     moduleTitle: "Operating Systems – Process Scheduling",
+    roles: ["cse-data-engineer", "cse-devops", "cse-sde", "cse-backend", "cse-fullstack", "cse-frontend"],
+    industryUseCase: "Zero-Downtime Multi-Region Kubernetes Deployment at Spotify",
+    harvardOxfordRef: "Harvard CS109 Cloud Infrastructure & Site Reliability Engineering",
     level: "Level 2 – Intermediate",
     branch: ["cse", "it"],
     videos: makeVideoLinks("Process Scheduling OS algorithms"),
@@ -1361,7 +1418,7 @@ print_area(Rectangle(4, 6)) # Area: 24`,
       summary: "CPU scheduling algorithms determine which process runs next. Key metrics: CPU utilization, throughput, turnaround time, waiting time, and response time. Understanding scheduling is critical for OS interviews.",
       deepDiveTextbook: `CPU SCHEDULING ALGORITHMS\n\nScheduling Criteria:\n- CPU Utilization: Keep CPU busy (maximize).\n- Throughput: Processes completed per unit time.\n- Turnaround Time: Total time from submission to completion.\n- Waiting Time: Time spent in ready queue.\n- Response Time: Time from submission to first response.\n\nAlgorithms:\n1. FCFS (First Come First Served): Simple, non-preemptive. Convoy effect — long process blocks all short ones.\n2. SJF (Shortest Job First): Optimal for minimum average waiting time. Requires knowing burst time in advance.\n3. SRTF (Shortest Remaining Time First): Preemptive SJF. Best average waiting time but starvation risk.\n4. Round Robin: Preemptive, time quantum Q. Good response time. Context switch overhead increases with small Q.\n5. Priority Scheduling: Each process has priority. Risk of starvation; solved by Aging (gradually increase priority over time).\n6. Multilevel Queue: Different queues for foreground/background with different algorithms.\n\nContext Switch: Saving and restoring process state (PCB). Pure overhead — no useful work done during switch.\n\nProcess vs Thread: Process has independent memory space. Threads share process memory, lighter to create/switch.`,
       keyPoints: ["SJF gives minimum average waiting time but needs burst time upfront","Round Robin ensures fairness with time quantum","Priority scheduling risks starvation — solved by aging","Context switch is overhead: saves/restores PCB"],
-      example: `# Round Robin Simulation\ndef round_robin(processes, quantum):\n    queue = processes.copy()\n    time, waiting = 0, {p['name']:0 for p in processes}\n    remaining = {p['name']:p['burst'] for p in processes}\n    while queue:\n        p = queue.pop(0)\n        run = min(quantum, remaining[p['name']])\n        time += run\n        remaining[p['name']] -= run\n        if remaining[p['name']] > 0:\n            queue.append(p)  # back in queue\n    return time`,
+      example: `• Round Robin Simulation\ndef round_robin(processes, quantum):\n    queue = processes.copy()\n    time, waiting = 0, {p['name']:0 for p in processes}\n    remaining = {p['name']:p['burst'] for p in processes}\n    while queue:\n        p = queue.pop(0)\n        run = min(quantum, remaining[p['name']])\n        time += run\n        remaining[p['name']] -= run\n        if remaining[p['name']] > 0:\n            queue.append(p)  • back in queue\n    return time`,
       comparisonTable: { headers: ["Algorithm","Preemptive","Avg Wait","Starvation"], rows: [["FCFS","No","High (convoy)","No"],["SJF","No","Optimal","Yes"],["SRTF","Yes","Optimal","Yes"],["Round Robin","Yes","Medium","No"],["Priority","Both","Varies","Yes"]] },
       flowchartSteps: ["Process arrives → enters ready queue","Scheduler selects process based on algorithm","Dispatcher loads process (context switch)","Process runs until preemption, I/O wait, or completion","If preempted → back to ready queue","If I/O → moves to waiting queue","If complete → terminates"],
       concept3DSimulation: { title: "CPU Scheduler Gantt Chart", description: "Timeline shows which process runs each time unit with preemption events marked.", interactiveNodes: [{name:"Ready Queue",type:"Priority Queue",details:"Holds processes waiting for CPU"},{name:"CPU Core",type:"Execution Unit",details:"Runs one process at a time"},{name:"Context Switcher",type:"PCB Manager",details:"Saves/restores registers and memory maps"}] },
@@ -1380,10 +1437,13 @@ print_area(Rectangle(4, 6)) # Area: 24`,
       { company: "Infosys", year: "2022", question: "Calculate average waiting time for FCFS: P1(6ms), P2(4ms), P3(2ms)", answer: "P1 waits 0, P2 waits 6, P3 waits 10. Average = (0+6+10)/3 = 5.33ms. With SJF (P3,P2,P1): P3 waits 0, P2 waits 2, P1 waits 6. Average = 2.67ms." }
     ],
     mock: [{ type: "Technical", question: "What is the difference between a process and a thread?", tip: "Process: independent memory space, expensive creation, isolated crash. Thread: shared memory space, lightweight, faster context switch, crash can affect all threads. Use threads for I/O concurrency, processes for isolation." }],
-    coding: { problem: "Task Scheduler", desc: "Given tasks with cooldown n between same tasks, find minimum intervals to finish all tasks.", input: "tasks=['A','A','A','B','B','B'], n=2", output: "8", starter: "from collections import Counter\nimport heapq\ndef leastInterval(tasks, n):\n    freq = Counter(tasks)\n    heap = [-f for f in freq.values()]\n    heapq.heapify(heap)\n    # simulate scheduling with cooldown" }
+    coding: { problem: "Task Scheduler", desc: "Given tasks with cooldown n between same tasks, find minimum intervals to finish all tasks.", input: "tasks=['A','A','A','B','B','B'], n=2", output: "8", starter: "from collections import Counter\nimport heapq\ndef leastInterval(tasks, n):\n    freq = Counter(tasks)\n    heap = [-f for f in freq.values()]\n    heapq.heapify(heap)\n    • simulate scheduling with cooldown" }
   },
   {
     moduleTitle: "Computer Networks – TCP/IP & HTTP",
+    roles: ["cse-data-engineer", "cse-devops", "cse-sde", "cse-backend", "cse-fullstack", "cse-frontend"],
+    industryUseCase: "Zero-Downtime Multi-Region Kubernetes Deployment at Spotify",
+    harvardOxfordRef: "Harvard CS109 Cloud Infrastructure & Site Reliability Engineering",
     level: "Level 2 – Intermediate",
     branch: ["cse", "it"],
     videos: makeVideoLinks("TCP IP HTTP Computer Networks"),
@@ -1391,7 +1451,7 @@ print_area(Rectangle(4, 6)) # Area: 24`,
       summary: "TCP/IP is the foundational protocol suite of the internet. TCP provides reliable, ordered delivery. HTTP/HTTPS operates on top of TCP for web communication. Understanding these is essential for backend and system design roles.",
       deepDiveTextbook: `TCP/IP & HTTP FUNDAMENTALS\n\nOSI vs TCP/IP Model:\nOSI: 7 layers (Physical, Data Link, Network, Transport, Session, Presentation, Application).\nTCP/IP: 4 layers (Network Access, Internet, Transport, Application).\n\nTCP (Transmission Control Protocol):\n- Connection-oriented: 3-way handshake (SYN → SYN-ACK → ACK).\n- Reliable: Acknowledgments + retransmission on timeout.\n- Ordered: Sequence numbers ensure in-order delivery.\n- Flow Control: Sliding window prevents receiver buffer overflow.\n- Congestion Control: Slow start, congestion avoidance (AIMD).\n\nUDP (User Datagram Protocol):\n- Connectionless, no reliability, lower latency.\n- Used for: DNS queries, video streaming, gaming, VoIP.\n\nHTTP/HTTPS:\n- HTTP is stateless. Each request is independent.\n- HTTP Methods: GET (retrieve), POST (create), PUT (replace), PATCH (partial update), DELETE.\n- Status Codes: 2xx (success), 3xx (redirect), 4xx (client error), 5xx (server error).\n- HTTPS adds TLS/SSL encryption: prevents eavesdropping and tampering.\n- HTTP/2: Multiplexing (multiple requests over single connection), header compression, server push.\n- HTTP/3: Uses QUIC (UDP-based), faster handshake, eliminates head-of-line blocking.`,
       keyPoints: ["TCP: reliable, ordered via 3-way handshake + ACKs","UDP: fast, unreliable — good for streaming/gaming","HTTP is stateless; HTTPS adds TLS encryption","HTTP/2 multiplexing eliminates one-request-per-connection bottleneck"],
-      example: `# HTTP Request anatomy (Python requests library)\nimport requests\n\n# GET request\nresponse = requests.get('https://api.example.com/users', \n                        headers={'Authorization': 'Bearer token123'},\n                        params={'page': 1, 'limit': 10})\nprint(response.status_code)  # 200\nprint(response.json())       # parsed JSON body\n\n# POST request\nresponse = requests.post('https://api.example.com/users',\n                         json={'name': 'Alice', 'email': 'alice@example.com'})\nprint(response.status_code)  # 201 Created`,
+      example: `• HTTP Request anatomy (Python requests library)\nimport requests\n\n• GET request\nresponse = requests.get('https://api.example.com/users', \n                        headers={'Authorization': 'Bearer token123'},\n                        params={'page': 1, 'limit': 10})\nprint(response.status_code)  • 200\nprint(response.json())       • parsed JSON body\n\n• POST request\nresponse = requests.post('https://api.example.com/users',\n                         json={'name': 'Alice', 'email': 'alice@example.com'})\nprint(response.status_code)  • 201 Created`,
       comparisonTable: { headers: ["Feature","TCP","UDP"], rows: [["Connection","Connection-oriented","Connectionless"],["Reliability","Guaranteed ACK","Best-effort"],["Order","In-order delivery","No ordering"],["Use Case","Web, email, file transfer","Video, DNS, gaming"],["Overhead","High (headers, ACK)","Low"]] },
       flowchartSteps: ["Client sends SYN (TCP handshake)","Server responds SYN-ACK","Client sends ACK — connection established","Client sends HTTP Request","Server processes and sends HTTP Response","Connection closed with FIN-ACK-FIN-ACK"],
       concept3DSimulation: { title: "TCP/HTTP Request Lifecycle", description: "3D pipeline shows SYN/ACK handshake, data segments flowing, and HTTP response returning.", interactiveNodes: [{name:"TCP Handshaker",type:"Connection Manager",details:"Establishes reliable channel via 3-way handshake"},{name:"HTTP Encoder",type:"Application Layer",details:"Formats request with method, headers, and body"},{name:"TLS Engine",type:"Encryption Layer",details:"Encrypts payload for HTTPS connections"}] },
@@ -1410,10 +1470,13 @@ print_area(Rectangle(4, 6)) # Area: 24`,
       { company: "Infosys", year: "2022", question: "Difference between HTTP/1.1 and HTTP/2?", answer: "HTTP/1.1: one request per connection, head-of-line blocking. HTTP/2: multiplexing (multiple parallel streams on one connection), binary framing, header compression (HPACK), server push. HTTP/2 significantly faster for modern web pages." }
     ],
     mock: [{ type: "Technical", question: "How does HTTPS protect against a man-in-the-middle attack?", tip: "TLS: server presents digital certificate (signed by trusted CA). Client verifies signature. Then Diffie-Hellman key exchange establishes encrypted session key. All data encrypted — MITM can't read or modify without detection." }],
-    coding: { problem: "Implement a simple HTTP server", desc: "Create a basic HTTP server in Python responding to GET requests.", input: "GET / HTTP/1.1", output: "HTTP/1.1 200 OK\\nContent-Type: text/plain\\n\\nHello, World!", starter: "import socket\nserver = socket.socket(socket.AF_INET, socket.SOCK_STREAM)\nserver.bind(('localhost', 8080))\nserver.listen(5)\n# Accept connections and return HTTP response" }
+    coding: { problem: "Implement a simple HTTP server", desc: "Create a basic HTTP server in Python responding to GET requests.", input: "GET / HTTP/1.1", output: "HTTP/1.1 200 OK\\nContent-Type: text/plain\\n\\nHello, World!", starter: "import socket\nserver = socket.socket(socket.AF_INET, socket.SOCK_STREAM)\nserver.bind(('localhost', 8080))\nserver.listen(5)\n• Accept connections and return HTTP response" }
   },
   {
     moduleTitle: "System Design – Scalable Architecture",
+    roles: ["cse-data-engineer", "cse-devops", "cse-sde", "cse-backend", "cse-fullstack", "cse-frontend"],
+    industryUseCase: "Zero-Downtime Multi-Region Kubernetes Deployment at Spotify",
+    harvardOxfordRef: "Harvard CS109 Cloud Infrastructure & Site Reliability Engineering",
     level: "Level 3 – Advanced",
     branch: ["cse", "it"],
     videos: makeVideoLinks("System Design scalable architecture microservices"),
@@ -1421,7 +1484,7 @@ print_area(Rectangle(4, 6)) # Area: 24`,
       summary: "System design interviews test ability to design large-scale distributed systems. Core concepts: load balancing, caching, database sharding, CAP theorem, and microservices architecture.",
       deepDiveTextbook: `SCALABLE SYSTEM DESIGN\n\nDesign Steps (RESHADED):\n1. Requirements: Functional (what it does) + Non-functional (scale, latency, availability).\n2. Estimation: DAU, QPS, storage needs.\n3. API Design: REST endpoints, request/response schema.\n4. Data Model: SQL vs NoSQL choice.\n5. High-Level Design: Major components (Load Balancer, API Gateway, Services, DB, Cache).\n6. Deep Dive: Specific bottleneck components.\n\nKey Components:\n- Load Balancer: Distributes traffic across servers. Round-robin, least connections, or IP-hash strategies.\n- CDN: Serves static assets from edge locations close to users. Reduces latency globally.\n- Cache (Redis): Store hot data in memory. LRU eviction. Cache-aside pattern.\n- Database Sharding: Horizontal partitioning by user_id % N. Avoids single DB bottleneck.\n- Message Queue (Kafka/RabbitMQ): Async communication between services. Decouples producers and consumers.\n\nCAP Theorem: A distributed system can guarantee only 2 of 3: Consistency, Availability, Partition Tolerance.\n\nMicroservices vs Monolith: Monolith easier to develop/debug. Microservices enable independent scaling, deployment, and tech stack per service.`,
       keyPoints: ["Load balancer + CDN handle traffic distribution","Redis caching reduces DB load by 10-100x","CAP theorem: choose CP or AP during network partition","Message queues decouple services and handle traffic spikes"],
-      example: `# System Design: URL Shortener\n# Components:\n# 1. API: POST /shorten → returns short_code\n# 2. DB: urls table (short_code, long_url, clicks, created_at)\n# 3. Cache: Redis short_code → long_url (TTL 24h)\n# 4. Algorithm: base62 encoding of auto-increment ID\n\nimport string, random\nBASE62 = string.ascii_letters + string.digits\n\ndef encode(num):\n    chars = []\n    while num > 0:\n        chars.append(BASE62[num % 62])\n        num //= 62\n    return ''.join(reversed(chars)) or '0'`,
+      example: `• System Design: URL Shortener\n• Components:\n• 1. API: POST /shorten → returns short_code\n• 2. DB: urls table (short_code, long_url, clicks, created_at)\n• 3. Cache: Redis short_code → long_url (TTL 24h)\n• 4. Algorithm: base62 encoding of auto-increment ID\n\nimport string, random\nBASE62 = string.ascii_letters + string.digits\n\ndef encode(num):\n    chars = []\n    while num > 0:\n        chars.append(BASE62[num % 62])\n        num //= 62\n    return ''.join(reversed(chars)) or '0'`,
       comparisonTable: { headers: ["Concern","Solution","Trade-off"], rows: [["High traffic","Load Balancer + Horizontal Scaling","Added complexity"],["Slow DB reads","Redis Cache","Cache invalidation problem"],["Large data","DB Sharding","Cross-shard queries harder"],["Service coupling","Message Queue","Eventual consistency"],["Global latency","CDN","Stale content risk"]] },
       flowchartSteps: ["Clarify functional + non-functional requirements","Estimate QPS, storage, bandwidth","Design API endpoints","Choose SQL or NoSQL","Draw high-level architecture","Identify bottlenecks","Deep dive into critical components"],
       concept3DSimulation: { title: "Distributed System Architecture", description: "3D cluster shows client → CDN → Load Balancer → API Servers → Cache → DB tiers.", interactiveNodes: [{name:"Load Balancer",type:"Traffic Distributor",details:"Routes requests using round-robin or least-connections"},{name:"Cache Layer",type:"Redis Cluster",details:"Returns hot data in <1ms, bypassing database"},{name:"Message Queue",type:"Kafka Broker",details:"Buffers async events between producer and consumer services"}] },

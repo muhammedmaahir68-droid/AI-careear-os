@@ -544,7 +544,7 @@ for (let i = 11; i <= 210; i++) {
     topic: `${selectedMod} Module Concept ${i}`,
     difficulty: i % 3 === 0 ? "hard" : i % 2 === 0 ? "medium" : "easy",
     type: "mcq",
-    prompt: `[Level Placement Exam Q${i}] Evaluate the execution result or time complexity for standard problem #${i} in ${selectedMod}.`,
+    prompt: `[Level Placement Exam Q${i}] Evaluate the execution result or time complexity for standard problem • ${i} in ${selectedMod}.`,
     options: [
       `Option A: O(1) constant complexity with optimized state`,
       `Option B: O(N) linear scan over memory buffer`,
@@ -552,7 +552,7 @@ for (let i = 11; i <= 210; i++) {
       `Option D: O(N^2) quadratic fallback iteration`
     ],
     correctAnswer: 1,
-    explanation: `For placement problem #${i}, linear evaluation O(N) provides optimal performance by avoiding redundant recalculations.`,
+    explanation: `For placement problem • ${i}, linear evaluation O(N) provides optimal performance by avoiding redundant recalculations.`,
     companyTags: ["TCS NQT", "Infosys", "Wipro", "Amazon", "Accenture"]
   });
 }

@@ -36,8 +36,8 @@ export const IOT_MODULES: BranchModuleData[] = [
     debug: [
       {
         title: "Fix MQTT connection with QoS",
-        buggy: "client.publish('sensor/temp', '23.5')  # QoS 0 — fire and forget, may lose data!",
-        fixed: "client.publish('sensor/temp', '23.5', qos=1)  # QoS 1 — at least once delivery guaranteed\n# Use qos=2 for critical data: exactly once delivery",
+        buggy: "client.publish('sensor/temp', '23.5')  • QoS 0 — fire and forget, may lose data!",
+        fixed: "client.publish('sensor/temp', '23.5', qos=1)  • QoS 1 — at least once delivery guaranteed\n• Use qos=2 for critical data: exactly once delivery",
         hint: "QoS 0 = fire and forget. QoS 1 = at least once (may duplicate). QoS 2 = exactly once. Choose based on data criticality."
       }
     ],
@@ -154,8 +154,8 @@ export const IOT_MODULES: BranchModuleData[] = [
     debug: [
       {
         title: "Fix insecure MQTT connection",
-        buggy: "client.connect('mqtt.example.com', 1883)  # Plain text! Credentials exposed!",
-        fixed: "client.tls_set(ca_certs='ca.crt', certfile='device.crt', keyfile='device.key')\nclient.tls_insecure_set(False)\nclient.connect('mqtt.example.com', 8883)  # Port 8883 = MQTT over TLS",
+        buggy: "client.connect('mqtt.example.com', 1883)  • Plain text! Credentials exposed!",
+        fixed: "client.tls_set(ca_certs='ca.crt', certfile='device.crt', keyfile='device.key')\nclient.tls_insecure_set(False)\nclient.connect('mqtt.example.com', 8883)  • Port 8883 = MQTT over TLS",
         hint: "Always use TLS (port 8883) for MQTT. Load device certificate for mutual TLS authentication."
       }
     ],

@@ -17,14 +17,27 @@ export * from "./biotech";
 export * from "./iot";
 
 export function getBranchModules(branchId: string | null, roleId?: string | null): BranchModuleData[] {
-  if (!branchId) return CSE_IT_MODULES;
-  const b = branchId.toLowerCase();
-  if (b === "cse" || b === "it") return CSE_IT_MODULES;
-  if (b === "aiml" || b === "aids") return AIML_AIDS_MODULES;
-  if (b === "ece") return ECE_MODULES;
-  if (b === "eee") return EEE_MODULES;
-  if (b === "mech") return MECH_MODULES;
-  if (b === "biotech") return BIOTECH_MODULES;
-  if (b === "iot") return IOT_MODULES;
-  return CSE_IT_MODULES;
+  let modules: BranchModuleData[] = CSE_IT_MODULES;
+
+  if (branchId) {
+    const b = branchId.toLowerCase();
+    if (b === "cse" || b === "it") modules = CSE_IT_MODULES;
+    else if (b === "aiml" || b === "aids") modules = AIML_AIDS_MODULES;
+    else if (b === "ece") modules = ECE_MODULES;
+    else if (b === "eee") modules = EEE_MODULES;
+    else if (b === "mech") modules = MECH_MODULES;
+    else if (b === "biotech") modules = BIOTECH_MODULES;
+    else if (b === "iot") modules = IOT_MODULES;
+  }
+
+  if (roleId) {
+    const r = roleId.toLowerCase();
+    const roleSpecific = modules.filter(m => m.roles && m.roles.some(role => role.toLowerCase() === r));
+    if (roleSpecific.length > 0) {
+      const general = modules.filter(m => !m.roles || !m.roles.some(role => role.toLowerCase() === r));
+      return [...roleSpecific, ...general];
+    }
+  }
+
+  return modules;
 }
