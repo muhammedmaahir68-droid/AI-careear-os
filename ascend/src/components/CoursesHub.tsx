@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Search, BookOpen, Layers, Award, Star, Video, Filter, Check, Plus, Globe, ArrowRight, Shield, Zap, Sparkles } from "lucide-react";
 import type { Course } from "../data/coursesCatalog";
-import { COURSES_CATALOG, generate12LanguageVideos } from "../data/coursesCatalog";
+import { ALL_COURSES, generate12LanguageVideos } from "../data/coursesCatalog";
 import { loadUserCourseProgress, toggleCoursePlan } from "../data/userCourseStore";
 import CourseDetailModal from "./CourseDetailModal";
 
@@ -11,7 +11,8 @@ interface Props {
 }
 
 const CATEGORIES = [
-  "All", "Programming", "Electronics", "Robotics", "VLSI", "Biotechnology", "Mechanical", "Marine", "Cloud", "Cybersecurity", "AI & Data"
+  "All", "Programming", "AI & Data", "Cloud", "Electronics", "Robotics",
+  "VLSI", "Biotechnology", "Mechanical", "Marine", "Cybersecurity"
 ];
 
 export default function CoursesHub({ userRole = "cse-backend", userBranch = "cse" }: Props) {
@@ -29,7 +30,7 @@ export default function CoursesHub({ userRole = "cse-backend", userBranch = "cse
   };
 
   // Filter courses
-  const filteredCourses = COURSES_CATALOG.filter(c => {
+  const filteredCourses = ALL_COURSES.filter(c => {
     const matchesSearch = c.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
                           c.shortDescription.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCat = selectedCategory === "All" || c.category === selectedCategory;
@@ -38,7 +39,7 @@ export default function CoursesHub({ userRole = "cse-backend", userBranch = "cse
   });
 
   // Recommended courses for role
-  const recommendedCourses = COURSES_CATALOG.filter(c => 
+  const recommendedCourses = ALL_COURSES.filter(c => 
     userRole && c.relatedRoles.includes(userRole.toLowerCase())
   );
 
