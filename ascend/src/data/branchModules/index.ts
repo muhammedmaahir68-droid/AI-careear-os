@@ -6,6 +6,7 @@ import { EEE_MODULES } from "./eee";
 import { MECH_MODULES } from "./mech";
 import { BIOTECH_MODULES } from "./biotech";
 import { IOT_MODULES } from "./iot";
+import { ROLE_SPECIFIC_MODULES } from "./roleModules";
 
 export * from "./types";
 export * from "./cse";
@@ -15,8 +16,16 @@ export * from "./eee";
 export * from "./mech";
 export * from "./biotech";
 export * from "./iot";
+export * from "./roleModules";
 
 export function getBranchModules(branchId: string | null, roleId?: string | null): BranchModuleData[] {
+  if (roleId) {
+    const r = roleId.toLowerCase();
+    if (ROLE_SPECIFIC_MODULES[r] && ROLE_SPECIFIC_MODULES[r].length > 0) {
+      return ROLE_SPECIFIC_MODULES[r];
+    }
+  }
+
   let modules: BranchModuleData[] = CSE_IT_MODULES;
 
   if (branchId) {
