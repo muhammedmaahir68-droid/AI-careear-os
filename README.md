@@ -1,163 +1,153 @@
-# 🎓 AI Career OS — World-Class Engineering Education Platform
+# 🚀 CARVEX — Autonomous AI Career Operating System
 
-> A Duolingo-style career platform for engineering students across CSE, AIML, ECE, EEE, MECH, Civil, Data Science & IT — with gamified learning, placement prep, and Kubernetes-ready infrastructure.
+> An enterprise-grade, Duolingo-style career intelligence platform for engineering students across 9 departments and 47+ roles — featuring an autonomous ReAct multi-agent loop, real-time AI Voice Tutor (TTS/STT), CleanStudyContent NLP engine, 24-course independent learning hub, and Kubernetes-ready cloud architecture.
 
-![Platform](https://img.shields.io/badge/Platform-Vercel-black?logo=vercel)
-![Backend](https://img.shields.io/badge/Backend-Node.js%20%2B%20Express-green?logo=node.js)
-![Database](https://img.shields.io/badge/Database-MongoDB%20Atlas-brightgreen?logo=mongodb)
-![Frontend](https://img.shields.io/badge/Frontend-React%20%2B%20Vite-blue?logo=react)
-![Container](https://img.shields.io/badge/Container-Docker%20%2B%20K8s-blue?logo=kubernetes)
-
----
-
-## 🚀 Live Demo
-**[View on Vercel →](https://ai-careear-os.vercel.app)**
+[![Live Demo](https://img.shields.io/badge/Live_App-carvexapp.vercel.app-7C3AED?style=for-the-badge&logo=vercel)](https://carvexapp.vercel.app)
+[![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-20.x-339933?style=for-the-badge&logo=nodedotjs)](https://nodejs.org/)
+[![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?style=for-the-badge&logo=docker)](https://www.docker.com/)
+[![Kubernetes](https://img.shields.io/badge/Kubernetes-Orchestrated-326CE5?style=for-the-badge&logo=kubernetes)](https://kubernetes.io/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-4EA94B?style=for-the-badge&logo=mongodb)](https://www.mongodb.com/)
 
 ---
 
-## ✨ Features
-
-- 🎯 **Department-wise Curriculum** — CSE, AIML, ECE, EEE, MECH, Civil, Data Science, IT
-- 💎 **Duolingo-style Gamification** — Diamond leagues, XP, streaks, loot box rewards
-- 📚 **200+ Lessons** — University-level content (IIT/MIT/Oxford depth)
-- ❓ **500+ Placement Questions** — TCS, Infosys, Google, Amazon, Microsoft tagged MCQs
-- 🔐 **JWT Authentication** — Secure user accounts with progress persistence
-- 📊 **Progress Tracking** — XP, levels, streaks, diamonds, badges all persisted to MongoDB
-- 🌐 **Vercel + MongoDB Atlas** — Worldwide accessible, auto-scaling, zero-cost hosting
-- 🐳 **Docker + Kubernetes** — Full containerization and orchestration manifests
+## 🌐 Live Production Deployment
+- **Official App**: [**carvexapp.vercel.app**](https://carvexapp.vercel.app)
+- **Portfolio**: [**mohamed-maahir-portfolio.vercel.app**](https://mohamed-maahir-portfolio.vercel.app/)
 
 ---
 
-## 🏗️ Architecture
+## ⚡ Newly Added Upgrades & Major Features
+
+### 1. 🎙️ AI Voice Tutor Engine (TTS & STT)
+- **Hands-Free Audio Learning**: Integrated text-to-speech engine powered by the browser's native `Web Speech API` (`SpeechSynthesis`), allowing students to listen to study materials, lessons, and code explanations without eye strain.
+- **Dynamic Playback Controls**: Real-time Play, Pause, Resume, and Stop controls with 4 selectable speeds (`0.75x`, `1.0x`, `1.25x`, `1.5x`).
+- **Speech-to-Text Vocal Input**: Built-in microphone listener (`SpeechRecognition`) enabling students to speak questions aloud directly to Maahir AI.
+
+### 2. 🧠 CleanStudyContent NLP Rendering Engine
+- **Hashtag-Free Textbook Content**: Custom NLP parser that cleans raw markdown `#`, `##`, and `###` artifacts and restructures raw content into semantic, readable cards.
+- **Visual Step Flowcharts**: Automatically extracts sequential procedure steps and renders them into interactive visual flowchart step cards.
+- **Structured Knowledge Blocks**: Color-coded cards for *Core Theory*, *Step-by-Step Execution*, *Code Implementation*, *Intuitive Analogies*, and *Key Takeaways*.
+
+### 3. 🤖 Autonomous ReAct Multi-Agent Maahir AI
+- **Self-Built ReAct Agent Loop**: Autonomous *Thought → Action → Observation → Final Answer* execution loop built without external agent framework bloat.
+- **5 Specialized Agent Personas**:
+  - 🎓 **Placement Coach**: Technical interview preparation, MNC hiring patterns, HR round advice.
+  - 💻 **Code Expert**: Algorithmic problem-solving, bug diagnostics, code review, complexity analysis.
+  - 📄 **Resume Specialist**: ATS scoring tips, bullet point optimization, tech stack alignment.
+  - 🌐 **Web Research Agent**: Live technical search and documentation lookup.
+  - 📊 **Data Analyst**: Explanatory data insights, mathematics, and statistical concepts.
+- **In-Browser Sandbox Tools**: In-memory calculator, live JavaScript code executor, web search tool, and system environment inspector.
+
+### 4. 📚 24+ Independent Courses Hub
+- **Global Catalog**: 24+ global engineering and emerging tech courses accessible independently:
+  - *C Programming, Java, Python, DSA, AI/ML, TensorFlow, PyTorch, AI Agents Building, RAG Systems, Agentic AI, HR Management, Data Analytics with GenAI, Data Science, Cloud Computing, Cybersecurity, DevOps, System Design, Blockchain, Full-Stack Web Development, Embedded Systems, IoT, Mobile App Development, etc.*
+- **12-Language Video Tutorials**: Multi-language curated YouTube tutorials per course (English, Hindi, Tamil, Telugu, Kannada, Malayalam, Bengali, Marathi, Gujarati, Spanish, French, German).
+- **Independent from Role Path**: Courses live in a dedicated global hub that does not overwrite the student's primary degree roadmap.
+
+### 5. 💻 6-Tab Interactive Lesson Engine
+- Dedicated 6-tab interactive study system per module topic:
+  - 📖 **Learn**: In-depth theoretical concepts with visual breakdowns and real-world analogies.
+  - 💻 **Code**: Syntax, boilerplate, clean implementations, and edge-case handling.
+  - 🐞 **Debug**: Buggy code snippet challenge with hints and verified fix.
+  - ❓ **Quiz**: Interactive multiple-choice questions with instant scoring and explanations.
+  - 🛠️ **Practice**: Real-world challenge prompts for hands-on application.
+  - 🎯 **Interview**: Curated MNC interview questions from Google, Amazon, Microsoft, and TCS.
+
+### 6. 🏢 Tappable MNC Interview Questions Modal
+- Located right adjacent to YouTube video lessons in both the Learning Game Path and Daily Challenge modules.
+- **3 Comprehensive Tabs**:
+  - 💻 **Online Assessment (OA)**: Real coding problems with time/space complexity constraints.
+  - ❓ **Interview Questions**: Technical round conceptual questions with high-scoring answers.
+  - 📋 **Hiring Rounds Breakdown**: Complete step-by-step round flow (Aptitude → Technical I → Technical II → HR).
+
+### 7. 🧭 Department & Role Switcher
+- Added a top switcher bar in `BranchRolePicker` allowing students to toggle between:
+  - **[Select Department & Career Role]** — Official personalized curriculum.
+  - **[Learn Independent Courses]** — Global courses catalog.
+
+### 8. 🧬 9 Engineering Departments & 47+ Career Roles
+- **CSE**: Software Development, Backend Engineering, Full-Stack, Systems.
+- **IT**: Cloud Architecture, DevOps, Cybersecurity, Database Administration.
+- **AIML**: Machine Learning Engineer, Deep Learning Specialist, NLP Engineer, MLOps.
+- **AIDS**: Data Scientist, BI Analyst, Big Data Engineer.
+- **ECE**: VLSI Design, Embedded Systems, Wireless Communication, Signal Processing.
+- **EEE**: Power Systems, Electric Vehicles, Power Electronics, Smart Grid.
+- **MECH**: Thermal Engineering, CAD/CAM, Robotics, Automotive Dynamics.
+- **Bio-Technology**: Bioinformatics Analyst, Pharma R&D, Biomedical Engineering.
+- **Internet of Things (IoT)**: IoT Developer, Edge Computing Engineer, Firmware Engineer.
+
+---
+
+## 🏛️ System Architecture
 
 ```
-AI-careear-os/
-├── ascend/              # React + Vite frontend (deployed on Vercel)
+CARVEX-AI-CAREER-OS/
+├── ascend/                           # React 18 + Vite Frontend (Vercel)
 │   ├── src/
-│   │   ├── components/  # GamificationModal, DailyChallenge, etc.
-│   │   ├── services/    # api.ts (connects to backend)
-│   │   └── data/        # Static branch curriculum data
-│   └── Dockerfile
-├── backend/             # Node.js + Express + TypeScript API
+│   │   ├── components/
+│   │   │   ├── AIVoiceTutorBar.tsx   # TTS/STT Voice Controller Bar
+│   │   │   ├── CleanStudyContent.tsx # NLP Parser & Visual Flowchart Engine
+│   │   │   ├── MaahirAIPanel.tsx     # Autonomous ReAct Multi-Agent AI
+│   │   │   ├── CoursesHub.tsx        # 24-Course Independent Catalog
+│   │   │   ├── CourseLessonViewer.tsx# 6-Tab Interactive Lesson Module
+│   │   │   ├── CourseDetailModal.tsx # Course Syllabus & Video Viewer
+│   │   │   ├── CompanyQuestionsModal.tsx # Tappable MNC Questions Modal
+│   │   │   ├── LearningGamePath.tsx  # Gamified Duolingo-style Career Map
+│   │   │   ├── DailyChallenge.tsx    # Daily Practice & Streak System
+│   │   │   └── BranchRolePicker.tsx  # Department & Course Switcher
+│   │   ├── services/
+│   │   │   ├── aiVoiceTutor.ts       # Singleton Web Speech API Service
+│   │   │   └── api.ts                # Backend & MongoDB API Client
+│   │   └── data/
+│   │       ├── branchModules/        # 9 Engineering Departments & 47 Roles
+│   │       ├── coursesData.ts        # 24+ Independent Courses
+│   │       └── companyData.ts        # MNC Placement & OA Question Bank
+│   └── Dockerfile                    # Multi-stage Nginx production build
+├── backend/                          # Node.js + Express + TypeScript API
 │   ├── src/
-│   │   ├── models/      # Lesson, Question, Module, User, UserProgress
-│   │   ├── routes/      # auth, lessons, questions, modules, progress
-│   │   ├── middleware/  # auth (JWT), errorHandler
-│   │   └── scripts/     # seed.ts — database ingestion
-│   └── Dockerfile
-├── api/
-│   └── index.ts         # Vercel Serverless Function entry point
-├── k8s/                 # Kubernetes manifests (production)
-├── docker-compose.yml   # Full local stack
-└── vercel.json          # Vercel deployment config
+│   │   ├── models/                   # Lesson, Question, Module, User, Progress
+│   │   ├── routes/                   # auth, lessons, questions, progress
+│   │   └── scripts/seed.ts           # Massive seed ingestion
+│   └── Dockerfile                    # Multi-stage Node.js container
+├── k8s/                              # Production Kubernetes Manifests
+│   ├── namespace.yaml
+│   ├── mongodb-statefulset.yaml
+│   ├── backend-deployment.yaml
+│   ├── frontend-deployment.yaml
+│   └── ingress.yaml
+├── docker-compose.yml                # Full local multi-container stack
+└── vercel.json                       # Frontend deployment config
 ```
 
 ---
 
-## ⚡ Quick Start (Local Dev)
+## ⚡ Quick Start (Local Development)
 
 ```bash
-# 1. Clone
-git clone https://github.com/muhammedmaahir68-droid/AI-careear-os.git
-cd AI-careear-os
+# 1. Clone repository
+git clone https://github.com/muhammedmaahir68-droid/carvex.git
+cd carvex
 
-# 2. Start MongoDB (Docker)
-docker run -d -p 27017:27017 --name mongo mongo:7
+# 2. Run with Docker Compose (Full Stack)
+docker-compose up --build
 
-# 3. Install & seed backend
-npm --prefix backend install
-npm --prefix backend run seed
-
-# 4. Start backend
-npm --prefix backend run dev
-
-# 5. Start frontend (new terminal)
-npm --prefix ascend install
-npm --prefix ascend run dev
-```
-Frontend: http://localhost:5173  
-Backend API: http://localhost:5000/api/health
-
----
-
-## 🌐 Deploy to Vercel + MongoDB Atlas (Free)
-
-### Step 1: MongoDB Atlas
-1. Sign up at [cloud.mongodb.com](https://cloud.mongodb.com) (free M0 cluster)
-2. Create DB user and password
-3. Network Access → **Allow from Anywhere** (`0.0.0.0/0`)
-4. Copy your connection string: `mongodb+srv://user:pass@cluster.mongodb.net/ai-career-os`
-
-### Step 2: Seed Atlas Database
-```powershell
-$env:MONGODB_URI="mongodb+srv://user:pass@cluster.mongodb.net/ai-career-os"
-npm --prefix backend run seed
+# OR Run Frontend locally:
+cd ascend
+npm install
+npm run dev
 ```
 
-### Step 3: Vercel Environment Variables
-In your Vercel project → **Settings → Environment Variables**, add:
-
-| Key | Value |
-|-----|-------|
-| `MONGODB_URI` | `mongodb+srv://...` |
-| `JWT_SECRET` | `your-strong-secret-key` |
-| `NODE_ENV` | `production` |
-
-### Step 4: Redeploy
-Push any commit or click **Redeploy** in Vercel dashboard. Done! 🎉
-
----
-
-## 🐳 Docker Compose (Full Stack Local)
-
-```bash
-docker-compose up --build -d
-```
-- Frontend: http://localhost:80
-- Backend API: http://localhost:5000
-- MongoDB Admin: http://localhost:8081
-
----
-
-## ☸️ Kubernetes Deployment
-
-```bash
-kubectl apply -f k8s/namespace.yaml
-kubectl apply -f k8s/
-```
-Includes: MongoDB StatefulSet, Backend Deployment + HPA, Frontend LoadBalancer, Nginx Ingress, nightly seed CronJob.
-
----
-
-## 📡 API Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/health` | Server health check |
-| POST | `/api/auth/register` | Register user |
-| POST | `/api/auth/login` | Login user |
-| GET | `/api/lessons` | List lessons (filter by dept/level) |
-| GET | `/api/lessons/search?q=` | Full-text search |
-| GET | `/api/questions/random` | Random placement quiz |
-| POST | `/api/progress` | Record XP/diamond progress |
-| GET | `/api/progress/:userId/stats` | Get user stats |
-
----
-
-## 🛠️ Tech Stack
-
-| Layer | Technology |
-|-------|-----------|
-| Frontend | React 18, Vite, TypeScript, TailwindCSS |
-| Backend | Node.js, Express, TypeScript |
-| Database | MongoDB Atlas (Mongoose ODM) |
-| Auth | JWT (jsonwebtoken + bcryptjs) |
-| Hosting | Vercel (frontend + serverless API) |
-| Container | Docker (multi-stage builds) |
-| Orchestration | Kubernetes + Helm |
-| Security | Helmet, CORS, Rate Limiting |
+Frontend runs on: `http://localhost:5173`
 
 ---
 
 ## 📄 License
-MIT — Built for engineering students worldwide 🌍
+This project is licensed under the MIT License.
+
+---
+
+<div align="center">
+  <sub>Engineered with ❤️ by <b>Mohamed Maahir M</b> — <a href="https://mohamed-maahir-portfolio.vercel.app/">Official Portfolio</a></sub>
+</div>
