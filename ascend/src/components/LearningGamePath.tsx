@@ -3,12 +3,16 @@ import { motion, AnimatePresence } from "motion/react";
 import {
   Trophy, Gem, Lock, CheckCircle2, BookOpen,
   ArrowRight, Gift, X, Zap, Target, ChevronDown, ChevronRight,
-  Code2, Brain, Cpu, Bolt, Wrench, Building, Database, Shield,
+  Code2, Brain, Cpu, Bolt, Wrench, Building, Building2, Database, Shield,
   Lightbulb, HelpCircle, FileText, Check, Award, Video, Play,
   Briefcase, UserCheck, Layers, FileCheck, Terminal, Bug, Filter, Layers3,
   Download
 } from "lucide-react";
 import GamificationModal, { LEAGUES } from "./GamificationModal";
+import { getBranchCompanies, type CompanyTrack } from "../data/companyData";
+import CleanStudyContent from "./CleanStudyContent";
+import AIVoiceTutorBar from "./AIVoiceTutorBar";
+import CompanyQuestionsModal from "./CompanyQuestionsModal";
 import { recordUserProgress } from "../services/api";
 import { getBranchModules, makeVideoLinks } from "../data/branchModules";
 import type { BranchModuleData, VideoLink } from "../data/branchModules/types";
@@ -489,6 +493,9 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
 
   const [activeNode, setActiveNode] = useState<LessonNode | null>(null);
   const [modalTab, setModalTab] = useState<"textbook" | "formulas" | "videos" | "placement" | "ai">("textbook");
+  const [selectedCompanyTrack, setSelectedCompanyTrack] = useState<CompanyTrack | null>(null);
+  const branchCompanies = useMemo(() => getBranchCompanies(branchId || "cse"), [branchId]);
+
   const [step, setStep] = useState<"theory" | "quiz">("theory");
   
   // Local Large LLM AI Assistant states
@@ -979,15 +986,20 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                       <div className="space-y-6">
                         {activeNode.theory && (
                           <>
-                            <div className="p-4 rounded-2xl bg-purple-950/40 border border-purple-500/20 text-slate-200 text-sm leading-relaxed">
-                              <strong>Summary:</strong> {activeNode.theory.summary}
-                            </div>
+                            {/* AI Voice Tutor Audio Bar */}
+                            <AIVoiceTutorBar
+                              label={`Voice Tutor: ${activeNode.title}`}
+                              textToRead={`${activeNode.title}. ${activeNode.theory.summary}. ${activeNode.theory.detailedContent || ""}`}
+                            />
 
-                            {activeNode.theory.detailedContent && (
-                              <div className="prose prose-invert max-w-none text-slate-300 text-sm leading-relaxed whitespace-pre-line font-sans space-y-4">
-                                {activeNode.theory.detailedContent}
-                              </div>
-                            )}
+                            {/* Clean Study Content (removes hashtags, parses steps, flowcharts) */}
+                            <CleanStudyContent
+                              summary={activeNode.theory.summary}
+                              content={activeNode.theory.detailedContent}
+                              flowchartSteps={activeNode.theory.flowchartSteps}
+                              keyPoints={activeNode.theory.keyPoints}
+                              placementTips={activeNode.theory.placementTips}
+                            />
 
                             {/* Author References */}
                             {activeNode.theory.authorReferences?.length && (
@@ -1102,6 +1114,46 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
                               <Play size={14} className="text-emerald-400 shrink-0 group-hover:scale-125 transition-transform" />
                             </a>
                           ))}
+                        </div>
+
+                        {/* ── TARGET MNC COMPANIES NEAR VIDEOS (TAPPABLE TO VIEW QUESTIONS) ── */}
+                        <div className="p-6 rounded-3xl bg-slate-950/90 border border-cyan-500/30 space-y-4 shadow-xl">
+                          <div className="flex flex-wrap items-center justify-between gap-2">
+                            <div className="flex items-center gap-2">
+                              <Building2 size={18} className="text-cyan-400" />
+                              <h4 className="text-sm font-bold text-foreground">Target Companies for this Topic & Role</h4>
+                            </div>
+                            <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30 uppercase">
+                              Tap Any Company to View Real Interview Questions
+                            </span>
+                          </div>
+                          <p className="text-xs text-slate-300">
+                            These top companies heavily evaluate this specific curriculum topic. Tap on any company card below to inspect actual online coding test problems, technical interview solutions, and interview rounds:
+                          </p>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 pt-1">
+                            {branchCompanies.map((c, ci) => (
+                              <button
+                                key={ci}
+                                onClick={() => setSelectedCompanyTrack(c)}
+                                className="p-3.5 rounded-2xl bg-card hover:bg-muted/70 border border-border hover:border-cyan-500/50 transition-all flex items-center gap-3 text-left group shadow-sm cursor-pointer"
+                              >
+                                <span className="text-2xl p-2 rounded-xl bg-white/5 border border-white/10 group-hover:scale-110 transition-transform">
+                                  {c.logo}
+                                </span>
+                                <div className="min-w-0">
+                                  <div className="text-xs font-bold text-foreground group-hover:text-cyan-300 transition-colors truncate">
+                                    {c.name}
+                                  </div>
+                                  <div className="text-[10px] text-emerald-400 font-semibold truncate">
+                                    {c.avgPackage}
+                                  </div>
+                                  <div className="text-[9px] text-cyan-400 font-bold uppercase tracking-wider flex items-center gap-1 mt-0.5">
+                                    <span>View Questions</span> <span>➔</span>
+                                  </div>
+                                </div>
+                              </button>
+                            ))}
+                          </div>
                         </div>
                       </div>
                     )}
@@ -1360,6 +1412,13 @@ export default function LearningGamePath({ branchId = "cse", roleId, targetPhase
         onClose={() => { setShowReward(false); setActiveNode(null); }}
         xpEarned={lastCompleted?.xpReward || 0}
         diamondsEarned={lastCompleted?.diamondReward || 0}
+      />
+
+      {/* ── INTERACTIVE COMPANY QUESTIONS MODAL ── */}
+      <CompanyQuestionsModal
+        company={selectedCompanyTrack}
+        isOpen={!!selectedCompanyTrack}
+        onClose={() => setSelectedCompanyTrack(null)}
       />
     </div>
   );

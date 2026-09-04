@@ -1,4 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
+import { getBranchCompanies, type CompanyTrack } from "../data/companyData";
+import CleanStudyContent from "./CleanStudyContent";
+import AIVoiceTutorBar from "./AIVoiceTutorBar";
+import CompanyQuestionsModal from "./CompanyQuestionsModal";
 import { motion, AnimatePresence } from "motion/react";
 import {
   Play, CheckCircle2, Code2, BookOpen, BrainCircuit, PenTool,
@@ -736,6 +740,8 @@ print(solve_${conceptName.toLowerCase().replace(/[^a-z0-9]/g, "_")}([3, 1, 4, 1,
 export default function DailyChallenge({ onComplete, isCompleted, selectedConcept, onClearSelectedConcept, branchId }: DailyChallengeProps) {
   const [moduleIdx, setModuleIdx] = useState(0);
   const [activeStep, setActiveStep] = useState(0);
+  const [selectedCompanyTrack, setSelectedCompanyTrack] = useState<CompanyTrack | null>(null);
+  const branchCompanies = useMemo(() => getBranchCompanies(branchId || "cse"), [branchId]);
   const [code, setCode] = useState("");
   const [running, setRunning] = useState(false);
   const [quizAnswers, setQuizAnswers] = useState<Record<number, number>>({});
@@ -1123,14 +1129,19 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
                     </div>
                   )}
 
-                  {/* Deep Textbook Chapter Content */}
+                  {/* AI Voice Tutor Audio Bar */}
+                  <AIVoiceTutorBar
+                    label={`AI Voice Tutor: ${mod.moduleTitle}`}
+                    textToRead={`${mod.moduleTitle}. ${mod.studyMaterial.summary}. ${(mod.studyMaterial as any).deepDiveTextbook || ""}`}
+                  />
+
+                  {/* Deep Textbook Chapter Content (Cleaned with No Hashtags) */}
                   {(mod.studyMaterial as any).deepDiveTextbook && (
-                    <div className="p-5 rounded-2xl border border-border bg-card space-y-3">
-                      <h4 className="text-sm font-bold text-indigo-400 flex items-center gap-2">
-                        <span>📖</span> Comprehensive Placement Textbook Chapter
-                      </h4>
-                      <p className="text-xs text-gray-300 whitespace-pre-wrap leading-relaxed font-sans">{ (mod.studyMaterial as any).deepDiveTextbook }</p>
-                    </div>
+                    <CleanStudyContent
+                      summary={mod.studyMaterial.summary}
+                      content={(mod.studyMaterial as any).deepDiveTextbook}
+                      keyPoints={mod.studyMaterial.keyPoints}
+                    />
                   )}
 
                   {/* Key Points */}
@@ -1205,6 +1216,31 @@ export default function DailyChallenge({ onComplete, isCompleted, selectedConcep
                           </a>
                         </div>
                       )}
+                    </div>
+
+                    {/* ── TAPPABLE MNC COMPANIES NEAR VIDEOS ── */}
+                    <div className="mt-4 p-5 rounded-2xl bg-card border border-cyan-500/30 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-xs font-bold text-foreground">Target Companies Asking {mod.moduleTitle}</h4>
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-bold">
+                          Tap to View Interview Questions
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        {branchCompanies.map((c: CompanyTrack, ci: number) => (
+                          <button
+                            key={ci}
+                            onClick={() => setSelectedCompanyTrack(c)}
+                            className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-border hover:border-cyan-500/40 flex items-center gap-2 text-left group transition-all cursor-pointer"
+                          >
+                            <span className="text-xl">{c.logo}</span>
+                            <div className="min-w-0">
+                              <p className="text-xs font-bold text-foreground group-hover:text-cyan-300 transition-colors truncate">{c.name}</p>
+                              <p className="text-[10px] text-emerald-400 truncate">{c.avgPackage}</p>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   </div>
                   <button
